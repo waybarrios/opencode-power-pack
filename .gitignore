@@ -1,0 +1,38 @@
+# Personal / private context files
+CLAUDE.md
+.claude/
+.claude.local.md
+.agents.local.md
+AGENTS.md.local
+
+# Personal memory / notes
+memory/
+MEMORY.md
+*.memory.md
+.notes/
+NOTES.md
+
+# Local OpenCode state
+.opencode/local.json
+.opencode/cache/
+
+# Node / Bun
+node_modules/
+*.log
+npm-debug.log*
+.npm/
+.cache/
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/

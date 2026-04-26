@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" role="img" aria-label="opencode-power-pack">
+  <title>opencode-power-pack</title>
+
+  <defs>
+    <linearGradient id="bolt" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFE15D"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+    <linearGradient id="boltText" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFE15D"/>
+      <stop offset="100%" stop-color="#E08E0B"/>
+    </linearGradient>
+    <pattern id="scan" width="1" height="3" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="2" y2="0" stroke="#FFFFFF" stroke-opacity="0.035"/>
+    </pattern>
+    <filter id="boltGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- background -->
+  <rect width="1200" height="360" fill="#0B0F14"/>
+  <rect width="1200" height="360" fill="url(#scan)"/>
+
+  <!-- subtle frame: 1px inner border -->
+  <rect x="14" y="14" width="1172" height="332" fill="none" stroke="#1F2933" stroke-width="1"/>
+
+  <!-- pixel-art lightning bolt (Z-shape, 12px pixel size) -->
+  <!-- coordinate system: 10 cols × 12 rows, each pixel 12×12 -->
+  <g transform="translate(120, 70)" fill="url(#bolt)" filter="url(#boltGlow)">
+    <!-- row 0: cols 4-7 -->
+    <rect x="48"  y="0"   width="48" height="12"/>
+    <!-- row 1: cols 3-6 -->
+    <rect x="36"  y="12"  width="48" height="12"/>
+    <!-- row 2: cols 2-5 -->
+    <rect x="24"  y="24"  width="48" height="12"/>
+    <!-- row 3: cols 1-4 -->
+    <rect x="12"  y="36"  width="48" height="12"/>
+    <!-- row 4: cols 0-3 -->
+    <rect x="0"   y="48"  width="48" height="12"/>
+    <!-- row 5: cols 0-9 (the cross/bridge) -->
+    <rect x="0"   y="60"  width="120" height="12"/>
+    <!-- row 6: cols 4-8 -->
+    <rect x="48"  y="72"  width="60" height="12"/>
+    <!-- row 7: cols 3-7 -->
+    <rect x="36"  y="84"  width="60" height="12"/>
+    <!-- row 8: cols 2-6 -->
+    <rect x="24"  y="96"  width="60" height="12"/>
+    <!-- row 9: cols 1-4 -->
+    <rect x="12"  y="108" width="48" height="12"/>
+    <!-- row 10: cols 1-3 -->
+    <rect x="12"  y="120" width="36" height="12"/>
+    <!-- row 11: cols 1-2 -->
+    <rect x="12"  y="132" width="24" height="12"/>
+  </g>
+
+  <!-- Wordmark -->
+  <g font-family="ui-monospace, 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace" font-weight="800">
+    <!-- top line: opencode -->
+    <text x="320" y="158" fill="#E8E6E3" font-size="76" letter-spacing="-2">opencode</text>
+    <!-- bottom line: POWER PACK -->
+    <text x="320" y="240" fill="url(#boltText)" font-size="76" letter-spacing="6">POWER PACK</text>
+    <!-- tagline -->
+    <text x="320" y="282" fill="#7B8794" font-size="16" letter-spacing="4" font-weight="600">
+      ELEVEN  SKILLS  ·  OPENCODE
+    </text>
+  </g>
+
+  <!-- bottom-right voltage stamp -->
+  <g transform="translate(1050, 290)" font-family="ui-monospace, monospace">
+    <rect x="0" y="0" width="124" height="36" fill="none" stroke="#FFE15D" stroke-width="1.25"/>
+    <text x="62" y="24" font-size="14" font-weight="800" fill="#FFE15D" text-anchor="middle" letter-spacing="3">v0.1.0</text>
+  </g>
+
+  <!-- top-left registry mark -->
+  <g transform="translate(40, 40)" font-family="ui-monospace, monospace">
+    <text x="0" y="14" font-size="11" font-weight="700" fill="#3D4A57" letter-spacing="3">[ MIT · 2026 · WAYBARRIOS ]</text>
+  </g>
+</svg>
