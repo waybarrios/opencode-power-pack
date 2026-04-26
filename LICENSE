@@ -1,0 +1,42 @@
+MIT License
+
+Copyright (c) 2026 Wayner Barrios
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+This package incorporates skills derived from upstream Anthropic projects:
+
+- `frontend-design` — copied from anthropics/claude-code/plugins/frontend-design
+- `mcp-builder`, `skill-creator` — copied / adapted from anthropics/skills
+- `code-review`, `feature-dev`, `code-explorer`, `code-architect`, `code-reviewer`
+  — translated from anthropics/claude-code/plugins/{code-review,feature-dev}
+- `security-review` — translated from
+  anthropics/claude-code-security-review/.claude/commands/security-review.md
+- `agents-md-improver` — adapted from
+  anthropics/claude-plugins-official/plugins/claude-md-management/skills/claude-md-improver
+  (renamed from `claude-md-improver`; covers both AGENTS.md and CLAUDE.md)
+- `agents-md-revise` — translated from
+  anthropics/claude-plugins-official/plugins/claude-md-management/commands/revise-claude-md.md
+  (renamed from `revise-claude-md`; converted from slash command to skill)
+
+Each derived skill includes attribution in its frontmatter `license` field.
+The original Anthropic projects are MIT-licensed; see their repositories for
+upstream license text.

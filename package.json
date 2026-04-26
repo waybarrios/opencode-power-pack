@@ -1,0 +1,24 @@
+{
+  "name": "opencode-power-pack",
+  "version": "0.1.0",
+  "description": "Curated bundle of Claude Code skills ported to OpenCode: code-review, feature-dev, security-review, frontend-design, mcp-builder, skill-creator, and the feature-dev sub-agents.",
+  "type": "module",
+  "main": ".opencode/plugins/opencode-power-pack.js",
+  "license": "MIT",
+  "author": "Wayner Barrios",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/waybarrios/opencode-power-pack.git"
+  },
+  "keywords": [
+    "opencode",
+    "claude-code",
+    "skills",
+    "code-review",
+    "security-review",
+    "feature-dev",
+    "frontend-design",
+    "mcp-builder",
+    "plugin"
+  ]
+}
