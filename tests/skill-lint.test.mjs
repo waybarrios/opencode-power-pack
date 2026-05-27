@@ -56,4 +56,19 @@ for (const name of names) {
     const cmd = parse(readFileSync(cmdPath, "utf8"));
     assert.match((cmd.fm.description ?? "").trim(), SENTENCE_END, "command description not truncated");
   });
+
+  test(`${name}: no duplicated block`, () => {
+    const check = (label, text) => {
+      const seen = new Set();
+      for (const raw of text.split(/\r?\n/)) {
+        const line = raw.replace(/\s+$/, "");
+        if (line.trim().length >= 50) {
+          assert.ok(!seen.has(line), `${label} repeats a line verbatim: "${line.slice(0, 60)}..."`);
+          seen.add(line);
+        }
+      }
+    };
+    check("SKILL.md", readFileSync(join(skillsDir, name, "SKILL.md"), "utf8"));
+    check("command", readFileSync(cmdPath, "utf8"));
+  });
 }

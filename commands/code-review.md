@@ -57,11 +57,6 @@ Each reviewer must receive the PR title, description, and the relevant project r
 - Clear, unambiguous convention violations (must quote the exact rule)
 - Concrete edge cases that are reachable in production with a specific trigger
 
-**Critical: only HIGH-SIGNAL issues should be flagged.** Do flag:
-- Code that will fail to compile or parse (syntax, type errors, missing imports)
-- Code that will definitely produce wrong results regardless of inputs
-- Clear, unambiguous convention violations (must quote the exact rule)
-
 Do NOT flag:
 - Style or quality concerns that aren't in the project rules
 - Potential issues that depend on specific runtime state or inputs
