@@ -1,5 +1,5 @@
 ---
-description: Design a feature architecture by analyzing existing codebase patterns and conventions, then provide a comprehensive implementation blueprint with specific files to create or modify, component designs,
+description: Design a feature architecture by analyzing existing codebase patterns and conventions, then provide a comprehensive implementation blueprint with specific files to create or modify, component designs, data flows, and a build sequence. Use this skill when the user asks for an architecture design, an implementation plan for a non-trivial feature, or when dispatched as a sub-task during feature-dev architecture phase.
 ---
 
 # Code Architect
