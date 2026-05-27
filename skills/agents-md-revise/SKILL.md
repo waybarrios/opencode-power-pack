@@ -8,7 +8,7 @@ license: MIT (translated from anthropics/claude-plugins-official/plugins/claude-
 
 Review the current session for learnings about working in this codebase, then update the project-rules file with context that would help future sessions be more effective.
 
-OpenCode reads project rules from `AGENTS.md` (native) or `CLAUDE.md` (Claude Code compatibility). When this skill creates a new file, prefer `AGENTS.md`. When updating an existing file, edit whichever the project already uses.
+OpenCode resolves project rules first-match-wins per directory: if a directory holds both `AGENTS.md` and `CLAUDE.md`, only `AGENTS.md` is loaded and the `CLAUDE.md` is never read. When capturing learnings, prefer `AGENTS.md` for a new file; if both already exist in the same directory, write to `AGENTS.md` — never into the shadowed `CLAUDE.md`, or the notes land in a file OpenCode ignores. If only `CLAUDE.md` exists, update it in place (and consider migrating it to `AGENTS.md`).
 
 ## Step 1 — Reflect
 
@@ -39,6 +39,8 @@ Decide where each addition belongs:
 
 - **`AGENTS.md` / `CLAUDE.md`** — team-shared, committed to git. Use for project-wide conventions, build commands, architectural notes.
 - **`.agents.local.md` / `.claude.local.md`** — personal / local only, gitignored. Use for personal preferences that should not affect teammates.
+
+If both `AGENTS.md` and `CLAUDE.md` exist in the same directory, target `AGENTS.md` — OpenCode ignores the co-located `CLAUDE.md`, so anything written there is lost.
 
 If no rules file exists yet, propose creating `AGENTS.md` at the project root.
 
