@@ -1,5 +1,5 @@
 ---
-description: Capture learnings from the current session into the project-rules file (AGENTS.md, CLAUDE.md, or local override) so future sessions benefit. Use when the user says "revise the rules", "update AGENTS.m
+description: Capture learnings from the current session into the project-rules file (AGENTS.md, CLAUDE.md, or local override) so future sessions benefit. Use when the user says "revise the rules", "update AGENTS.md / CLAUDE.md with what we just learned", "save this to project memory", "remember this for next time", or at the end of a productive session when valuable context has emerged that is not yet documented. This is the COMPLEMENT to agents-md-improver: improver audits, this one captures.
 ---
 
 # AGENTS.md / CLAUDE.md Revise

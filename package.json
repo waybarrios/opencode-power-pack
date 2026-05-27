@@ -4,6 +4,9 @@
   "description": "Curated bundle of Claude Code skills ported to OpenCode: code-review, feature-dev, security-review, frontend-design, mcp-builder, skill-creator, and the feature-dev sub-agents.",
   "type": "module",
   "main": ".opencode/plugins/opencode-power-pack.js",
+  "scripts": {
+    "test": "node --test"
+  },
   "license": "MIT",
   "author": "Wayner Barrios",
   "repository": {

@@ -1,5 +1,5 @@
 ---
-description: Deeply analyze an existing codebase feature by tracing execution paths, mapping architecture layers, understanding patterns and abstractions, and documenting dependencies. Use this skill when you need
+description: Deeply analyze an existing codebase feature by tracing execution paths, mapping architecture layers, understanding patterns and abstractions, and documenting dependencies. Use this skill when you need to understand how a feature works before modifying or extending it, when dispatched as a sub-task during feature-dev exploration, or when the user asks "how does X work in this codebase".
 ---
 
 # Code Explorer

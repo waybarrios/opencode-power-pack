@@ -1,5 +1,5 @@
 ---
-description: Create new skills (SKILL.md files), modify and improve existing skills, and design skill descriptions for accurate triggering. Use when the user wants to create a new skill from scratch, edit an exist
+description: Create new skills (SKILL.md files), modify and improve existing skills, and design skill descriptions for accurate triggering. Use when the user wants to create a new skill from scratch, edit an existing skill, optimize a skill's description, or convert a workflow they just demonstrated into a reusable skill.
 ---
 
 # Skill Creator
