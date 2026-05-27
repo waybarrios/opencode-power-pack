@@ -1,6 +1,6 @@
 ---
 name: agents-md-improver
-description: Audit and improve project-rules files (AGENTS.md, CLAUDE.md, .agents/instructions, etc.) in repositories. Use when the user asks to check, audit, update, improve, or fix their AGENTS.md or CLAUDE.md, when they mention "project rules maintenance" or "agent context optimization", or after the codebase has changed significantly and the rules file may be stale. Scans for all relevant files, evaluates quality against templates, outputs a quality report, and then makes targeted updates with user approval.
+description: Audit and improve project-rules files (AGENTS.md, CLAUDE.md, .agents/instructions, local overrides) so the agent keeps accurate project context. Use when the user asks to check, audit, review, update, improve, or fix their AGENTS.md or CLAUDE.md, mentions "project rules maintenance" or "agent context optimization", or when the codebase has changed enough that the rules file may be stale. Scans the repository for every rules file, grades each against a quality rubric, outputs a quality report, and applies targeted edits only after user approval.
 license: MIT (adapted from anthropics/claude-plugins-official/plugins/claude-md-management/skills/claude-md-improver)
 ---
 
@@ -8,7 +8,7 @@ license: MIT (adapted from anthropics/claude-plugins-official/plugins/claude-md-
 
 Audit, evaluate, and improve project-rules files across a codebase to ensure the agent has optimal project context.
 
-OpenCode reads project rules from several files in a priority order: **`AGENTS.md`** (native), then **`CLAUDE.md`** (Claude Code compatibility), then `.agents/instructions.md`. This skill works on whichever your project uses, but treats `AGENTS.md` as the canonical name when creating new files.
+OpenCode resolves project rules **first-match-wins per directory**: when a directory holds both `AGENTS.md` and `CLAUDE.md`, only `AGENTS.md` is loaded and the `CLAUDE.md` is never read. Resolution walks from the working directory up to the git root, takes the first match at each level, and merges those with the global `~/.config/opencode/AGENTS.md` and any paths declared in the `instructions` field of `opencode.json`. Treat `AGENTS.md` as canonical when creating new files, and report any directory that contains both files as a finding, since its `CLAUDE.md` is silently ignored.
 
 **This skill can write to project-rules files.** After presenting a quality report and getting user approval, it updates the files with targeted improvements.
 
@@ -149,6 +149,7 @@ After user approval, apply changes using the editor tool. Preserve the existing 
 4. **Missing environment setup** — required env vars or config.
 5. **Broken test commands** — test scripts that have changed.
 6. **Undocumented gotchas** — non-obvious patterns not captured.
+7. **Shadowed `CLAUDE.md`** — a directory that contains both `AGENTS.md` and `CLAUDE.md`. OpenCode loads only `AGENTS.md`, so the `CLAUDE.md` is silently ignored; merge its contents into `AGENTS.md` or remove it.
 
 ## What makes a great rules file
 
@@ -176,4 +177,4 @@ After user approval, apply changes using the editor tool. Preserve the existing 
 - **Actionable commands** — all documented commands should be copy-paste ready.
 - **Use a `.local` override** — for personal preferences not shared with the team (add to `.gitignore`).
 - **Global defaults** — put user-wide preferences in `~/.config/opencode/AGENTS.md` (or `~/.claude/CLAUDE.md`).
-- **Prefer `AGENTS.md`** — when creating a new rules file, use `AGENTS.md`. OpenCode reads it natively and Claude Code reads it via fallback. If a `CLAUDE.md` already exists, leave it; OpenCode reads it via the compatibility layer.
+- **Prefer `AGENTS.md`.** Use `AGENTS.md` for new rules files: OpenCode reads it natively and Claude Code reads it as a fallback. Do not add an `AGENTS.md` alongside an existing `CLAUDE.md` — under first-match-wins, OpenCode would load only the `AGENTS.md` and ignore the `CLAUDE.md` entirely. Either keep maintaining the `CLAUDE.md` in place, or migrate its contents into `AGENTS.md` and remove it.
