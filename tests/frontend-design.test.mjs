@@ -36,3 +36,9 @@ test("frontend-design: command inlines the rubric (stays in sync)", () => {
   assert.ok(command.includes("prefers-reduced-motion"));
   assert.ok(command.includes("html-validate"));
 });
+
+test("frontend-design: enforces variety / anti-convergence across generations", () => {
+  assert.match(skill, /Vary across generations/i);
+  assert.match(skill, /diverge/i);
+  assert.ok(command.includes("Vary across generations"), "command must inline the variety rule too");
+});

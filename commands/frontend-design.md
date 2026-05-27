@@ -51,6 +51,7 @@ Left to its own devices a model drifts to the statistical center — white backg
 - **Color**: a dominant color with one sharp accent beats a timid, evenly spread palette. Anchor it to a concrete reference — an IDE theme, a cultural or era aesthetic — not generic brand-blue, and give color semantic meaning where it helps.
 - **Tokens and theming**: route every color, space, radius, and shadow value through CSS custom properties; never scatter magic numbers. Implement dark mode by redefining those variables under `.dark`, not by restyling. If the user already has a brand or design system, inject its tokens and skip your defaults entirely.
 - **Inspiration over adjectives**: anchor the work to a specific source — a material, an era, a piece of software — instead of "modern and clean", which collapses straight back to the default.
+- **Vary across generations**: the font and layout lists above are seeds, not a menu to pick from every time — treat them as starting points and rotate. Do not reach for the same direction, type pairing, or palette twice; if a brief resembles one handled before, deliberately diverge. Two interfaces for different products should not be recognizably the same template. Sameness across outputs is itself a failure, even when each one looks fine on its own.
 
 ## Self-critique before returning
 
@@ -71,6 +72,7 @@ Craft:
 - Spacing follows one consistent scale (4/8px steps or tokens), not ad-hoc values.
 - A `@media (prefers-reduced-motion: reduce)` block softens or removes non-essential motion, and nothing flashes more than three times per second.
 - No generic-default tells survive: not Inter/Roboto/Arial, not a purple-on-white gradient, not a lone centered card when the brief deserves more.
+- The result does not read as a default template, nor like a previous generation. If it resembles a common pattern or something already produced, diverge — change the layout archetype, type pairing, or palette — and regenerate.
 
 ## Optional validation
 
