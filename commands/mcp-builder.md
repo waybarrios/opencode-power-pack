@@ -6,6 +6,15 @@ description: Guide the creation of high-quality MCP (Model Context Protocol) ser
 
 Create MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. The quality of an MCP server is measured by how well it enables LLMs to accomplish real-world tasks.
 
+## Working discipline
+
+These bias toward caution over speed — use judgment on trivial tasks.
+
+- **Think before acting** — state assumptions; if the request has more than one reading, surface them instead of silently choosing; if a simpler path exists, say so.
+- **Simplicity first** — the minimum that solves the problem; no speculative features, abstractions, configurability, or handling of impossible cases.
+- **Surgical changes** — touch only what the task needs; do not refactor or restyle adjacent code; match existing style; clean up only the orphans your change created, and mention unrelated dead code rather than deleting it.
+- **Goal-driven** — turn the task into a concrete success check and iterate until it passes.
+
 ## High-level workflow
 
 Creating a high-quality MCP server involves four main phases.
