@@ -152,7 +152,7 @@ If you already use other plugins (e.g. `superpowers`), keep all of them in the a
 To pin a specific tag (recommended once releases exist):
 
 ```jsonc
-"opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git#v0.1.0"
+"opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git#v0.2.0"
 ```
 
 You still need a local copy of the repo for **step 2** (the slash command files live there). Clone it next to wherever you keep code:
@@ -267,7 +267,7 @@ pkill -f opencode
 opencode
 ```
 
-If you pinned a version in `opencode.json` (e.g. `#v0.1.0`), bump the tag in the JSON before restarting, otherwise OpenCode keeps using the pinned commit.
+If you pinned a version in `opencode.json` (e.g. `#v0.2.0`), bump the tag in the JSON before restarting, otherwise OpenCode keeps using the pinned commit.
 
 ---
 

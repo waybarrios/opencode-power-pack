@@ -1,6 +1,6 @@
 {
   "name": "opencode-power-pack",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Curated bundle of Claude Code skills ported to OpenCode: code-review, feature-dev, security-review, frontend-design, mcp-builder, skill-creator, and the feature-dev sub-agents.",
   "type": "module",
   "main": ".opencode/plugins/opencode-power-pack.js",
