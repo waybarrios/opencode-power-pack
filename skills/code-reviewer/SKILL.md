@@ -56,6 +56,7 @@ Evaluate significant issues:
 - Missing critical error handling
 - Accessibility problems
 - Inadequate test coverage
+- Scope creep — speculative abstractions, configurability, or features that do not trace to the change's goal
 
 ## Multi-pass analysis
 

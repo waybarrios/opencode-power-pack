@@ -56,6 +56,7 @@ Each reviewer must receive the PR title, description, and the relevant project r
 - Code that will definitely produce wrong results regardless of inputs
 - Clear, unambiguous convention violations (must quote the exact rule)
 - Concrete edge cases that are reachable in production with a specific trigger
+- Scope creep — code that adds abstractions, configurability, or features that do not trace to the change's stated goal
 
 Do NOT flag:
 - Style or quality concerns that aren't in the project rules
