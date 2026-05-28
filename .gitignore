@@ -1,9 +1,37 @@
-# Personal / private context files
+# Personal / private context files (AI agent context)
+# Claude Code
 CLAUDE.md
+CLAUDE.local.md
 .claude/
 .claude.local.md
+
+# OpenCode / Codex / agentes genéricos
+AGENTS.md
+AGENTS.local.md
 .agents.local.md
 AGENTS.md.local
+.codex/
+codex.md
+CODEX.md
+
+# Cursor
+.cursorrules
+.cursor/
+.cursorignore
+
+# Windsurf
+.windsurfrules
+.windsurf/
+
+# GitHub Copilot
+.github/copilot-instructions.md
+
+# Gemini / otros
+GEMINI.md
+.gemini/
+.aider*
+.continue/
+.aiderignore
 
 # Personal memory / notes
 memory/
