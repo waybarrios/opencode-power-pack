@@ -26,6 +26,12 @@ test("plugin registers the feature workflow roles as read-only subagents", async
     assert.doesNotMatch(agent.prompt, /^---/);
   }
 
+  assert.match(
+    config.agent["code-reviewer"].prompt,
+    /Dispatched handoff/i,
+    "registered reviewer inherits the handoff contract",
+  );
+
   assert.deepEqual(config.agent["code-reviewer"].permission.bash, {
     "*": "deny",
     "git status*": "allow",
