@@ -42,6 +42,12 @@ test("feature-dev captures the complete before-state before implementation", () 
   assert.match(feature, /implementation delta/i);
 });
 
+test("feature-dev never converts missing coverage into a clean result", () => {
+  assert.match(feature, /uncovered scope.*remain.*non-valid.*recovered.*parent fallback/is);
+  assert.match(feature, /unresolved coverage.*final summary/is);
+  assert.doesNotMatch(feature, /mark all todos complete/i);
+});
+
 test("explorer and architect implement the feature-dev handoff", () => {
   for (const [name, skill] of [["code-explorer", explorer], ["code-architect", architect]]) {
     assert.match(skill, /Feature-dev handoff contract/i, name);

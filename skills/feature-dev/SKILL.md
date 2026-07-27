@@ -47,6 +47,8 @@ Require each child response to start with `Status: complete | partial | blocked`
 
 Maintain a coverage ledger containing assignment, focus, status (`pending | valid | blocked | failed | local-fallback`), dispatch count, resume count, retry count, evidence received, uncovered items, and fallback action.
 
+Any uncovered scope must remain non-valid until recovered or completed through parent fallback. Never convert missing coverage into a valid result; carry any unresolved coverage into the final summary.
+
 Use this recovery order:
 
 1. Dispatch independent assignments in parallel.
@@ -145,9 +147,10 @@ Goal: Ensure the code is simple, DRY, elegant, readable, and correct.
 
 Goal: Document what was accomplished.
 
-1. Mark all todos complete.
+1. Mark only completed todos complete; leave todos tied to unresolved coverage incomplete.
 2. Summarize:
    - What was built
    - Key decisions made
    - Files modified
+   - Unresolved coverage and its impact
    - Suggested next steps
