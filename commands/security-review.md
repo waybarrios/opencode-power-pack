@@ -1,5 +1,6 @@
 ---
 description: Perform a focused security review of pending git changes to identify high-confidence security vulnerabilities with real exploitation potential. Use this skill when the user asks for a security review, security audit, vulnerability scan, or wants to check pending changes on a branch for security issues before merging. This is NOT a general code review.
+license: MIT (modified; see UPSTREAMS.json)
 ---
 
 # Security Review

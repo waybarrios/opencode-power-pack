@@ -8,12 +8,15 @@
     "skills",
     "commands",
     ".opencode",
-    "assets"
+    "assets",
+    "UPSTREAMS.json",
+    "THIRD_PARTY_NOTICES.md",
+    "LICENSES"
   ],
   "scripts": {
     "test": "node --test"
   },
-  "license": "MIT",
+  "license": "MIT AND Apache-2.0",
   "author": "Wayner Barrios",
   "repository": {
     "type": "git",

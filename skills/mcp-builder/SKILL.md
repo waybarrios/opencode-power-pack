@@ -1,7 +1,7 @@
 ---
 name: mcp-builder
 description: Guide the creation of high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when the user wants to build an MCP server to integrate an external API or service, whether in Python (FastMCP) or Node/TypeScript (MCP SDK).
-license: MIT (copied from anthropics/skills/skills/mcp-builder)
+license: Apache-2.0 (modified; see UPSTREAMS.json)
 ---
 
 ## Overview
@@ -147,4 +147,4 @@ Create an XML file with this structure:
 
 ## Notes
 
-This is a port of the upstream `mcp-builder` skill from `anthropics/skills`. The original ships bundled reference files (`reference/mcp_best_practices.md`, `reference/node_mcp_server.md`, `reference/python_mcp_server.md`, `reference/evaluation.md`) which are not included in this port. When you need deeper detail, fetch them directly from <https://github.com/anthropics/skills/tree/main/skills/mcp-builder/reference>.
+This is a modified port of the upstream `mcp-builder` skill from `anthropics/skills`. The original ships bundled reference files (`reference/mcp_best_practices.md`, `reference/node_mcp_server.md`, `reference/python_mcp_server.md`, `reference/evaluation.md`) which are not included in this port. The reviewed upstream snapshot is pinned in `UPSTREAMS.json`.

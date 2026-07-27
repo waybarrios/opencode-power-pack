@@ -1,7 +1,7 @@
 ---
 name: frontend-design
 description: Create distinctive, production-grade frontend interfaces with high design quality and accessible markup. Use this skill when the user asks to build or beautify web components, pages, applications, landing pages, dashboards, artifacts, or React/HTML/CSS UI. Generates creative, polished code that avoids generic AI aesthetics, then self-checks it against an objective accessibility and quality rubric.
-license: MIT (adapted from anthropics/claude-code/plugins/frontend-design)
+license: Apache-2.0 (modified; see UPSTREAMS.json)
 ---
 
 This skill guides creation of distinctive, production-grade frontend interfaces that avoid generic "AI slop" aesthetics. Implement real working code with exceptional attention to aesthetic details and creative choices, then audit it against the self-critique rubric before returning.
