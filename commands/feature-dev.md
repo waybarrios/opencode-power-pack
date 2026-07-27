@@ -1,5 +1,6 @@
 ---
 description: Guide a feature implementation through a structured seven-phase workflow with deep codebase understanding, clarifying questions, parallel architecture design, and quality review. Use this skill when the user asks to build a new feature, add functionality, or wants a methodical approach to implementation rather than diving straight to code.
+license: Apache-2.0 (modified; see UPSTREAMS.json)
 ---
 
 # Feature Development

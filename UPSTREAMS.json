@@ -1,0 +1,163 @@
+{
+  "version": 1,
+  "components": [
+    {
+      "name": "opencode-plugin-pattern",
+      "license": "MIT",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-07-27",
+      "source": {
+        "repository": "https://github.com/obra/superpowers",
+        "commit": "6efe32c9e2dd002d0c394e861e0529675d1ab32e",
+        "committedAt": "2026-04-24T02:02:37Z",
+        "path": ".opencode/plugins/superpowers.js",
+        "blob": "48a2b72ddc5ac05718d23647a11b6b169a9a6363"
+      }
+    }
+  ],
+  "skills": [
+    {
+      "name": "agents-md-improver",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-07-27",
+      "source": {
+        "repository": "https://github.com/anthropics/claude-plugins-official",
+        "commit": "bdca23e8e46f8832d0030c05804ae207786ae37f",
+        "committedAt": "2026-04-24T19:52:02Z",
+        "path": "plugins/claude-md-management/skills/claude-md-improver/SKILL.md",
+        "blob": "744444e4df385e9b9160e23fba02321062dfba9a"
+      }
+    },
+    {
+      "name": "agents-md-revise",
+      "license": "Apache-2.0",
+      "adaptation": "translated",
+      "reviewedAt": "2026-07-27",
+      "source": {
+        "repository": "https://github.com/anthropics/claude-plugins-official",
+        "commit": "bdca23e8e46f8832d0030c05804ae207786ae37f",
+        "committedAt": "2026-04-24T19:52:02Z",
+        "path": "plugins/claude-md-management/commands/revise-claude-md.md",
+        "blob": "b7f201db19ec485271945e350914e6ac5a8957bd"
+      }
+    },
+    {
+      "name": "code-architect",
+      "license": "Apache-2.0",
+      "adaptation": "ported",
+      "reviewedAt": "2026-07-27",
+      "source": {
+        "repository": "https://github.com/anthropics/claude-plugins-official",
+        "commit": "bdca23e8e46f8832d0030c05804ae207786ae37f",
+        "committedAt": "2026-04-24T19:52:02Z",
+        "path": "plugins/feature-dev/agents/code-architect.md",
+        "blob": "fcb78bfd11004048fa287ac52c55eb5c17855549"
+      }
+    },
+    {
+      "name": "code-explorer",
+      "license": "Apache-2.0",
+      "adaptation": "ported",
+      "reviewedAt": "2026-07-27",
+      "source": {
+        "repository": "https://github.com/anthropics/claude-plugins-official",
+        "commit": "bdca23e8e46f8832d0030c05804ae207786ae37f",
+        "committedAt": "2026-04-24T19:52:02Z",
+        "path": "plugins/feature-dev/agents/code-explorer.md",
+        "blob": "e0f667ef65f7204399110214defd46ce062a1a51"
+      }
+    },
+    {
+      "name": "code-review",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-07-27",
+      "source": {
+        "repository": "https://github.com/anthropics/claude-plugins-official",
+        "commit": "bdca23e8e46f8832d0030c05804ae207786ae37f",
+        "committedAt": "2026-04-24T19:52:02Z",
+        "path": "plugins/code-review/commands/code-review.md",
+        "blob": "c46e327f19b6bb59dbf9060e8c9961e701908350"
+      }
+    },
+    {
+      "name": "code-reviewer",
+      "license": "Apache-2.0",
+      "adaptation": "ported",
+      "reviewedAt": "2026-07-27",
+      "source": {
+        "repository": "https://github.com/anthropics/claude-plugins-official",
+        "commit": "bdca23e8e46f8832d0030c05804ae207786ae37f",
+        "committedAt": "2026-04-24T19:52:02Z",
+        "path": "plugins/feature-dev/agents/code-reviewer.md",
+        "blob": "7fb589cbd7140152fae41720e391290ba202e57e"
+      }
+    },
+    {
+      "name": "feature-dev",
+      "license": "Apache-2.0",
+      "adaptation": "ported",
+      "reviewedAt": "2026-07-27",
+      "source": {
+        "repository": "https://github.com/anthropics/claude-plugins-official",
+        "commit": "bdca23e8e46f8832d0030c05804ae207786ae37f",
+        "committedAt": "2026-04-24T19:52:02Z",
+        "path": "plugins/feature-dev/commands/feature-dev.md",
+        "blob": "8bdeda3430e43afddbee79830db0f6ea9dfbf36a"
+      }
+    },
+    {
+      "name": "frontend-design",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-07-27",
+      "source": {
+        "repository": "https://github.com/anthropics/claude-plugins-official",
+        "commit": "bdca23e8e46f8832d0030c05804ae207786ae37f",
+        "committedAt": "2026-04-24T19:52:02Z",
+        "path": "plugins/frontend-design/skills/frontend-design/SKILL.md",
+        "blob": "600b6db41fac7e2081c7528ec6982960892c819d"
+      }
+    },
+    {
+      "name": "mcp-builder",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-07-27",
+      "source": {
+        "repository": "https://github.com/anthropics/skills",
+        "commit": "5128e1865d670f5d6c9cef000e6dfc4e951fb5b9",
+        "committedAt": "2026-04-23T17:07:18Z",
+        "path": "skills/mcp-builder/SKILL.md",
+        "blob": "8a1a77a47d141967b246adb4da4f91037578ff7d"
+      }
+    },
+    {
+      "name": "security-review",
+      "license": "MIT",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-07-27",
+      "source": {
+        "repository": "https://github.com/anthropics/claude-code-security-review",
+        "commit": "0c6a49f1fa56a1d472575da86a94dbc1edb78eda",
+        "committedAt": "2026-02-11T18:01:23Z",
+        "path": ".claude/commands/security-review.md",
+        "blob": "93651ea8b92194a1f739eaf5115ea493746df300"
+      }
+    },
+    {
+      "name": "skill-creator",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-07-27",
+      "source": {
+        "repository": "https://github.com/anthropics/skills",
+        "commit": "5128e1865d670f5d6c9cef000e6dfc4e951fb5b9",
+        "committedAt": "2026-04-23T17:07:18Z",
+        "path": "skills/skill-creator/SKILL.md",
+        "blob": "65b3a402dbd09b8e83f9d637c6b553875189085c"
+      }
+    }
+  ]
+}
