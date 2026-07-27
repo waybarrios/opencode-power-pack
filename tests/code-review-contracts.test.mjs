@@ -30,6 +30,12 @@ test("code-review validates child output and bounds recovery", () => {
   assert.match(review, /never .*failed.*blank.*partial.*no findings/is);
 });
 
+test("code-review distinguishes parallel denial from individual task denial", () => {
+  assert.match(review, /parallel dispatch is unavailable or denied[^.]*serial/i);
+  assert.match(review, /individual task dispatch is unavailable or denied[^.]*parent/i);
+  assert.match(review, /permission denial[^.]*does not consume[^.]*transient-retry budget/i);
+});
+
 test("code-review gates clean output on complete ledgers", () => {
   assert.match(review, /detection coverage ledger/i);
   assert.match(review, /candidate ledger/i);

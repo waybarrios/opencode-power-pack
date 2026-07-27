@@ -97,9 +97,9 @@ Validate every child envelope against the frozen `SCOPE_ID`, assigned role, expe
 1. Preserve valid partial output and identify only the missing work.
 2. When a successful child response is incomplete or malformed, resume the same child exactly once with the missing fields and scope named.
 3. For transient timeout, rate-limit, or transport dispatch failure, retry the task exactly once as a fresh dispatch.
-4. For permission denial, unavailable tools, invalid requests, or deterministic failures, do not retry.
-5. If parallel dispatch is unavailable, continue unfinished work with serial children.
-6. If task dispatch is unavailable or denied, or bounded recovery is exhausted, complete the missing role checklist in the parent.
+4. For permission denial, unavailable tools, invalid requests, or deterministic failures, do not retry; a permission denial does not consume the transient-retry budget.
+5. If parallel dispatch is unavailable or denied, continue unfinished work with serial children.
+6. If individual task dispatch is unavailable or denied, or bounded recovery is exhausted, complete the missing role checklist in the parent.
 
 Never interpret failed, blank, malformed, or partial output as no findings. Preserve valid sibling results and cover only missing work locally.
 
