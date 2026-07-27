@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/waybarrios/opencode-power-pack/blob/main/LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-brightgreen?style=flat-square"></a>
+  <a href="https://github.com/waybarrios/opencode-power-pack/blob/main/THIRD_PARTY_NOTICES.md"><img alt="License: MIT and Apache-2.0" src="https://img.shields.io/badge/license-MIT%20%2B%20Apache--2.0-brightgreen?style=flat-square"></a>
   <a href="https://github.com/waybarrios/opencode-power-pack/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/waybarrios/opencode-power-pack?style=flat-square&color=FFD60A"></a>
   <a href="https://github.com/waybarrios/opencode-power-pack/commits/main"><img alt="Last commit" src="https://img.shields.io/github/last-commit/waybarrios/opencode-power-pack?style=flat-square"></a>
   <a href="https://github.com/waybarrios/opencode-power-pack/issues"><img alt="Issues" src="https://img.shields.io/github/issues/waybarrios/opencode-power-pack?style=flat-square"></a>
@@ -27,7 +27,7 @@
 </p>
 
 <p align="center">
-  <i>Built on top of <a href="https://github.com/anthropics/claude-code">anthropics/claude-code</a>,
+  <i>Built on top of <a href="https://github.com/anthropics/claude-plugins-official">anthropics/claude-plugins-official</a>,
   <a href="https://github.com/anthropics/skills">anthropics/skills</a>,
   <a href="https://github.com/anthropics/claude-code-security-review">anthropics/claude-code-security-review</a>,
   and <a href="https://github.com/obra/superpowers">obra/superpowers</a>. See <a href="#acknowledgments">Acknowledgments</a>.</i>
@@ -57,34 +57,34 @@ It pairs nicely with **[obra/superpowers](https://github.com/obra/superpowers)**
 
 <tr><td rowspan="2"><b>Review</b></td>
 <td><code>code-review</code></td>
-<td>translated · plugins/code-review</td>
+<td>adapted · claude-plugins-official/code-review</td>
 <td>Multi-agent PR review with confidence-filtered cross-checks and reproduction scenarios</td></tr>
 <tr><td><code>security-review</code></td>
-<td>translated · claude-code-security-review</td>
+<td>adapted · claude-code-security-review</td>
 <td>OWASP-bucketed, three-stage filtering, requires concrete attack PoC per finding</td></tr>
 
 <tr><td rowspan="4"><b>Feature dev</b></td>
 <td><code>feature-dev</code></td>
-<td>translated · plugins/feature-dev</td>
+<td>ported · claude-plugins-official/feature-dev</td>
 <td>Seven-phase guided workflow: discovery → exploration → questions → architecture → impl → review → summary</td></tr>
 <tr><td><code>code-explorer</code></td>
-<td>translated · feature-dev/agents</td>
+<td>ported · claude-plugins-official/feature-dev</td>
 <td>Deep codebase analysis sub-task — traces a feature end-to-end</td></tr>
 <tr><td><code>code-architect</code></td>
-<td>translated · feature-dev/agents</td>
+<td>ported · claude-plugins-official/feature-dev</td>
 <td>Decisive architecture blueprint sub-task with file-level implementation map</td></tr>
 <tr><td><code>code-reviewer</code></td>
-<td>translated · feature-dev/agents</td>
+<td>ported · claude-plugins-official/feature-dev</td>
 <td>Two-pass adversarial review sub-task with explicit edge-case checklist</td></tr>
 
 <tr><td><b>Design</b></td>
 <td><code>frontend-design</code></td>
-<td>copied · plugins/frontend-design</td>
+<td>adapted · claude-plugins-official/frontend-design</td>
 <td>Distinctive, production-grade UI generation that avoids generic AI aesthetics</td></tr>
 
 <tr><td rowspan="2"><b>Authoring</b></td>
 <td><code>mcp-builder</code></td>
-<td>copied · skills/mcp-builder</td>
+<td>adapted · anthropics/skills/mcp-builder</td>
 <td>Build high-quality MCP servers (Python or TypeScript)</td></tr>
 <tr><td><code>skill-creator</code></td>
 <td>adapted · skills/skill-creator</td>
@@ -149,10 +149,10 @@ If you already use other plugins (e.g. `superpowers`), keep all of them in the a
 }
 ```
 
-To pin a specific tag (recommended once releases exist):
+To pin a specific published tag:
 
 ```jsonc
-"opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git#v0.2.0"
+"opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git#<tag>"
 ```
 
 You still need a local copy of the repo for **step 2** (the slash command files live there). Clone it next to wherever you keep code:
@@ -267,7 +267,7 @@ pkill -f opencode
 opencode
 ```
 
-If you pinned a version in `opencode.json` (e.g. `#v0.2.0`), bump the tag in the JSON before restarting, otherwise OpenCode keeps using the pinned commit.
+If you pinned a version in `opencode.json`, bump the tag in the JSON before restarting, otherwise OpenCode keeps using the pinned commit.
 
 ---
 
@@ -386,7 +386,7 @@ The plugin entry-point only registers the skills path. Slash commands are **phys
 |---|---|
 | Porting Claude Code skills where the methodology is portable | Claude Code slash commands ported as Claude-Code-style commands |
 | Translating commands and agents into SKILL.md format | Claude Code hooks |
-| Direct copies of `anthropics/skills` skills with attribution | Claude Code output styles |
+| Licensed adaptations of upstream skills with immutable provenance | Claude Code output styles |
 | OpenCode-native slash commands generated from skills | Anything that breaks if you also use Claude Code |
 
 ---
@@ -411,19 +411,19 @@ Skill format must follow the OpenCode spec:
 
 ## Acknowledgments
 
-**This package is not original work.** Almost everything in `skills/` is either a direct copy or a translation of skills, commands, or agent definitions written by **Anthropic** for Claude Code, plus one direct adaptation of the OpenCode plugin pattern from **Jesse Vincent (obra)**. The credit belongs to them; this repo's contribution is the *porting and packaging* for OpenCode.
+**The bundled skills are modified upstream works.** Most content in `skills/` is adapted from skills, commands, or agent definitions written by **Anthropic**, plus an adaptation of the OpenCode plugin pattern from **Jesse Vincent (obra)**. This repository contributes the OpenCode port, packaging, and additional workflow guidance. Exact sources and Git blobs are recorded in [`UPSTREAMS.json`](UPSTREAMS.json).
 
 ### Upstream sources
 
 | Upstream | Project | What we use from it |
 |---|---|---|
-| Anthropic | [`anthropics/claude-code/plugins/code-review`](https://github.com/anthropics/claude-code/tree/main/plugins/code-review) | The four-reviewer parallel-review methodology that became `code-review` |
-| Anthropic | [`anthropics/claude-code/plugins/feature-dev`](https://github.com/anthropics/claude-code/tree/main/plugins/feature-dev) | The seven-phase workflow and the three sub-agents (`code-explorer`, `code-architect`, `code-reviewer`) |
-| Anthropic | [`anthropics/claude-code/plugins/frontend-design`](https://github.com/anthropics/claude-code/tree/main/plugins/frontend-design) | The `frontend-design` skill (direct copy) |
-| Anthropic | [`anthropics/claude-code-security-review`](https://github.com/anthropics/claude-code-security-review) | The `/security-review` slash command, translated and extended |
-| Anthropic | [`anthropics/skills/skills/mcp-builder`](https://github.com/anthropics/skills/tree/main/skills/mcp-builder) | The `mcp-builder` skill (direct copy, references stripped) |
-| Anthropic | [`anthropics/skills/skills/skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator) | The `skill-creator` skill (adapted, eval-tooling references trimmed) |
-| Anthropic | [`anthropics/claude-plugins-official/.../claude-md-management`](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/claude-md-management) | Renamed to `agents-md-improver` and `agents-md-revise`; covers AGENTS.md too |
+| Anthropic | [`claude-plugins-official/code-review`](https://github.com/anthropics/claude-plugins-official/tree/bdca23e8e46f8832d0030c05804ae207786ae37f/plugins/code-review) | The confidence-filtered parallel-review methodology adapted as `code-review` |
+| Anthropic | [`claude-plugins-official/feature-dev`](https://github.com/anthropics/claude-plugins-official/tree/bdca23e8e46f8832d0030c05804ae207786ae37f/plugins/feature-dev) | The seven-phase workflow and three specialist roles |
+| Anthropic | [`claude-plugins-official/frontend-design`](https://github.com/anthropics/claude-plugins-official/tree/bdca23e8e46f8832d0030c05804ae207786ae37f/plugins/frontend-design) | The base `frontend-design` methodology, substantially extended here |
+| Anthropic | [`claude-code-security-review`](https://github.com/anthropics/claude-code-security-review/tree/0c6a49f1fa56a1d472575da86a94dbc1edb78eda) | The MIT security-review command, translated and extended |
+| Anthropic | [`anthropics/skills/mcp-builder`](https://github.com/anthropics/skills/tree/5128e1865d670f5d6c9cef000e6dfc4e951fb5b9/skills/mcp-builder) | The base `mcp-builder` workflow, adapted without its original resources |
+| Anthropic | [`anthropics/skills/skill-creator`](https://github.com/anthropics/skills/tree/5128e1865d670f5d6c9cef000e6dfc4e951fb5b9/skills/skill-creator) | The `skill-creator` workflow, adapted without its original eval tooling |
+| Anthropic | [`claude-plugins-official/claude-md-management`](https://github.com/anthropics/claude-plugins-official/tree/bdca23e8e46f8832d0030c05804ae207786ae37f/plugins/claude-md-management) | The base project-memory workflows, expanded to cover AGENTS.md |
 | Jesse Vincent (obra) | [`obra/superpowers`](https://github.com/obra/superpowers) | The OpenCode plugin pattern (`config.skills.paths.push(...)`) used in `.opencode/plugins/opencode-power-pack.js` |
 
 ### What this repo actually contributes
@@ -433,10 +433,10 @@ Skill format must follow the OpenCode spec:
 - Deepening the review skills (`code-review`, `code-reviewer`, `security-review`) with extra reviewers, multi-pass adversarial analysis, mandatory category coverage, and concrete-PoC requirements — the originals were already strong; the ports try to compensate for the smaller models people sometimes run under OpenCode by being more directive
 - Bundling everything as a one-line OpenCode plugin, plus generating physical slash command files that inline each skill's full content
 
-Each individual SKILL.md frontmatter includes a `license` field naming its specific upstream. The wrapper code (the plugin JS, the README, the LICENSE) is the only original-work portion of this repo.
+Each `SKILL.md` and generated command marks itself as modified and names its license. See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for attribution and `UPSTREAMS.json` for immutable provenance.
 
 If you are one of the upstream authors and you'd like the attribution worded differently — or removed — open an issue and we'll fix it.
 
 ## License
 
-MIT for the wrapper code and original work in this repo. Each ported skill cites its upstream source in its frontmatter; upstream Anthropic projects are also MIT-licensed. See [LICENSE](LICENSE) for full attribution.
+The wrapper code and original project material are MIT-licensed under [LICENSE](LICENSE). Modified skills and command prompts derived from Anthropic's official plugins and skills are Apache-2.0, except `security-review`, whose upstream is MIT. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md), [UPSTREAMS.json](UPSTREAMS.json), and [LICENSES/](LICENSES/) for exact terms and sources.
