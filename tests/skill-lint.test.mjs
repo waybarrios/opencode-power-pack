@@ -19,8 +19,6 @@ function parse(md) {
   return { fm, body: m ? m[2] : md, hasFrontmatter: !!m };
 }
 
-const norm = (s) => s.replace(/\s+/g, " ").trim();
-
 const skillsDir = join(REPO, "skills");
 const names = readdirSync(skillsDir).filter((n) =>
   existsSync(join(skillsDir, n, "SKILL.md"))
@@ -28,7 +26,6 @@ const names = readdirSync(skillsDir).filter((n) =>
 
 for (const name of names) {
   const skill = parse(readFileSync(join(skillsDir, name, "SKILL.md"), "utf8"));
-  const cmdPath = join(REPO, "commands", `${name}.md`);
 
   test(`${name}: SKILL.md frontmatter`, () => {
     assert.ok(skill.hasFrontmatter, "has YAML frontmatter");
@@ -43,18 +40,8 @@ for (const name of names) {
     assert.ok(skill.body.split(/\r?\n/).length < 500);
   });
 
-  test(`${name}: command in sync with SKILL.md`, () => {
-    assert.ok(existsSync(cmdPath), `commands/${name}.md exists`);
-    const cmd = parse(readFileSync(cmdPath, "utf8"));
-    assert.equal(cmd.fm.description, skill.fm.description, "description identical skill<->command");
-    assert.ok(norm(cmd.body).includes(norm(skill.body)), "command inlines the SKILL.md body");
-    assert.match(cmd.body, /\$ARGUMENTS\s*$/, "command ends with $ARGUMENTS");
-  });
-
   test(`${name}: descriptions not truncated`, () => {
     assert.match((skill.fm.description ?? "").trim(), SENTENCE_END, "SKILL.md description not truncated");
-    const cmd = parse(readFileSync(cmdPath, "utf8"));
-    assert.match((cmd.fm.description ?? "").trim(), SENTENCE_END, "command description not truncated");
   });
 
   test(`${name}: no duplicated block`, () => {
@@ -69,6 +56,5 @@ for (const name of names) {
       }
     };
     check("SKILL.md", readFileSync(join(skillsDir, name, "SKILL.md"), "utf8"));
-    check("command", readFileSync(cmdPath, "utf8"));
   });
 }

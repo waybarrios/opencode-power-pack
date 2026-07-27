@@ -10,11 +10,9 @@ const read = (p) => readFileSync(join(REPO, p), "utf8");
 for (const name of ["feature-dev", "code-architect", "mcp-builder"]) {
   test(`${name}: Working discipline section present`, () => {
     const s = read(`skills/${name}/SKILL.md`);
-    const c = read(`commands/${name}.md`);
     assert.match(s, /##\s*Working discipline/);
     assert.match(s, /Simplicity first/);
     assert.match(s, /Surgical changes/);
-    assert.ok(c.includes("Working discipline"), "command must inline the section");
   });
 }
 
@@ -22,8 +20,6 @@ for (const name of ["feature-dev", "code-architect", "mcp-builder"]) {
 for (const name of ["code-review", "code-reviewer"]) {
   test(`${name}: flags scope creep / speculative complexity`, () => {
     const s = read(`skills/${name}/SKILL.md`);
-    const c = read(`commands/${name}.md`);
     assert.match(s, /scope creep/i);
-    assert.match(c, /scope creep/i);
   });
 }

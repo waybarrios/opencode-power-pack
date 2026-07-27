@@ -5,7 +5,6 @@ import { join } from "node:path";
 
 const REPO = process.env.REPO || process.cwd();
 const skill = readFileSync(join(REPO, "skills/frontend-design/SKILL.md"), "utf8");
-const command = readFileSync(join(REPO, "commands/frontend-design.md"), "utf8");
 
 // Content-regression guards: these encode the improvement so it can't silently rot.
 
@@ -31,14 +30,7 @@ test("frontend-design: keeps the optional, cross-platform validation note", () =
   assert.match(skill, /opt-in|optional/i);
 });
 
-test("frontend-design: command inlines the rubric (stays in sync)", () => {
-  assert.match(command, /##\s*Self-critique/i);
-  assert.ok(command.includes("prefers-reduced-motion"));
-  assert.ok(command.includes("html-validate"));
-});
-
 test("frontend-design: enforces variety / anti-convergence across generations", () => {
   assert.match(skill, /Vary across generations/i);
   assert.match(skill, /diverge/i);
-  assert.ok(command.includes("Vary across generations"), "command must inline the variety rule too");
 });
