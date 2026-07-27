@@ -20,10 +20,9 @@
  * `config` hook) is adapted directly from Jesse Vincent's superpowers
  * plugin: https://github.com/obra/superpowers
  *
- * The skills under skills/ are ports/translations of artifacts originally
- * written by Anthropic for Claude Code. See README.md → Acknowledgments
- * and each SKILL.md's `license` frontmatter for the specific upstream of
- * each skill.
+ * The skills under skills/ are modified upstream works. See UPSTREAMS.json
+ * for immutable source commits and blobs, and THIRD_PARTY_NOTICES.md for
+ * their licenses and attribution.
  * ─────────────────────────────────────────────────────────────────────────
  */
 
