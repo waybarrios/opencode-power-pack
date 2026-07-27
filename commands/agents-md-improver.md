@@ -1,5 +1,6 @@
 ---
 description: Audit and improve project-rules files (AGENTS.md, CLAUDE.md, .agents/instructions, local overrides) so the agent keeps accurate project context. Use when the user asks to check, audit, review, update, improve, or fix their AGENTS.md or CLAUDE.md, mentions "project rules maintenance" or "agent context optimization", or when the codebase has changed enough that the rules file may be stale. Scans the repository for every rules file, grades each against a quality rubric, outputs a quality report, and applies targeted edits only after user approval.
+license: Apache-2.0 (modified; see UPSTREAMS.json)
 ---
 
 # AGENTS.md / CLAUDE.md Improver

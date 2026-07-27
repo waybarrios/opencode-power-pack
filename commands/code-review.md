@@ -1,5 +1,6 @@
 ---
 description: Review a pull request or a set of code changes for bugs, logic errors, and project-convention violations using a confidence-filtered, multi-agent process. Use this skill when the user asks to review a PR, audit pending changes, or inspect a diff for problems before merging.
+license: Apache-2.0 (modified; see UPSTREAMS.json)
 ---
 
 # Code Review

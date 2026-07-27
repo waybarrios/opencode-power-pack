@@ -1,7 +1,7 @@
 ---
 name: skill-creator
 description: Create new skills (SKILL.md files), modify and improve existing skills, and design skill descriptions for accurate triggering. Use when the user wants to create a new skill from scratch, edit an existing skill, optimize a skill's description, or convert a workflow they just demonstrated into a reusable skill.
-license: MIT (adapted from anthropics/skills/skills/skill-creator)
+license: Apache-2.0 (modified; see UPSTREAMS.json)
 ---
 
 # Skill Creator
@@ -153,4 +153,4 @@ The `description` field is the primary mechanism that determines whether the mod
 
 ## Notes
 
-This is an adapted port of `anthropics/skills/skills/skill-creator`. The upstream version ships bundled scripts and an HTML eval viewer (`scripts/aggregate_benchmark.py`, `eval-viewer/generate_review.py`, etc.) that are not included here. For automated benchmarking infrastructure, see <https://github.com/anthropics/skills/tree/main/skills/skill-creator>.
+This is a modified port of `anthropics/skills/skills/skill-creator`. The upstream version ships bundled scripts and an HTML eval viewer (`scripts/aggregate_benchmark.py`, `eval-viewer/generate_review.py`, etc.) that are not included here. The reviewed upstream snapshot is pinned in `UPSTREAMS.json`.
