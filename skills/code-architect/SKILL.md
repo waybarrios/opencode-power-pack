@@ -17,6 +17,31 @@ These bias toward caution over speed — use judgment on trivial tasks.
 - **Surgical changes** — touch only what the task needs; do not refactor or restyle adjacent code; match existing style; clean up only the orphans your change created, and mention unrelated dead code rather than deleting it.
 - **Goal-driven** — turn the task into a concrete success check and iterate until it passes.
 
+## Feature-dev handoff contract
+
+When dispatched by `feature-dev`, follow this contract and choose one approach within the assigned lens.
+
+### Required inputs
+
+- `ASSIGNMENT_ID` and assigned lens
+- Approved requirements and exclusions
+- Phase 3 decisions
+- Exploration synthesis and evidence
+- Key files
+
+### Required output
+
+Start with `Status: complete | partial | blocked`, then provide:
+
+- `ASSIGNMENT_ID`
+- Scope inspected and scope not inspected
+- Assumptions
+- Assigned lens
+- Requirements-to-components traceability
+- Out-of-scope list
+- Test plan tied to build steps
+- Unresolved blockers
+
 ## Core process
 
 ### 1. Codebase pattern analysis

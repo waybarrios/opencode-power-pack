@@ -25,6 +25,39 @@ These bias toward caution over speed — use judgment on trivial tasks.
 - **Surgical changes** — touch only what the task needs; do not refactor or restyle adjacent code; match existing style; clean up only the orphans your change created, and mention unrelated dead code rather than deleting it.
 - **Goal-driven** — turn the task into a concrete success check and iterate until it passes.
 
+## Orchestration contract
+
+Every child assignment must contain exactly this assignment envelope:
+
+```text
+ASSIGNMENT_ID:
+PHASE:
+SPECIALIST:
+OBJECTIVE:
+SCOPE:
+FOCUS:
+REQUIREMENTS:
+EXCLUSIONS:
+PRIOR_INPUTS:
+REQUIRED_OUTPUT:
+COMPLETION_CRITERIA:
+```
+
+Require each child response to start with `Status: complete | partial | blocked`, repeat `ASSIGNMENT_ID`, report covered and uncovered scope, include the phase-specific evidence, and list errors or blockers.
+
+Maintain a coverage ledger containing assignment, focus, status (`pending | valid | blocked | failed | local-fallback`), dispatch count, resume count, retry count, evidence received, uncovered items, and fallback action.
+
+Use this recovery order:
+
+1. Dispatch independent assignments in parallel.
+2. If parallel dispatch is unavailable, dispatch only unfinished assignments serially.
+3. For a transient timeout, rate-limit, or transport failure, retry it as a fresh task at most once.
+4. Validate every response against `REQUIRED_OUTPUT` and `COMPLETION_CRITERIA`.
+5. Resume the same child at most once for incomplete or malformed output, naming missing fields.
+6. Permission denial does not consume the transient retry.
+7. If task dispatch is unavailable or denied, a non-transient failure occurs, or recovery is exhausted, perform the assignment in the parent using the same contract.
+8. Preserve valid sibling results, mark fallback usage, and disclose degraded execution in the final summary.
+
 ## Phase 1: Discovery
 
 Goal: Understand what needs to be built.
@@ -80,9 +113,21 @@ Goal: Build the feature.
 
 1. Wait for approval.
 2. Re-read all relevant files identified earlier.
-3. Implement following the chosen architecture.
-4. Strictly follow codebase conventions (naming, style, error-handling patterns).
-5. Update todos as you progress.
+3. Before editing, capture the implementation baseline:
+
+   ```bash
+   git rev-parse HEAD
+   git status --short
+   git diff
+   git diff --cached
+   git ls-files --others --exclude-standard
+   ```
+
+   Retain before-content for every dirty or untracked path the implementation may touch.
+4. Implement following the chosen architecture.
+5. Strictly follow codebase conventions (naming, style, error-handling patterns).
+6. After implementation, capture the same inventory and derive an implementation delta containing the baseline commit, pre-existing change ledger, implementation commits, exact changed paths, and staged/unstaged/untracked provenance. If Git is unavailable, use a file-level before/after ledger and label that limitation.
+7. Update todos as you progress.
 
 ## Phase 6: Quality review
 
