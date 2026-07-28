@@ -57,7 +57,7 @@ Build the smallest correct TypeScript or Python MCP server in three phases: sele
 #### 2.2 Enforce lifecycle and capability negotiation
 
 - `initialize` must be the first protocol operation. It exchanges protocol version and capabilities; after success, the client sends `notifications/initialized`.
-- Reject unsupported required protocol versions. Invoke optional operations only when negotiated, and do not send optional notifications unless the peer advertised the corresponding capability.
+- When the client proposes an unsupported protocol version, the server responds during `initialize` with a supported version. The client continues only if it supports that counteroffered version; otherwise it disconnects. Genuinely incompatible version negotiation must fail cleanly without entering operation. Invoke optional operations only when negotiated, and do not send optional notifications unless the peer advertised the corresponding capability.
 - Advertise only implemented capabilities. Report `listChanged` accurately and claim resource subscription support only when subscriptions and their lifecycle are implemented.
 
 #### 2.3 Design the exposed surface
@@ -87,10 +87,12 @@ Build the smallest correct TypeScript or Python MCP server in three phases: sele
 
 Test the generated MCP project without external network or LLM calls. Cover:
 
-- Initialization order, version negotiation, incompatible versions, and exact advertised capabilities.
-- Capability-gated operations and notifications, including `listChanged` and resource subscriptions when exposed.
-- Lists, reads and calls, resource templates, prompts, pagination cursors, schemas, and structured-output conformance for every exposed surface.
-- JSON-RPC protocol failures and `isError`: true execution failures, including malformed requests, timeout, cancellation, cleanup, teardown, and shutdown.
+- Test initialization order and version negotiation, including compatible fallback through the server's supported-version counteroffer and genuinely incompatible versions.
+- Test exact advertised capabilities and capability-gated operations and notifications, including `listChanged` and resource subscriptions when exposed.
+- Test lists, reads and calls, resource templates, prompts, pagination cursors, schemas, and structured-output conformance for every exposed surface.
+- Test JSON-RPC protocol failures and `isError`: true execution failures, including malformed requests and timeout behavior.
+- Test cancellation handling and cleanup.
+- Test transport teardown and orderly shutdown.
 - stdio stdout purity and stderr diagnostics.
 - Streamable HTTP `Origin`, authentication, protocol-version, session, and content-type behavior when HTTP is selected.
 - Fixed fixtures plus deterministic IDs and clocks.

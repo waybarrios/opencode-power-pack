@@ -21,9 +21,12 @@ test("mcp-builder defines modern transport and security contracts", () => {
   assert.match(skill, /stdout.*protocol.*stderr.*log/is);
   assert.match(skill, /Streamable HTTP.*remote/is);
   assert.match(skill, /HTTP\+SSE.*compatibility-only|legacy HTTP\+SSE.*compatibility/is);
-  for (const concept of ["Origin", "loopback", "authentication", "session", "protocol-version", "cancellation", "shutdown"]) {
-    assert.match(skill, new RegExp(concept, "i"), concept);
-  }
+  assert.match(skill, /validate `?Origin`?/i);
+  assert.match(skill, /bind local[^.\n]*loopback/i);
+  assert.match(skill, /require[^.\n]*authentication[^.\n]*remote/i);
+  assert.match(skill, /cryptographically secure[^.\n]*non-authorizing session IDs/i);
+  assert.match(skill, /validate protocol-version and session headers/i);
+  assert.doesNotMatch(skill, /(?:do not|don't|never)[^.\n]*(?:validate[^.\n]*Origin|bind[^.\n]*loopback|authentication|session IDs?|headers?)/i);
 });
 
 test("mcp-builder negotiates lifecycle and capabilities", () => {
@@ -31,6 +34,9 @@ test("mcp-builder negotiates lifecycle and capabilities", () => {
   assert.match(skill, /protocol version.*capabilit/is);
   assert.match(skill, /notifications\/initialized/);
   assert.match(skill, /only.*negotiated|advertised.*capabilit/is);
+  assert.match(skill, /client proposes an unsupported protocol version[^.]*server responds[^.]*supported version/i);
+  assert.match(skill, /client continues only if it supports that counteroffered version[^.]*otherwise (?:it )?disconnects/i);
+  assert.match(skill, /genuinely incompatible version negotiation[^.]*fail cleanly/i);
   assert.match(skill, /listChanged/);
   assert.match(skill, /resource subscriptions?/i);
 });
@@ -53,9 +59,15 @@ test("mcp-builder uses both MCP error channels", () => {
 test("mcp-builder requires deterministic protocol tests before evaluations", () => {
   assert.match(skill, /deterministic protocol tests/i);
   assert.match(skill, /in-memory.*transport|paired transport/is);
-  for (const concept of ["initialization", "capability", "pagination", "schema", "timeout", "cancellation", "teardown"]) {
-    assert.match(skill, new RegExp(concept, "i"), concept);
-  }
+  assert.match(skill, /test[^.\n]*initialization[^.\n]*version negotiation/i);
+  assert.match(skill, /test[^.\n]*compatible fallback[^.\n]*counteroffer/i);
+  assert.match(skill, /test[^.\n]*genuinely incompatible versions/i);
+  assert.match(skill, /test[^.\n]*capabilit/i);
+  assert.match(skill, /test[^.\n]*pagination[^.\n]*schemas/i);
+  assert.match(skill, /test[^.\n]*timeout/i);
+  assert.match(skill, /test[^.\n]*cancellation/i);
+  assert.match(skill, /test[^.\n]*(?:teardown[^.\n]*shutdown|shutdown[^.\n]*teardown)/i);
+  assert.doesNotMatch(skill, /(?:do not|don't|never)[^.\n]*(?:test|verify)[^.\n]*(?:timeout|cancellation|teardown|shutdown)/i);
   assert.match(skill, /Inspector.*supplemental|supplemental.*Inspector/is);
   assert.doesNotMatch(skill, /Create 10 evaluation questions|<qa_pair>|XML file/i);
 });
