@@ -49,6 +49,20 @@ test("project-rule matrix describes Claude native files and the portable bridge"
   assert.match(matrix, /settings\.json.*settings\.local\.json.*configuration.*not.*instructions/is);
 });
 
+test("project-rule matrix distinguishes lazy Claude files from recursive and conditional rules", () => {
+  assert.match(
+    matrix,
+    /project instructions[^\n]*CLAUDE\.md[^\n]*\.claude\/CLAUDE\.md[^\n]*directory hierarchy[^\n]*CLAUDE\.md[^\n]*CLAUDE\.local\.md[^\n]*at or above[^\n]*load at launch/i,
+  );
+  assert.match(matrix, /descendant.*CLAUDE\.md.*CLAUDE\.local\.md.*laz(?:y|ily).*files.*beneath/is);
+  assert.match(matrix, /\.claude\/rules\/\*\*\/\*\.md.*recursiv.*regardless.*director.*nest/is);
+  assert.match(matrix, /rules without.*`paths`.*(?:launch|uncondition)/is);
+  assert.match(matrix, /only rules with.*`paths`.*condition.*matching files.*read/is);
+  assert.doesNotMatch(matrix, /nested and path-scoped rules.*load(?:ed)? lazily/is);
+  assert.match(improver, /\.claude\/rules\/\*\*\/\*\.md.*unconditional.*`paths`-conditional.*recursiv/is);
+  assert.doesNotMatch(improver, /path-scoped or nested context/i);
+});
+
 test("rules skills resolve the same packaged matrix relative to their SKILL.md", () => {
   for (const { name, skill, locator } of matrixConsumers) {
     assert.ok(skill.includes(`\`${locator}\``), `${name} declares its relative locator`);

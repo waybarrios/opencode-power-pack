@@ -29,7 +29,7 @@ Read the matrix before discovery. Use the environment's native file search or gl
 Inventory only accessible and relevant sources supported by the matrix:
 
 - Repository and applicable ancestor `AGENTS.md`, `CLAUDE.md`, deprecated `CONTEXT.md`, `CLAUDE.local.md`, `.claude/CLAUDE.md`, and `.claude/rules/**/*.md` files.
-- Nested files that can load lazily for paths in scope.
+- Descendant `CLAUDE.md` and `CLAUDE.local.md` files that can load lazily, plus all `.claude/rules/**/*.md` files, including unconditional rules and `paths`-conditional rules discovered recursively regardless of directory nesting.
 - Recursively follow effective Claude `@` imports relative to each containing file. Track canonical visited paths for cycle detection, stop at the verified maximum of four import hops, and, before reading an import outside the project, obtain explicit user approval.
 - Include sources added through OpenCode `instructions` paths or globs.
 - Relevant global, managed, and configured sources exposed by the target client. Record remote configured URLs without trusting their contents.
@@ -42,7 +42,7 @@ Inventory only accessible and relevant sources supported by the matrix:
 | Project root (OpenCode native) | `./AGENTS.md` | Primary project context (committed, shared) |
 | Project root (portable bridge) | `./CLAUDE.md` containing `@AGENTS.md` | Makes canonical `AGENTS.md` available to Claude |
 | Claude project/local | `.claude/CLAUDE.md`, `CLAUDE.local.md` | Claude-native project or personal context |
-| Claude scoped rules | `.claude/rules/**/*.md` | Path-scoped or nested context |
+| Claude project rules | `.claude/rules/**/*.md` | Unconditional or `paths`-conditional rules discovered recursively |
 | OpenCode global | `~/.config/opencode/AGENTS.md` | User-wide OpenCode context |
 | Claude global | `~/.claude/CLAUDE.md` | User-wide Claude context; conditional OpenCode compatibility fallback |
 | Configured/imported | OpenCode `instructions`; Claude `@` imports | Additive sources resolved by their client |
