@@ -9,6 +9,18 @@ const improver = read("skills/agents-md-improver/SKILL.md");
 const revise = read("skills/agents-md-revise/SKILL.md");
 const matrixPath = "skills/agents-md-improver/references/project-rule-resolution.md";
 const matrix = existsSync(join(REPO, matrixPath)) ? read(matrixPath) : "";
+const matrixConsumers = [
+  {
+    name: "agents-md-improver",
+    skill: improver,
+    locator: "references/project-rule-resolution.md",
+  },
+  {
+    name: "agents-md-revise",
+    skill: revise,
+    locator: "../agents-md-improver/references/project-rule-resolution.md",
+  },
+];
 
 test("project-rule matrix pins the verified clients and evidence", () => {
   assert.ok(matrix.length > 0, "project-rule matrix exists");
@@ -37,15 +49,38 @@ test("project-rule matrix describes Claude native files and the portable bridge"
   assert.match(matrix, /settings\.json.*settings\.local\.json.*configuration.*not.*instructions/is);
 });
 
-test("rules skills use the matrix and stop treating invented local names as native", () => {
-  for (const skill of [improver, revise]) {
-    assert.ok(skill.includes(matrixPath));
+test("rules skills resolve the same packaged matrix relative to their SKILL.md", () => {
+  for (const { name, skill, locator } of matrixConsumers) {
+    assert.ok(skill.includes(`\`${locator}\``), `${name} declares its relative locator`);
+    assert.match(skill, /relative to.*loaded `SKILL\.md` directory.*not.*(?:CWD|working directory)/is);
+    const resolved = join(REPO, "skills", name, locator);
+    assert.ok(existsSync(resolved), `${name} locator resolves`);
+    assert.equal(readFileSync(resolved, "utf8"), matrix, `${name} loads the shared matrix`);
+  }
+});
+
+test("rules skills stop treating invented local names as native", () => {
+  for (const { skill } of matrixConsumers) {
     assert.match(skill, /read.*matrix.*before.*(?:discovery|target)/is);
     assert.match(skill, /\.agents\.local\.md.*unsupported/is);
     assert.match(skill, /\.claude\.local\.md.*unsupported/is);
   }
   assert.doesNotMatch(improver, /first-match-wins per directory/i);
   assert.doesNotMatch(revise, /first-match-wins per directory/i);
+});
+
+test("matrix and rules skills recursively traverse bounded Claude imports", () => {
+  for (const source of [matrix, improver, revise]) {
+    assert.match(source, /recursiv.*Claude.*@.*imports/is);
+    assert.match(source, /relative to.*containing file/is);
+    assert.match(source, /cycle/is);
+    assert.match(source, /maximum.*four import hops/is);
+    assert.match(source, /outside.*project.*explicit user approval/is);
+  }
+  assert.match(
+    matrix,
+    /CLAUDE\.md.*@rules\/team\.md.*rules\/team\.md.*@\.\.\/shared\/testing\.md.*shared\/testing\.md/is,
+  );
 });
 
 test("rules skills prohibit secrets in every prompt-loaded file", () => {

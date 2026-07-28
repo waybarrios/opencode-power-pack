@@ -22,6 +22,7 @@ The Claude documentation URLs are mutable, so these hashes describe the dated ob
 ## Claude Code v2.1.220
 
 - Claude loads applicable `CLAUDE.md`, `.claude/CLAUDE.md`, `CLAUDE.local.md`, and `.claude/rules/**/*.md` sources. Nested and path-scoped rules are loaded lazily when their scope becomes relevant.
+- Recursively follow effective Claude `@` imports, resolving each path relative to its containing file. Track canonical visited paths to detect cycles and stop at the verified maximum of four import hops. Before reading an import outside the project, obtain explicit user approval. For a concrete two-hop chain, project `CLAUDE.md` imports `@rules/team.md`, then `rules/team.md` imports `@../shared/testing.md`, which resolves to `shared/testing.md`.
 - Claude Code does not natively read `AGENTS.md`.
 - `.claude/settings.json` and `.claude/settings.local.json` are configuration files, not replacement instructions files.
 

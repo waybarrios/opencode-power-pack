@@ -8,7 +8,7 @@ license: Apache-2.0 (modified; see UPSTREAMS.json)
 
 Audit, evaluate, and improve project-rules files across a codebase to ensure the agent has optimal project context.
 
-Read `skills/agents-md-improver/references/project-rule-resolution.md` before discovery or resolution analysis. Apply only the behavior for the target client and pinned version; do not collapse OpenCode startup, OpenCode lazy nested, and Claude Code resolution into one rule.
+Read `references/project-rule-resolution.md`, resolved relative to this loaded `SKILL.md` directory and not the consuming project's CWD or working directory, before discovery or resolution analysis. Apply only the behavior for the target client and pinned version; do not collapse OpenCode startup, OpenCode lazy nested, and Claude Code resolution into one rule.
 
 **This skill can write to project-rules files.** After presenting a quality report and getting user approval, it updates the files with targeted improvements.
 
@@ -30,7 +30,8 @@ Inventory only accessible and relevant sources supported by the matrix:
 
 - Repository and applicable ancestor `AGENTS.md`, `CLAUDE.md`, deprecated `CONTEXT.md`, `CLAUDE.local.md`, `.claude/CLAUDE.md`, and `.claude/rules/**/*.md` files.
 - Nested files that can load lazily for paths in scope.
-- Files imported from applicable Claude rules and sources added through OpenCode `instructions` paths or globs.
+- Recursively follow effective Claude `@` imports relative to each containing file. Track canonical visited paths for cycle detection, stop at the verified maximum of four import hops, and, before reading an import outside the project, obtain explicit user approval.
+- Include sources added through OpenCode `instructions` paths or globs.
 - Relevant global, managed, and configured sources exposed by the target client. Record remote configured URLs without trusting their contents.
 - Unsupported lookalikes as findings, not as effective rules. `.agents.local.md` and `.claude.local.md` are unsupported; `CLAUDE.local.md` is Claude-native but not OpenCode-native.
 

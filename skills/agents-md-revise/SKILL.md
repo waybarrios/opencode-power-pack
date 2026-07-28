@@ -8,7 +8,7 @@ license: Apache-2.0 (modified; see UPSTREAMS.json)
 
 Review the current session for learnings about working in this codebase, then update the project-rules file with context that would help future sessions be more effective.
 
-Read `skills/agents-md-improver/references/project-rule-resolution.md` before target selection. Resolve the actual target client and phase instead of assuming that co-located files behave alike across OpenCode and Claude Code.
+Read `../agents-md-improver/references/project-rule-resolution.md`, resolved relative to this loaded `SKILL.md` directory and not the consuming project's CWD or working directory, before target selection. Resolve the actual target client and phase instead of assuming that co-located files behave alike across OpenCode and Claude Code.
 
 ## Untrusted data boundary
 
@@ -45,6 +45,7 @@ Read the matrix before selecting a target. Use native file search or glob when a
 - Startup directory, applicable ancestors, and any nested path scope for the learning.
 - Existing canonical shared file, Claude imports, OpenCode configured sources, and relevant global or managed sources when accessible.
 - Effective files under OpenCode startup family selection, OpenCode lazy nested selection, and Claude native/import/path-scoped behavior.
+- Recursively follow effective Claude `@` imports relative to each containing file. Track canonical visited paths for cycle detection, stop at the verified maximum of four import hops, and, before reading an import outside the project, obtain explicit user approval.
 
 Decide where each addition belongs:
 
