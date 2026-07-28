@@ -24,6 +24,10 @@ test("published package relies on native commands and ships every skill", () => 
   for (const name of skillNames) {
     assert.ok(packaged.has(`skills/${name}/SKILL.md`), `${name} is published`);
   }
+  assert.ok(
+    packaged.has("skills/agents-md-improver/references/project-rule-resolution.md"),
+    "project-rule resolution matrix is published",
+  );
 });
 
 test("plugin loads as an ES module without runtime warnings", () => {
