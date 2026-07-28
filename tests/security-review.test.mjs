@@ -15,6 +15,18 @@ test("security-review resolves explicit, PR, and complete local scopes", () => {
   assert.ok(skill.includes("No reviewable changes found in the resolved scope."));
 });
 
+test("security-review filters path-only requests over the resolved change set", () => {
+  assert.match(skill, /path-only.*resolve.*(?:PR|current.branch|local).*change set.*(?:filter|restrict)/is);
+  assert.match(skill, /(?:filter|restrict).*requested paths.*committed.*(?:branch|PR) changes/is);
+});
+
+test("security-review content-addresses worktree scope and detects mutation", () => {
+  assert.match(skill, /worktree.*(?:exact bytes|content hash|SHA-256|frozen patch)/is);
+  assert.match(skill, /SCOPE_ID.*(?:worktree|snapshot).*(?:hash|digest)/is);
+  assert.match(skill, /recompute.*SCOPE_ID.*(?:worktree|snapshot|hash)/is);
+  assert.match(skill, /(?:re-read|recompute|verify|compare).*worktree.*mismatch.*incomplete/is);
+});
+
 test("security-review requires baseline evidence and validated handoffs", () => {
   assert.match(skill, /implementation baseline/i);
   assert.match(skill, /absent at base/i);

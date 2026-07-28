@@ -16,18 +16,18 @@ Track scope discovery, category analysis, filtering, exploit validation, recover
 
 ### 1. Freeze the scope
 
-Resolve review mode in this order. Explicit requested scope takes precedence over every inferred scope:
+Resolve review mode in this order. An explicit requested scope takes precedence over every inferred scope:
 
-1. Explicit requested paths, commit range, or revision.
+1. An explicit requested commit range or revision.
 2. An explicit PR URL or number.
 3. The open PR for the current branch, when one exists.
 4. Local pending changes.
 
-Do not mix modes or widen the resolved scope.
+Do not mix modes or widen the resolved scope. Requested paths are a filter over the resolved mode, not a separate baseline.
 
 #### Explicit paths, range, or revision
 
-Use the requested paths and revisions exactly. For paths without an explicit revision, use `HEAD` as the base and the complete working tree as the implementation, restricted to those paths. Include staged, unstaged, deleted, renamed, and untracked states.
+Use requested revisions exactly. A path-only request first resolves the appropriate explicit PR, current-branch PR, or local change set, then filters that set to the requested paths. Restrict the resolved set to requested paths while retaining committed branch or PR changes in those paths even when the worktree is clean. Include staged, unstaged, deleted, renamed, and untracked states when the resolved mode includes worktree changes.
 
 #### PR scope
 
@@ -39,15 +39,20 @@ Include committed current-branch changes relative to the resolved upstream merge
 
 #### Scope manifest
 
+Pinned commit OIDs identify committed bytes. When worktree changes are included, capture a frozen patch and the exact bytes for every staged, unstaged, and untracked entry before analysis. Record a SHA-256 content hash for each snapshot, a preimage hash plus deletion marker for deletions, and old and new paths plus content hashes for renames. Analyze only this frozen evidence, never later mutable worktree bytes.
+
 Before analysis, freeze a scope manifest containing:
 
 ```text
 SCOPE_ID:
-MODE: paths | range | revision | pr | local
+MODE: range | revision | pr | local
+PATH_FILTER:
 REPOSITORY_ROOT:
 BASE_SHA:
 HEAD_SHA:
 WORKTREE_INCLUDED: yes | no
+WORKTREE_SNAPSHOT_SHA256:
+WORKTREE_ENTRIES: state | old/new paths | source | content/preimage SHA-256 | deletion marker
 CHANGED_PATHS_AND_STATES:
 PR_NUMBER:
 PR_BASE_REF:
@@ -55,7 +60,11 @@ PR_BASE_SHA:
 PR_HEAD_SHA:
 ```
 
-Create stable `SCOPE_ID` and candidate identities from repository identity and pinned scope data, never from task ordering. If the manifest contains no changes, stop with exactly:
+Create stable `SCOPE_ID` and candidate identities from repository identity, mode, path filter, pinned commit OIDs, ordered changed paths and states, and the worktree snapshot digest and per-entry hashes, never from task ordering.
+
+Before each dispatch, before consuming a result, and before terminal output, re-read and recompute included worktree hashes and compare them with the manifest. Any mismatch makes the affected scope and analysis coverage incomplete; do not update `SCOPE_ID`, analyze replacement bytes, or combine evidence from different revisions. Preserve validated frozen evidence and use the incomplete terminal outcome.
+
+If the filtered manifest contains no changes, stop with exactly:
 
 `No reviewable changes found in the resolved scope.`
 
@@ -117,7 +126,7 @@ Reject a candidate if no concrete reachable attack path can be established. Do n
 
 ### 6. Validate handoffs and recover coverage
 
-Validate every category, filter, and exploit result before consuming it. Reject mismatched `SCOPE_ID`, category, assignment, or `candidate_id`; missing fields; out-of-range scores; nonexistent locations; and absent introduction evidence. Preserve the record as unresolved until the missing analysis is recovered.
+Validate every category, filter, and exploit result before consuming it. Recompute `SCOPE_ID` from the pinned commit OIDs and worktree snapshot hashes; reject mismatched identity, category, assignment, or `candidate_id`, as well as missing fields, out-of-range scores, nonexistent locations, and absent introduction evidence. Preserve the record as unresolved until the missing analysis is recovered.
 
 Apply this bounded recovery contract independently at every stage:
 
