@@ -19,6 +19,13 @@ test("code-review freezes complete PR and local scopes", () => {
   assert.doesNotMatch(review, /or the local `git diff`/);
 });
 
+test("code-review content-addresses working-tree scope and detects mutation", () => {
+  assert.match(review, /staged.*unstaged.*untracked.*(?:exact bytes|content hashes|SHA-256|frozen patch)/is);
+  assert.match(review, /SCOPE_ID.*(?:snapshot|patch).*(?:hash|digest)/is);
+  assert.match(review, /analyze only.*(?:snapshot|frozen evidence)/is);
+  assert.match(review, /(?:mutation|mismatch).*coverage incomplete/is);
+});
+
 test("code-review validates child output and bounds recovery", () => {
   for (const field of ["STATUS:", "SCOPE_ID:", "ROLE:", "COVERAGE:", "CANDIDATES:", "ERRORS:"]) assert.ok(review.includes(field));
   assert.match(review, /validate every child/i);
@@ -42,6 +49,13 @@ test("code-review gates clean output on complete ledgers", () => {
   assert.match(review, /Review incomplete/);
   assert.match(review, /Emit the exact no-issues sentence only when every detection role is complete and every candidate has a final disposition\./);
   assert.ok(review.includes("No issues found. Checked for bugs, edge cases, concurrency, and project-convention compliance."));
+});
+
+test("code-review treats unresolved candidates as non-final and gates every stage", () => {
+  assert.match(review, /`unresolved` is (?:explicitly )?non-final/i);
+  assert.match(review, /clean result requires complete detection, cross-check, and validation coverage/i);
+  assert.match(review, /zero unresolved candidates and zero reported candidates/i);
+  assert.match(review, /validated reportable findings.*findings output.*(?:not|never).*clean/is);
 });
 
 test("code-review reconciles confidence, runtime inputs, and posting", () => {

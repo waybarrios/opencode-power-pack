@@ -20,6 +20,13 @@ test("security-review filters path-only requests over the resolved change set", 
   assert.match(skill, /(?:filter|restrict).*requested paths.*committed.*(?:branch|PR) changes/is);
 });
 
+test("security-review fails closed when local branch provenance is ambiguous", () => {
+  assert.match(skill, /explicit baseline.*(?:takes precedence|when supplied)/is);
+  assert.match(skill, /uniquely resolved upstream merge base/is);
+  assert.match(skill, /(?:no|cannot establish).*unique trustworthy base.*scope discovery.*incomplete/is);
+  assert.match(skill, /never.*(?:silently )?use `?HEAD`?.*baseline.*(?:empty|no reviewable changes)/is);
+});
+
 test("security-review content-addresses worktree scope and detects mutation", () => {
   assert.match(skill, /worktree.*(?:exact bytes|content hash|SHA-256|frozen patch)/is);
   assert.match(skill, /SCOPE_ID.*(?:worktree|snapshot).*(?:hash|digest)/is);

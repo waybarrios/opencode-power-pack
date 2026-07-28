@@ -40,7 +40,9 @@ Set the baseline to `HEAD` and the implementation to the complete working tree. 
 
 Discover repository-root and path-ancestor `AGENTS.md` and `CLAUDE.md` files. Read the applicable rules and map them to each changed path rather than applying unrelated nested rules.
 
-Create a stable `SCOPE_ID` from the repository identity, mode, pinned baseline and implementation, and changed paths. Emit this frozen scope manifest before any dispatch:
+For staged, unstaged, and untracked evidence, capture exact bytes before analysis: snapshot staged index blobs separately from unstaged working-tree bytes, retain a frozen patch, and record SHA-256 content hashes for the patch and every entry. Record a preimage hash and deletion marker for deletions, and old and new paths with their content hashes for renames. Analyze only this frozen snapshot, never later mutable worktree bytes.
+
+Create a stable `SCOPE_ID` from the repository identity, mode, pinned baseline and implementation, changed paths, frozen patch digest, and per-entry snapshot hashes. Emit this frozen scope manifest before any dispatch:
 
 ```text
 SCOPE_ID:
@@ -51,6 +53,10 @@ IMPLEMENTATION:
 DIFF_SOURCE:
 CHANGED_PATHS_AND_STATUSES:
 UNTRACKED_PATHS:
+WORKTREE_INCLUDED: yes | no
+WORKTREE_PATCH_SHA256:
+WORKTREE_SNAPSHOT_SHA256:
+WORKTREE_ENTRIES: state | old/new paths | source | content/preimage SHA-256 | deletion marker
 PR_NUMBER:
 PR_TITLE:
 PR_BODY:
@@ -61,6 +67,8 @@ RULES_BY_PATH:
 ```
 
 Use empty PR fields outside PR mode. Summarize the intent and implementation only from this manifest and its pinned evidence.
+
+Before every dispatch, before consuming a child result, and before output or posting, recompute the included index and working-tree hashes and compare them with the manifest. Any mutation or mismatch makes the affected detection, cross-check, and validation coverage incomplete. Do not update `SCOPE_ID`, analyze replacement bytes, or combine evidence from different snapshots; preserve valid frozen evidence and use the incomplete outcome.
 
 ### 2. Detect candidates
 
@@ -105,7 +113,7 @@ Never interpret failed, blank, malformed, or partial output as no findings. Pres
 
 Maintain a detection coverage ledger keyed by detection role and expected path. Record status (`pending | complete | partial | blocked | local-fallback`), dispatch/resume/retry counts, evidence, missing coverage, and fallback result.
 
-Maintain a candidate ledger keyed by stable candidate ID. Record source role, evidence, cross-check disposition, validation status, final confidence, and final disposition (`reported | rejected | unresolved`). Do not silently discard a candidate because a child failed.
+Maintain a candidate ledger keyed by stable candidate ID. Record source role, evidence, cross-check status, validation status, final confidence, and final disposition (`reported | rejected`). `unresolved` is explicitly non-final and remains the candidate status until cross-check and required validation complete. Do not silently discard a candidate because a child failed.
 
 ### 4. Cross-check and validate candidates
 
@@ -119,7 +127,9 @@ The final reporting threshold is confidence ≥ 80. Reject candidates below the 
 
 For each reported finding provide path and line, Critical or Important severity, confidence, concise problem statement, concrete reproduction, fix direction or regression-test location, and rule or bug category. Findings come first and are grouped by severity.
 
-Emit the exact no-issues sentence only when every detection role is complete and every candidate has a final disposition. Complete detection also requires every expected path to be covered for every applicable role, including parent-owned fallback work:
+The clean result requires complete detection, cross-check, and validation coverage with zero unresolved candidates and zero reported candidates. Detection must cover every expected path for every applicable role, including parent-owned fallback work; every candidate must complete cross-check; and every cross-check survivor must complete validation with a final disposition.
+
+Emit the exact no-issues sentence only when every detection role is complete and every candidate has a final disposition. Validated reportable findings produce findings output, not clean output, even when all coverage is complete:
 
 `No issues found. Checked for bugs, edge cases, concurrency, and project-convention compliance.`
 
@@ -127,7 +137,7 @@ Otherwise emit `Review incomplete` and report completed coverage, missing covera
 
 ### 6. Post to GitHub only when requested
 
-Posting requires PR scope. If `--comment` or equivalent is requested without PR scope, report the missing target and do not post. Never post a clean summary for incomplete coverage.
+Posting requires PR scope. If `--comment` or equivalent is requested without PR scope, report the missing target and do not post. Apply the same detection, cross-check, validation, unresolved, and reported-candidate gate before posting a clean summary; never post one for incomplete coverage or validated findings.
 
 Use a marker tied to repository, PR, pinned head SHA, and either `summary` or a stable finding key:
 

@@ -21,7 +21,7 @@ Resolve review mode in this order. An explicit requested scope takes precedence 
 1. An explicit requested commit range or revision.
 2. An explicit PR URL or number.
 3. The open PR for the current branch, when one exists.
-4. Local pending changes.
+4. Local branch and pending changes.
 
 Do not mix modes or widen the resolved scope. Requested paths are a filter over the resolved mode, not a separate baseline.
 
@@ -35,7 +35,13 @@ Run `gh pr view <PR> --json number,title,body,state,isDraft,baseRefName,baseRefO
 
 #### Local scope
 
-Include committed current-branch changes relative to the resolved upstream merge base and the complete working tree. Use `git diff --find-renames HEAD` for staged and unstaged tracked changes. Use `git ls-files --others --exclude-standard` and read every returned untracked file as an addition. Include committed, staged, unstaged, deleted, renamed, and untracked states without counting the same change twice.
+An explicit baseline takes precedence when supplied: resolve it to one commit OID and use it as `BASE_SHA`. Otherwise resolve exactly one upstream tracking ref and its OID with `git rev-parse --abbrev-ref --symbolic-full-name @{upstream}` and `git rev-parse --verify @{upstream}^{commit}`, then require `git merge-base --all HEAD <upstream-oid>` to return exactly one OID. That OID is the uniquely resolved upstream merge base; do not guess a remote default branch or use a symbolic ref as evidence.
+
+Default local scope requires that committed-branch provenance. If no unique trustworthy base can be established because the branch has no upstream, a ref or object cannot be resolved, or the merge base is absent or ambiguous, mark scope discovery incomplete and use the incomplete terminal outcome before checking for an empty scope. Never silently use `HEAD` as a committed-branch baseline or report the empty `No reviewable changes found in the resolved scope.` outcome after baseline-resolution failure.
+
+Pure pending-change local review is allowed only when the user explicitly requests pending-only scope. Record that mode unambiguously, pin `HEAD` solely as the preimage for those worktree changes, and do not infer pending-only mode from a missing upstream or a clean worktree.
+
+Include committed current-branch changes relative to the resolved base and the complete working tree. Use `git diff --find-renames HEAD` for staged and unstaged tracked changes. Use `git ls-files --others --exclude-standard` and read every returned untracked file as an addition. Include committed, staged, unstaged, deleted, renamed, and untracked states without counting the same change twice.
 
 #### Scope manifest
 
@@ -49,6 +55,7 @@ MODE: range | revision | pr | local
 PATH_FILTER:
 REPOSITORY_ROOT:
 BASE_SHA:
+BASE_SOURCE: explicit | upstream-merge-base | explicit-pending-only
 HEAD_SHA:
 WORKTREE_INCLUDED: yes | no
 WORKTREE_SNAPSHOT_SHA256:
