@@ -7,6 +7,7 @@ const CASE_FIELDS = new Set([
 ]);
 const REQUIRED_FIELDS = new Set(["id", "anyOf"]);
 const FORBIDDEN_FIELDS = new Set(["id", "values"]);
+const MUTATION_FIELDS = new Set(["id", "caseId", "operation", "from", "value", "expectedFailure"]);
 
 export function sha256(value) {
   return createHash("sha256").update(value).digest("hex");
@@ -156,6 +157,72 @@ export function validateManifest(value) {
   }
 
   return deepFreeze({ version: 1, targetSkills, cases });
+}
+
+export function validateMutations(value, manifest) {
+  if (!Array.isArray(value)) throw new TypeError("mutations must be an array");
+
+  const cases = new Map(manifest.cases.map((testCase) => [testCase.id, testCase]));
+  const mutationIds = new Set();
+  const mutations = value.map((mutation, index) => {
+    const label = isObject(mutation) && typeof mutation.id === "string" && mutation.id !== ""
+      ? mutation.id
+      : `mutation[${index}]`;
+    assertObject(mutation, label);
+    for (const field of Object.keys(mutation)) {
+      if (!MUTATION_FIELDS.has(field)) throw new TypeError(`${label}: unknown field ${field}`);
+    }
+    for (const field of ["id", "caseId", "operation", "value", "expectedFailure"]) {
+      if (!Object.hasOwn(mutation, field)) throw new TypeError(`${label}: missing field ${field}`);
+      assertNonEmptyString(mutation[field], `${label}.${field}`);
+    }
+    if (mutationIds.has(mutation.id)) throw new TypeError(`duplicate mutation id ${mutation.id}`);
+    mutationIds.add(mutation.id);
+
+    if (mutation.operation === "append") {
+      if (Object.hasOwn(mutation, "from")) {
+        throw new TypeError(`${label}: append operation forbids from`);
+      }
+    } else if (mutation.operation === "replace") {
+      if (!Object.hasOwn(mutation, "from")) {
+        throw new TypeError(`${label}: replace operation requires from`);
+      }
+      assertNonEmptyString(mutation.from, `${label}.from`);
+    } else {
+      throw new TypeError(`${label}.operation must be append or replace`);
+    }
+
+    const testCase = cases.get(mutation.caseId);
+    if (!testCase) throw new TypeError(`${label}: unknown case ${mutation.caseId}`);
+    const failureIds = new Set([
+      ...testCase.required.map(({ id }) => `required:${id}`),
+      ...testCase.forbidden.map(({ id }) => `forbidden:${id}`),
+    ]);
+    if (testCase.sentinels.length > 0) failureIds.add("forbidden:sentinel");
+    if (testCase.fictitiousSecrets.length > 0) failureIds.add("forbidden:fictitious-secret");
+    if (!failureIds.has(mutation.expectedFailure)) {
+      throw new TypeError(`${label}: unknown expected failure ${mutation.expectedFailure}`);
+    }
+
+    return Object.hasOwn(mutation, "from")
+      ? {
+          id: mutation.id,
+          caseId: mutation.caseId,
+          operation: mutation.operation,
+          from: mutation.from,
+          value: mutation.value,
+          expectedFailure: mutation.expectedFailure,
+        }
+      : {
+          id: mutation.id,
+          caseId: mutation.caseId,
+          operation: mutation.operation,
+          value: mutation.value,
+          expectedFailure: mutation.expectedFailure,
+        };
+  });
+
+  return deepFreeze(mutations);
 }
 
 export function gradeResponse(testCase, response) {
