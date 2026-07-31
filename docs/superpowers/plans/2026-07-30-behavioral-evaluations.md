@@ -965,7 +965,7 @@ Expected: clean `hardening/behavioral-evals` worktree except ignored `.artifacts
 
 Use the `requesting-code-review` skill against `hardening/skill-refresh...HEAD`. Require review of corpus safety, pre-redaction grading, process cleanup, permission denial, stale-hash behavior, package exclusion, and tests. Fix Critical or Important findings with focused failing tests and separate non-amended commits, then repeat Steps 1 through 3.
 
-- [ ] **Step 5: Inspect branch state before push**
+- [x] **Step 5: Inspect branch state before push**
 
 Run: `git status --short --branch`
 
@@ -975,7 +975,7 @@ Run: `git log --oneline --decorate -10`
 
 Expected: only PR 5 design, evaluator, corpus, baseline, tests, and docs are ahead of `hardening/skill-refresh`; no secrets or `.artifacts/` are tracked.
 
-- [ ] **Step 6: Push and create the stacked PR**
+- [x] **Step 6: Push and create the stacked PR**
 
 Run: `git push -u origin hardening/behavioral-evals`
 
@@ -991,7 +991,7 @@ gh pr create \
 
 Generate `.artifacts/behavioral-evals/pr5-body.md` before this command with these sections: stack context identifying this as PR 5 of 5 and based on #17; problem; goals; deterministic replay; opt-in live runner; twelve-case matrix; isolation and redaction; behavior and compatibility; exact verification output; risks; commits; and merge order. The body must not include model responses, fixture credentials, or raw event content.
 
-- [ ] **Step 7: Verify remote PR metadata and checks**
+- [x] **Step 7: Verify remote PR metadata and checks**
 
 Run: `gh pr view --json url,state,baseRefName,headRefName,title`
 
