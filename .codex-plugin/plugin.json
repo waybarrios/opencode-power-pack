@@ -1,7 +1,7 @@
 {
   "name": "opencode-power-pack",
   "version": "0.2.0",
-  "description": "Eleven Claude Code workflows packaged for Codex and OpenCode.",
+  "description": "Eleven Claude Code workflows packaged for Codex, OpenCode, and Pi.",
   "author": {
     "name": "Wayner Barrios",
     "url": "https://github.com/waybarrios"
@@ -14,6 +14,8 @@
     "codex-cli",
     "openai-codex",
     "opencode",
+    "pi",
+    "pi-coding-agent",
     "skills",
     "code-review",
     "security-review",
@@ -22,8 +24,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "OpenCode + Codex Power Pack",
-    "shortDescription": "Eleven workflows for Codex and OpenCode",
-    "longDescription": "Review code, audit security, design and implement features, build MCP servers, and maintain project guidance with reusable workflows for Codex and OpenCode.",
+    "shortDescription": "Eleven workflows for Codex, OpenCode, and Pi",
+    "longDescription": "Review code, audit security, design and implement features, build MCP servers, and maintain project guidance with reusable workflows for Codex, OpenCode, and Pi.",
     "developerName": "Wayner Barrios",
     "category": "Productivity",
     "capabilities": [

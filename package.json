@@ -1,7 +1,7 @@
 {
   "name": "opencode-power-pack",
   "version": "0.2.0",
-  "description": "Eleven Claude Code workflows packaged for Codex and OpenCode: code review, feature development, security review, frontend design, authoring, and project memory.",
+  "description": "Eleven Claude Code workflows packaged for Codex, OpenCode, and Pi: code review, feature development, security review, frontend design, authoring, and project memory.",
   "type": "module",
   "main": ".opencode/plugins/opencode-power-pack.js",
   "engines": {
@@ -23,6 +23,11 @@
     "eval:behavioral:accept": "node scripts/behavioral-evals.mjs accept",
     "smoke:opencode": "node scripts/opencode-smoke.mjs 1.18.7"
   },
+  "pi": {
+    "skills": [
+      "./skills"
+    ]
+  },
   "license": "MIT AND Apache-2.0",
   "author": "Wayner Barrios",
   "repository": {
@@ -35,6 +40,9 @@
     "openai-codex",
     "openai",
     "opencode",
+    "pi",
+    "pi-coding-agent",
+    "pi-package",
     "claude-code",
     "skills",
     "code-review",

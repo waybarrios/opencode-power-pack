@@ -2,10 +2,10 @@
   <img src="assets/logo.svg" alt="opencode-power-pack" width="100%" />
 </p>
 
-<h1 align="center">OpenCode Power Pack for OpenCode + Codex</h1>
+<h1 align="center">OpenCode Power Pack for Codex, OpenCode + Pi</h1>
 
 <p align="center">
-  <i>Eleven Claude Code workflows, adapted for modern OpenCode and Codex.<br/>
+  <i>Eleven Claude Code workflows, adapted for Codex, OpenCode, and Pi.<br/>
   Code review, security audit, feature development, frontend design, project memory, and authoring tools.</i>
 </p>
 
@@ -17,11 +17,13 @@
   <img alt="Skills: 11" src="https://img.shields.io/badge/skills-11-FFD60A?style=flat-square&labelColor=0B0F14">
   <img alt="OpenCode 1.18.7+" src="https://img.shields.io/badge/opencode-1.18.7%2B-0B0F14?style=flat-square&labelColor=FFD60A">
   <img alt="Codex plugin" src="https://img.shields.io/badge/Codex-plugin-0B0F14?style=flat-square&labelColor=FFD60A">
+  <img alt="Pi package" src="https://img.shields.io/badge/Pi-package-0B0F14?style=flat-square&labelColor=FFD60A">
 </p>
 
 <p align="center">
   <a href="#installation"><b>Install</b></a> ·
   <a href="#codex-quick-install"><b>Codex Quick Install</b></a> ·
+  <a href="#pi-quick-install"><b>Pi Quick Install</b></a> ·
   <a href="#whats-inside"><b>Skills</b></a> ·
   <a href="#invocation"><b>Invocation</b></a> ·
   <a href="#how-it-works"><b>Architecture</b></a> ·
@@ -37,11 +39,23 @@ codex plugin add opencode-power-pack@opencode-power-pack
 
 Start a new Codex session, open `/plugins` to confirm the installation, or invoke a workflow explicitly with `$code-review`, `$feature-dev`, `$security-review`, and the other bundled skills.
 
+## Pi Quick Install
+
+```bash
+pi install git:github.com/waybarrios/opencode-power-pack
+```
+
+Pi discovers the eleven skills declared by the package. Use `pi list` to verify the installation. For a project-local installation recorded in `.pi/settings.json`, add `-l`:
+
+```bash
+pi install git:github.com/waybarrios/opencode-power-pack -l
+```
+
 ## Why This Exists
 
-OpenCode and Codex read `SKILL.md` workflows, but many valuable Claude Code workflows originated as Claude-specific commands and agents. Copying those artifacts directly does not preserve their orchestration, permissions, or subagent behavior.
+Codex, OpenCode, and Pi read `SKILL.md` workflows, but many valuable Claude Code workflows originated as Claude-specific commands and agents. Copying those artifacts directly does not preserve their orchestration, permissions, or subagent behavior.
 
-This package adapts the portable methodology into shared skills, registers feature-development specialist roles as read-only OpenCode subagents, and lets Codex execute the same phase assignments with its native subagent workflow. It ships immutable provenance for every upstream work.
+This package adapts the portable methodology into shared skills, registers feature-development specialist roles as read-only OpenCode subagents, lets Codex execute the same phase assignments with its native subagent workflow, and exposes all eleven skills as a Pi package. It ships immutable provenance for every upstream work.
 
 It complements [obra/superpowers](https://github.com/obra/superpowers), which provides process skills such as brainstorming, TDD, debugging, and plan execution.
 
@@ -71,6 +85,7 @@ It complements [obra/superpowers](https://github.com/obra/superpowers), which pr
 - One supported host:
   - OpenCode 1.18.7 or newer: <https://opencode.ai>
   - A current Codex CLI or Codex desktop environment with plugin support: <https://developers.openai.com/codex/>
+  - A current Pi coding agent installation: <https://pi.dev/>
 
 ### Codex CLI And Desktop
 
@@ -107,6 +122,14 @@ opencode plugin --global "opencode-power-pack@git+file:///home/you/code/opencode
 
 Use an absolute `file://` URL adjusted for your operating system. The target directory must be a Git repository.
 
+### Pi From GitHub
+
+```bash
+pi install git:github.com/waybarrios/opencode-power-pack
+```
+
+Pi installs the Git package and loads the `skills/` directory declared in `package.json`. Use `-l` to save it to project settings instead of user settings. See the [Pi package documentation](https://pi.dev/docs/latest/packages) for source, update, filtering, and trust behavior.
+
 ### Verify OpenCode
 
 ```bash
@@ -124,6 +147,14 @@ codex plugin list --marketplace opencode-power-pack
 
 The list should show `opencode-power-pack` as installed. Start a new session and explicitly select `$code-review`, `$feature-dev`, or another bundled skill for a first test.
 
+### Verify Pi
+
+```bash
+pi list
+```
+
+The package list should include the Git source for `waybarrios/opencode-power-pack`. Start a new Pi session after installation so its bundled skills are available.
+
 ## Updating
 
 For Codex:
@@ -134,6 +165,12 @@ codex plugin add opencode-power-pack@opencode-power-pack
 ```
 
 Start a new session after the upgrade.
+
+For Pi:
+
+```bash
+pi update git:github.com/waybarrios/opencode-power-pack
+```
 
 For an OpenCode GitHub installation:
 
@@ -151,6 +188,12 @@ For Codex:
 codex plugin remove opencode-power-pack@opencode-power-pack
 ```
 
+For Pi:
+
+```bash
+pi remove git:github.com/waybarrios/opencode-power-pack
+```
+
 For OpenCode, remove the `opencode-power-pack@...` entry from the `plugin` array in the config where it was installed, then restart OpenCode. There are no command symlinks or copied command files to remove.
 
 ## Troubleshooting
@@ -159,6 +202,7 @@ For OpenCode, remove the `opencode-power-pack@...` entry from the `plugin` array
 |---|---|---|
 | Codex cannot find the marketplace | Marketplace snapshot is missing or stale | Run `codex plugin marketplace add waybarrios/opencode-power-pack --ref main`, or upgrade the existing marketplace |
 | Codex installed the plugin but skills do not appear | The current session predates installation | Start a new Codex session and inspect `/plugins` |
+| Pi does not show the skills | Package is absent, disabled, or the session predates installation | Run `pi list`, inspect `pi config`, and start a new Pi session |
 | Skills or commands do not appear | OpenCode is older than 1.18.7 | Upgrade OpenCode, restart, and run `opencode debug skill` |
 | Skills are missing from debug output | Plugin installation failed or its config entry is absent | Re-run `opencode plugin --global --force <module-spec>` and inspect the reported error |
 | Specialist agents are missing | Stale plugin checkout | Force reinstall, restart, and run `opencode debug agent code-explorer` |
@@ -167,7 +211,7 @@ For OpenCode, remove the `opencode-power-pack@...` entry from the `plugin` array
 
 ## Invocation
 
-Codex exposes installed skills through `$` mentions, while OpenCode 1.18.7+ exposes each discovered skill as a same-named slash command:
+Codex exposes installed skills through `$` mentions, OpenCode 1.18.7+ exposes each discovered skill as a same-named slash command, and Pi loads the workflows from the installed skills package:
 
 ```text
 /code-review
@@ -208,6 +252,9 @@ opencode-power-pack
 +-- .agents/plugins/marketplace.json
 |   +-- exposes the repository as an installable Codex marketplace
 |
++-- package.json
+|   +-- declares skills/ as a Pi package for pi install
+|
 +-- .opencode/plugins/opencode-power-pack.js
 |   +-- registers skills/ in config.skills.paths
 |   +-- registers code-explorer as a read-only subagent
@@ -232,7 +279,7 @@ The packaged agents deny edits, external network access, and nested tasks. `code
 | In scope | Out of scope |
 |---|---|
 | Portable Claude Code workflow methodology | Claude Code hook contracts |
-| Codex and OpenCode skills, invocation, and subagent orchestration | Proprietary or non-redistributable plugins |
+| Codex, OpenCode, and Pi skills, invocation, and subagent orchestration | Proprietary or non-redistributable plugins |
 | Licensed adaptations with immutable provenance | Automatic trust of third-party skill catalogs |
 | Explicit permission boundaries and regression tests | Supporting OpenCode versions older than 1.18.7 or obsolete Codex plugin formats |
 
@@ -265,7 +312,7 @@ Every skill must use a lowercase hyphenated directory/name, provide a trigger-sp
 
 ## Acknowledgments
 
-The bundled skills are modified upstream works. This repository contributes their Codex and OpenCode adaptation, packaging, additional workflow guidance, tests, and compatibility layer.
+The bundled skills are modified upstream works. This repository contributes their Codex, OpenCode, and Pi adaptation, packaging, additional workflow guidance, tests, and compatibility layer.
 
 | Upstream | Pinned source | Used for |
 |---|---|---|
