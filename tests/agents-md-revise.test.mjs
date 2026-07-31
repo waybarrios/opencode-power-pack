@@ -24,12 +24,24 @@ const matrixConsumers = [
 
 test("project-rule matrix pins the verified clients and evidence", () => {
   assert.ok(matrix.length > 0, "project-rule matrix exists");
+  assert.ok(matrix.includes("Codex instruction discovery"));
+  assert.ok(matrix.includes("2026-07-31"));
+  assert.ok(matrix.includes("e29c6504aa583f66092e665158c32ec0612323d0d3bb8c641a38b1fae2ea9aa1"));
   assert.ok(matrix.includes("OpenCode CLI v1.18.7"));
   assert.ok(matrix.includes("02981844b88aed33f06f1527da6c58d137975069"));
   assert.ok(matrix.includes("Claude Code v2.1.220"));
   assert.ok(matrix.includes("2026-07-28T18:00:26Z"));
   assert.ok(matrix.includes("a7dd777240fd3f13fec00d5f9c5d3c4909e834963eceab97f01b7a74635d9ded"));
   assert.ok(matrix.includes("48994b0ac72e18586bca8d9f041119d720bac9fdcb618b7f9b9bac1503e29059"));
+});
+
+test("project-rule matrix describes Codex instruction discovery and precedence", () => {
+  assert.match(matrix, /\$CODEX_HOME.*AGENTS\.override\.md.*AGENTS\.md.*one global file/is);
+  assert.match(matrix, /project root.*working directory.*AGENTS\.override\.md.*AGENTS\.md.*project_doc_fallback_filenames/is);
+  assert.match(matrix, /root to working directory.*closer.*overrides/is);
+  assert.match(matrix, /once per Codex run.*project_doc_max_bytes.*32 KiB/is);
+  assert.match(matrix, /does not continue.*descendant.*below.*working directory/is);
+  assert.match(matrix, /AGENTS\.local\.md.*not Codex-native/is);
 });
 
 test("project-rule matrix distinguishes OpenCode startup and lazy resolution", () => {
@@ -46,6 +58,7 @@ test("project-rule matrix describes Claude native files and the portable bridge"
   }
   assert.match(matrix, /does not.*natively.*AGENTS\.md/is);
   assert.match(matrix, /CLAUDE\.md.*containing.*@AGENTS\.md/is);
+  assert.match(matrix, /Codex and OpenCode consume.*AGENTS\.md.*natively/is);
   assert.match(matrix, /settings\.json.*settings\.local\.json.*configuration.*not.*instructions/is);
 });
 

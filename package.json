@@ -1,7 +1,7 @@
 {
   "name": "opencode-power-pack",
   "version": "0.2.0",
-  "description": "Curated bundle of Claude Code skills ported to OpenCode: code-review, feature-dev, security-review, frontend-design, mcp-builder, skill-creator, and the feature-dev sub-agents.",
+  "description": "Curated bundle of Claude Code workflows adapted for OpenCode and Codex: code review, feature development, security review, frontend design, authoring, and project memory.",
   "type": "module",
   "main": ".opencode/plugins/opencode-power-pack.js",
   "engines": {
@@ -10,6 +10,7 @@
   },
   "files": [
     "skills",
+    ".codex-plugin",
     ".opencode",
     "assets",
     "UPSTREAMS.json",
@@ -29,6 +30,7 @@
     "url": "git+https://github.com/waybarrios/opencode-power-pack.git"
   },
   "keywords": [
+    "codex",
     "opencode",
     "claude-code",
     "skills",

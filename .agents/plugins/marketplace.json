@@ -1,0 +1,21 @@
+{
+  "name": "opencode-power-pack",
+  "interface": {
+    "displayName": "OpenCode Power Pack"
+  },
+  "plugins": [
+    {
+      "name": "opencode-power-pack",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/waybarrios/opencode-power-pack.git",
+        "ref": "main"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

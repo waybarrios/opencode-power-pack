@@ -28,6 +28,7 @@ test("published package relies on native commands and ships every skill", () => 
     packaged.has("skills/agents-md-improver/references/project-rule-resolution.md"),
     "project-rule resolution matrix is published",
   );
+  assert.ok(packaged.has(".codex-plugin/plugin.json"), "Codex plugin manifest is published");
   for (const prefix of ["evals/", "scripts/", "tests/", "docs/superpowers/"]) {
     assert.equal(
       files.some((file) => file.path.startsWith(prefix)),

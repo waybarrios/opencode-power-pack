@@ -1,0 +1,34 @@
+{
+  "name": "opencode-power-pack",
+  "version": "0.2.0",
+  "description": "Eleven software-development workflows adapted for OpenCode and Codex.",
+  "author": {
+    "name": "Wayner Barrios",
+    "url": "https://github.com/waybarrios"
+  },
+  "homepage": "https://github.com/waybarrios/opencode-power-pack",
+  "repository": "https://github.com/waybarrios/opencode-power-pack",
+  "license": "MIT AND Apache-2.0",
+  "keywords": [
+    "codex",
+    "opencode",
+    "skills",
+    "code-review",
+    "security-review",
+    "feature-development"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "OpenCode Power Pack",
+    "shortDescription": "Eleven rigorous development workflows",
+    "longDescription": "Review code, audit security, design and implement features, build MCP servers, and maintain project guidance with reusable workflows for Codex and OpenCode.",
+    "developerName": "Wayner Barrios",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": "Use the appropriate Power Pack workflow for this software-development task.",
+    "brandColor": "#FFD60A"
+  }
+}

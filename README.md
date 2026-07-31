@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <i>Eleven Claude Code workflows, adapted for modern OpenCode.<br/>
+  <i>Eleven Claude Code workflows, adapted for modern OpenCode and Codex.<br/>
   Code review, security audit, feature development, frontend design, project memory, and authoring tools.</i>
 </p>
 
@@ -14,21 +14,22 @@
   <a href="https://github.com/waybarrios/opencode-power-pack/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/waybarrios/opencode-power-pack?style=flat-square"></a>
   <img alt="Skills: 11" src="https://img.shields.io/badge/skills-11-FFD60A?style=flat-square&labelColor=0B0F14">
   <img alt="OpenCode 1.18.7+" src="https://img.shields.io/badge/opencode-1.18.7%2B-0B0F14?style=flat-square&labelColor=FFD60A">
+  <img alt="Codex plugin" src="https://img.shields.io/badge/Codex-plugin-0B0F14?style=flat-square&labelColor=FFD60A">
 </p>
 
 <p align="center">
   <a href="#installation"><b>Install</b></a> ·
   <a href="#whats-inside"><b>Skills</b></a> ·
-  <a href="#slash-commands"><b>Commands</b></a> ·
+  <a href="#invocation"><b>Invocation</b></a> ·
   <a href="#how-it-works"><b>Architecture</b></a> ·
   <a href="#acknowledgments"><b>Credits</b></a>
 </p>
 
 ## Why This Exists
 
-OpenCode reads `SKILL.md` natively, but many valuable Claude Code workflows originated as Claude-specific commands and agents. Copying those artifacts directly does not preserve their orchestration, permissions, or subagent behavior.
+OpenCode and Codex read `SKILL.md` workflows, but many valuable Claude Code workflows originated as Claude-specific commands and agents. Copying those artifacts directly does not preserve their orchestration, permissions, or subagent behavior.
 
-This package adapts the portable methodology into OpenCode skills, registers the feature-development specialist roles as real read-only subagents, and ships immutable provenance for every upstream work.
+This package adapts the portable methodology into shared skills, registers feature-development specialist roles as read-only OpenCode subagents, and lets Codex execute the same phase assignments with its native subagent workflow. It ships immutable provenance for every upstream work.
 
 It complements [obra/superpowers](https://github.com/obra/superpowers), which provides process skills such as brainstorming, TDD, debugging, and plan execution.
 
@@ -48,16 +49,29 @@ It complements [obra/superpowers](https://github.com/obra/superpowers), which pr
 | Project memory | `agents-md-improver` | Audit project rules and propose targeted improvements |
 | Project memory | `agents-md-revise` | Capture durable session learnings in project rules |
 
-`code-explorer`, `code-architect`, and `code-reviewer` are available both as standalone skills and as least-privilege subagents used by `feature-dev`.
+`code-explorer`, `code-architect`, and `code-reviewer` are standalone skills and specialist roles used by `feature-dev`. OpenCode registers named least-privilege agents; Codex can carry out the same assignments with native subagents and can use matching custom agents when the user configures them.
 
 ## Installation
 
 ### Prerequisites
 
-- OpenCode 1.18.7 or newer: <https://opencode.ai>
-- Git, used by OpenCode to fetch Git-based plugins
+- Git
+- One supported host:
+  - OpenCode 1.18.7 or newer: <https://opencode.ai>
+  - A current Codex CLI or Codex desktop environment with plugin support: <https://developers.openai.com/codex/>
 
-### Install From GitHub
+### Codex
+
+Add this repository as a marketplace, then install the plugin:
+
+```bash
+codex plugin marketplace add waybarrios/opencode-power-pack --ref main
+codex plugin add opencode-power-pack@opencode-power-pack
+```
+
+Start a new Codex session after installation so the eleven bundled skills are loaded. Use `/plugins` to inspect the installed plugin or `$` to select one of its skills explicitly.
+
+### OpenCode From GitHub
 
 ```bash
 opencode plugin --global "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"
@@ -71,7 +85,7 @@ To pin a published release, append its tag:
 opencode plugin --global "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git#<tag>"
 ```
 
-### Install From A Local Clone
+### OpenCode From A Local Clone
 
 ```bash
 git clone https://github.com/waybarrios/opencode-power-pack.git ~/code/opencode-power-pack
@@ -80,7 +94,7 @@ opencode plugin --global "opencode-power-pack@git+file:///home/you/code/opencode
 
 Use an absolute `file://` URL adjusted for your operating system. The target directory must be a Git repository.
 
-### Verify
+### Verify OpenCode
 
 ```bash
 opencode debug skill
@@ -89,9 +103,26 @@ opencode debug agent code-explorer
 
 The first command should include all eleven unprefixed skill names. The second should report a `subagent` with editing denied. In the TUI, `ctrl+p` should list `/code-review`, `/feature-dev`, `/frontend-design`, and the other skill-derived commands.
 
+### Verify Codex
+
+```bash
+codex plugin list --marketplace opencode-power-pack
+```
+
+The list should show `opencode-power-pack` as installed. Start a new session and explicitly select `$code-review`, `$feature-dev`, or another bundled skill for a first test.
+
 ## Updating
 
-For a GitHub installation:
+For Codex:
+
+```bash
+codex plugin marketplace upgrade opencode-power-pack
+codex plugin add opencode-power-pack@opencode-power-pack
+```
+
+Start a new session after the upgrade.
+
+For an OpenCode GitHub installation:
 
 ```bash
 opencode plugin --global --force "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"
@@ -101,21 +132,29 @@ Restart OpenCode after the command finishes. For a pinned installation, update t
 
 ## Uninstalling
 
-Remove the `opencode-power-pack@...` entry from the `plugin` array in the config where it was installed, then restart OpenCode. There are no command symlinks or copied command files to remove.
+For Codex:
+
+```bash
+codex plugin remove opencode-power-pack@opencode-power-pack
+```
+
+For OpenCode, remove the `opencode-power-pack@...` entry from the `plugin` array in the config where it was installed, then restart OpenCode. There are no command symlinks or copied command files to remove.
 
 ## Troubleshooting
 
 | Symptom | Cause | Fix |
 |---|---|---|
+| Codex cannot find the marketplace | Marketplace snapshot is missing or stale | Run `codex plugin marketplace add waybarrios/opencode-power-pack --ref main`, or upgrade the existing marketplace |
+| Codex installed the plugin but skills do not appear | The current session predates installation | Start a new Codex session and inspect `/plugins` |
 | Skills or commands do not appear | OpenCode is older than 1.18.7 | Upgrade OpenCode, restart, and run `opencode debug skill` |
 | Skills are missing from debug output | Plugin installation failed or its config entry is absent | Re-run `opencode plugin --global --force <module-spec>` and inspect the reported error |
 | Specialist agents are missing | Stale plugin checkout | Force reinstall, restart, and run `opencode debug agent code-explorer` |
 | Installation reports a Git error | Invalid URL, network failure, or inaccessible repository | Validate the source with `git ls-remote <url>` |
 | A workflow is rushed or incomplete | The backing model skipped multi-stage instructions | Use a stronger model and inspect whether required subagent tools are available |
 
-## Slash Commands
+## Invocation
 
-OpenCode 1.18.7+ automatically exposes every discovered skill as a same-named slash command:
+Codex exposes installed skills through `$` mentions, while OpenCode 1.18.7+ exposes each discovered skill as a same-named slash command:
 
 ```text
 /code-review
@@ -134,6 +173,8 @@ OpenCode 1.18.7+ automatically exposes every discovered skill as a same-named sl
 Examples:
 
 ```text
+$code-review review the current branch against main
+$feature-dev add a logout button to the topbar
 /code-review --comment
 /code-review review https://github.com/owner/repo/pull/449
 /feature-dev add a logout button to the topbar
@@ -141,12 +182,18 @@ Examples:
 /frontend-design pricing page, brutalist tone, single-screen
 ```
 
-An explicit command with the same name takes precedence over a skill-derived command.
+In OpenCode, an explicit command with the same name takes precedence over a skill-derived command.
 
 ## How It Works
 
 ```text
 opencode-power-pack
+|
++-- .codex-plugin/plugin.json
+|   +-- packages all skills/ for Codex and compatible plugin surfaces
+|
++-- .agents/plugins/marketplace.json
+|   +-- exposes the repository as an installable Codex marketplace
 |
 +-- .opencode/plugins/opencode-power-pack.js
 |   +-- registers skills/ in config.skills.paths
@@ -155,15 +202,15 @@ opencode-power-pack
 |   +-- registers code-reviewer with read-only Git commands
 |
 +-- skills/<name>/SKILL.md
-|   +-- native skill-tool entry
-|   +-- native same-named slash command
+|   +-- shared Codex/OpenCode workflow
+|   +-- host-native invocation metadata
 |   +-- immutable source and license metadata
 |
 +-- UPSTREAMS.json
     +-- repository, commit, path, blob, date, and adaptation type
 ```
 
-Each `SKILL.md` is the single source for its workflow. The plugin derives specialist-agent prompts from those files at startup, so the agent and standalone skill cannot drift apart. Existing user-defined agents with the same names take precedence.
+Each `SKILL.md` is the single source for its workflow. The OpenCode plugin derives specialist-agent prompts from those files at startup. Codex loads the same skills from the plugin and follows `feature-dev`'s specialist assignments with its native subagent workflow; installing a skill does not itself create a named custom agent.
 
 The packaged agents deny edits, external network access, and nested tasks. `code-reviewer` additionally allows a narrow set of read-only Git commands.
 
@@ -172,9 +219,9 @@ The packaged agents deny edits, external network access, and nested tasks. `code
 | In scope | Out of scope |
 |---|---|
 | Portable Claude Code workflow methodology | Claude Code hook contracts |
-| OpenCode-native skills, commands, and subagents | Proprietary or non-redistributable plugins |
+| Codex and OpenCode skills, invocation, and subagent orchestration | Proprietary or non-redistributable plugins |
 | Licensed adaptations with immutable provenance | Automatic trust of third-party skill catalogs |
-| Explicit permission boundaries and regression tests | Supporting OpenCode versions older than 1.18.7 |
+| Explicit permission boundaries and regression tests | Supporting OpenCode versions older than 1.18.7 or obsolete Codex plugin formats |
 
 ## Contributing
 
@@ -205,7 +252,7 @@ Every skill must use a lowercase hyphenated directory/name, provide a trigger-sp
 
 ## Acknowledgments
 
-The bundled skills are modified upstream works. This repository contributes their OpenCode adaptation, packaging, additional workflow guidance, tests, and compatibility layer.
+The bundled skills are modified upstream works. This repository contributes their Codex and OpenCode adaptation, packaging, additional workflow guidance, tests, and compatibility layer.
 
 | Upstream | Pinned source | Used for |
 |---|---|---|
