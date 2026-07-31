@@ -407,7 +407,9 @@ export function acceptReport({ report, manifest, repo, snapshotsPath }) {
     throw new TypeError(`snapshot responses failed replay grading: ${detail}`);
   }
   mkdirSync(path.dirname(snapshotsPath), { recursive: true });
-  writeFileSync(snapshotsPath, `${JSON.stringify(snapshotFile, null, 2)}\n`);
+  const tempPath = `${snapshotsPath}.tmp`;
+  writeFileSync(tempPath, `${JSON.stringify(snapshotFile, null, 2)}\n`);
+  renameSync(tempPath, snapshotsPath);
   return snapshotFile;
 }
 
@@ -797,8 +799,13 @@ export function writeReport(
 ) {
   mkdirSync(path.dirname(outputPath), { recursive: true });
   const tempPath = `${outputPath}.tmp`;
-  writeFileSync(tempPath, `${JSON.stringify(report, null, 2)}\n`);
-  renameSync(tempPath, outputPath);
+  try {
+    writeFileSync(tempPath, `${JSON.stringify(report, null, 2)}\n`);
+    renameSync(tempPath, outputPath);
+  } catch (error) {
+    rmSync(tempPath, { force: true });
+    throw error;
+  }
   return outputPath;
 }
 
