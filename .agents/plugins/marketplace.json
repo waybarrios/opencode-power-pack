@@ -1,7 +1,7 @@
 {
   "name": "opencode-power-pack",
   "interface": {
-    "displayName": "OpenCode Power Pack"
+    "displayName": "OpenCode + Codex Power Pack"
   },
   "plugins": [
     {

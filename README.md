@@ -2,6 +2,8 @@
   <img src="assets/logo.svg" alt="opencode-power-pack" width="100%" />
 </p>
 
+<h1 align="center">OpenCode Power Pack for OpenCode + Codex</h1>
+
 <p align="center">
   <i>Eleven Claude Code workflows, adapted for modern OpenCode and Codex.<br/>
   Code review, security audit, feature development, frontend design, project memory, and authoring tools.</i>
@@ -19,11 +21,21 @@
 
 <p align="center">
   <a href="#installation"><b>Install</b></a> ·
+  <a href="#codex-quick-install"><b>Codex Quick Install</b></a> ·
   <a href="#whats-inside"><b>Skills</b></a> ·
   <a href="#invocation"><b>Invocation</b></a> ·
   <a href="#how-it-works"><b>Architecture</b></a> ·
   <a href="#acknowledgments"><b>Credits</b></a>
 </p>
+
+## Codex Quick Install
+
+```bash
+codex plugin marketplace add waybarrios/opencode-power-pack --ref main
+codex plugin add opencode-power-pack@opencode-power-pack
+```
+
+Start a new Codex session, open `/plugins` to confirm the installation, or invoke a workflow explicitly with `$code-review`, `$feature-dev`, `$security-review`, and the other bundled skills.
 
 ## Why This Exists
 
@@ -60,16 +72,17 @@ It complements [obra/superpowers](https://github.com/obra/superpowers), which pr
   - OpenCode 1.18.7 or newer: <https://opencode.ai>
   - A current Codex CLI or Codex desktop environment with plugin support: <https://developers.openai.com/codex/>
 
-### Codex
+### Codex CLI And Desktop
 
 Add this repository as a marketplace, then install the plugin:
 
 ```bash
 codex plugin marketplace add waybarrios/opencode-power-pack --ref main
 codex plugin add opencode-power-pack@opencode-power-pack
+codex plugin list --marketplace opencode-power-pack
 ```
 
-Start a new Codex session after installation so the eleven bundled skills are loaded. Use `/plugins` to inspect the installed plugin or `$` to select one of its skills explicitly.
+Start a new Codex session after installation so the eleven bundled skills are loaded. Use `/plugins` to inspect the installed plugin or `$` to select one of its skills explicitly. Codex plugin packaging follows the [official plugin structure](https://developers.openai.com/plugins/build/plugins).
 
 ### OpenCode From GitHub
 

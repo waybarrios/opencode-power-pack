@@ -1,7 +1,7 @@
 {
   "name": "opencode-power-pack",
   "version": "0.2.0",
-  "description": "Eleven software-development workflows adapted for OpenCode and Codex.",
+  "description": "Eleven Claude Code workflows packaged for Codex and OpenCode.",
   "author": {
     "name": "Wayner Barrios",
     "url": "https://github.com/waybarrios"
@@ -11,6 +11,8 @@
   "license": "MIT AND Apache-2.0",
   "keywords": [
     "codex",
+    "codex-cli",
+    "openai-codex",
     "opencode",
     "skills",
     "code-review",
@@ -19,8 +21,8 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "OpenCode Power Pack",
-    "shortDescription": "Eleven rigorous development workflows",
+    "displayName": "OpenCode + Codex Power Pack",
+    "shortDescription": "Eleven workflows for Codex and OpenCode",
     "longDescription": "Review code, audit security, design and implement features, build MCP servers, and maintain project guidance with reusable workflows for Codex and OpenCode.",
     "developerName": "Wayner Barrios",
     "category": "Productivity",

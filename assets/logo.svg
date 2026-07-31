@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" role="img" aria-label="opencode-power-pack">
-  <title>opencode-power-pack</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" role="img" aria-label="OpenCode Power Pack for OpenCode and Codex">
+  <title>OpenCode Power Pack for OpenCode and Codex</title>
 
   <defs>
     <linearGradient id="bolt" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -67,7 +67,7 @@
     <text x="320" y="240" fill="url(#boltText)" font-size="76" letter-spacing="6">POWER PACK</text>
     <!-- tagline -->
     <text x="320" y="282" fill="#7B8794" font-size="16" letter-spacing="4" font-weight="600">
-      ELEVEN  SKILLS  ·  OPENCODE
+      ELEVEN  SKILLS  ·  OPENCODE  +  CODEX
     </text>
   </g>
 

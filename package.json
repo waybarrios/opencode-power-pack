@@ -1,7 +1,7 @@
 {
   "name": "opencode-power-pack",
   "version": "0.2.0",
-  "description": "Curated bundle of Claude Code workflows adapted for OpenCode and Codex: code review, feature development, security review, frontend design, authoring, and project memory.",
+  "description": "Eleven Claude Code workflows packaged for Codex and OpenCode: code review, feature development, security review, frontend design, authoring, and project memory.",
   "type": "module",
   "main": ".opencode/plugins/opencode-power-pack.js",
   "engines": {
@@ -31,6 +31,9 @@
   },
   "keywords": [
     "codex",
+    "codex-cli",
+    "openai-codex",
+    "openai",
     "opencode",
     "claude-code",
     "skills",
@@ -39,6 +42,7 @@
     "feature-dev",
     "frontend-design",
     "mcp-builder",
+    "multi-agent",
     "plugin"
   ]
 }
