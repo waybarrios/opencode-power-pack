@@ -1,4 +1,9 @@
 import { createHash } from "node:crypto";
+import { spawn } from "node:child_process";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import path from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const MANIFEST_FIELDS = new Set(["version", "targetSkills", "cases"]);
 const CASE_FIELDS = new Set([
@@ -306,3 +311,248 @@ export function parseJsonEvents(stdout) {
   }
   return { response: textParts.join("\n"), toolRequested };
 }
+
+export function buildEvalConfig(pluginUrl) {
+  return { plugin: [pluginUrl], permission: { "*": "deny" } };
+}
+
+function signalChild(child, signal) {
+  try {
+    if (process.platform === "win32") child.kill(signal);
+    else process.kill(-child.pid, signal);
+  } catch (error) {
+    if (error.code !== "ESRCH") throw error;
+  }
+}
+
+function reportEntry(testCase, options, started, status, failures, response) {
+  return {
+    caseId: testCase.id,
+    skill: testCase.skill,
+    category: testCase.category,
+    status,
+    failures,
+    response,
+    model: options.model,
+    opencodeVersion: options.opencodeVersion,
+    skillHash: sha256(readFileSync(path.join(options.repo, "skills", testCase.skill, "SKILL.md"))),
+    caseHash: caseHash(testCase),
+    durationMs: Date.now() - started,
+    completedAt: new Date().toISOString(),
+  };
+}
+
+export async function runCase(testCase, options) {
+  const {
+    repo,
+    model,
+    opencodeVersion,
+    command = process.platform === "win32" ? "opencode.cmd" : "opencode",
+    commandArgsPrefix = [],
+    env = process.env,
+  } = options;
+  const started = Date.now();
+  const project = mkdtempSync(path.join(tmpdir(), "behavioral-eval-"));
+  const pluginUrl = pathToFileURL(path.join(repo, ".opencode/plugins/opencode-power-pack.js")).href;
+  const args = [
+    ...commandArgsPrefix,
+    "run",
+    "--model", model,
+    "--command", testCase.skill,
+    "--format", "json",
+    testCase.prompt,
+  ];
+
+  try {
+    let outcome;
+    try {
+      outcome = await new Promise((resolve, reject) => {
+        const chunks = [];
+        let timedOut = false;
+        let killTimer;
+        const child = spawn(command, args, {
+          cwd: project,
+          env: {
+            ...env,
+            OPENCODE_CONFIG_CONTENT: JSON.stringify(buildEvalConfig(pluginUrl)),
+          },
+          detached: process.platform !== "win32",
+          shell: false,
+          stdio: ["ignore", "pipe", "pipe"],
+        });
+        child.stdout.on("data", (chunk) => chunks.push(chunk));
+        child.stderr.resume();
+        const timeout = setTimeout(() => {
+          timedOut = true;
+          signalChild(child, "SIGTERM");
+          killTimer = setTimeout(() => signalChild(child, "SIGKILL"), 100);
+          killTimer.unref();
+        }, testCase.timeoutMs);
+        child.once("error", (error) => {
+          clearTimeout(timeout);
+          clearTimeout(killTimer);
+          reject(error);
+        });
+        child.once("close", (code) => {
+          clearTimeout(timeout);
+          clearTimeout(killTimer);
+          resolve({ stdout: Buffer.concat(chunks).toString("utf8"), code, timedOut });
+        });
+      });
+    } catch {
+      return reportEntry(
+        testCase,
+        options,
+        started,
+        "incomplete",
+        ["incomplete:process-exit"],
+        "",
+      );
+    }
+    if (outcome.timedOut) {
+      return reportEntry(testCase, options, started, "incomplete", ["incomplete:timeout"], "");
+    }
+    if (outcome.code !== 0) {
+      return reportEntry(
+        testCase,
+        options,
+        started,
+        "incomplete",
+        ["incomplete:process-exit"],
+        "",
+      );
+    }
+    let parsed;
+    try {
+      parsed = parseJsonEvents(outcome.stdout);
+    } catch {
+      return reportEntry(
+        testCase,
+        options,
+        started,
+        "incomplete",
+        ["incomplete:malformed-events"],
+        "",
+      );
+    }
+    const { response, toolRequested } = parsed;
+    if (toolRequested) {
+      return reportEntry(
+        testCase,
+        options,
+        started,
+        "incomplete",
+        ["incomplete:permission"],
+        "",
+      );
+    }
+    if (response.trim() === "") {
+      return reportEntry(
+        testCase,
+        options,
+        started,
+        "incomplete",
+        ["incomplete:missing-response"],
+        "",
+      );
+    }
+    const grade = gradeResponse(testCase, response);
+    return reportEntry(
+      testCase,
+      options,
+      started,
+      grade.status,
+      grade.failures,
+      normalizeResponse(redactResponse(response, testCase)),
+    );
+  } finally {
+    rmSync(project, { recursive: true, force: true });
+  }
+}
+
+export function writeReport(
+  report,
+  outputPath = path.resolve(".artifacts/behavioral-evals/latest.json"),
+) {
+  mkdirSync(path.dirname(outputPath), { recursive: true });
+  writeFileSync(outputPath, `${JSON.stringify(report, null, 2)}\n`);
+  return outputPath;
+}
+
+async function detectOpenCodeVersion(command, commandArgsPrefix, env, cwd) {
+  return await new Promise((resolve, reject) => {
+    const chunks = [];
+    const child = spawn(command, [...commandArgsPrefix, "--version"], {
+      cwd,
+      env,
+      shell: false,
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+    child.stdout.on("data", (chunk) => chunks.push(chunk));
+    child.stderr.resume();
+    child.once("error", reject);
+    child.once("close", (code) => {
+      if (code !== 0) {
+        reject(new Error("Unable to detect OpenCode version"));
+        return;
+      }
+      resolve(Buffer.concat(chunks).toString("utf8").trim());
+    });
+  });
+}
+
+export async function runSuite(options) {
+  const {
+    repo,
+    cases,
+    env = process.env,
+    command = process.platform === "win32" ? "opencode.cmd" : "opencode",
+    commandArgsPrefix = [],
+  } = options;
+  const startedAt = new Date().toISOString();
+  const model = env.OPENCODE_EVAL_MODEL;
+  if (typeof model !== "string" || !/^[^/\s]+\/[^/\s]+$/.test(model)) {
+    throw new TypeError("OPENCODE_EVAL_MODEL must use provider/model form");
+  }
+  if (cases.length === 0) throw new TypeError("case selection must not be empty");
+  const opencodeVersion = await detectOpenCodeVersion(command, commandArgsPrefix, env, repo);
+  const entries = [];
+  for (const testCase of cases) {
+    entries.push(await runCase(testCase, {
+      repo,
+      model,
+      opencodeVersion,
+      command,
+      commandArgsPrefix,
+      env,
+    }));
+  }
+  return {
+    version: 1,
+    model,
+    opencodeVersion,
+    startedAt,
+    completedAt: new Date().toISOString(),
+    status: entries.every(({ status }) => status === "pass") ? "pass" : "fail",
+    cases: entries,
+  };
+}
+
+async function main() {
+  const mode = process.argv[2];
+  if (mode !== "run") throw new TypeError(`unsupported behavioral evaluation mode: ${mode || "missing"}`);
+  const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+  const manifest = validateManifest(JSON.parse(
+    readFileSync(path.join(repo, "evals/behavioral/cases.json"), "utf8"),
+  ));
+  const report = await runSuite({ repo, cases: manifest.cases });
+  const outputPath = writeReport(
+    report,
+    path.join(repo, ".artifacts/behavioral-evals/latest.json"),
+  );
+  const passed = report.cases.filter(({ status }) => status === "pass").length;
+  console.log(outputPath);
+  console.log(`${passed}/${report.cases.length} cases passed`);
+}
+
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await main();

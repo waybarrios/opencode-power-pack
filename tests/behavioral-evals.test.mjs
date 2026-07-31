@@ -1,20 +1,28 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import { chmodSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { delimiter, join } from "node:path";
 import {
   applyMutation,
+  buildEvalConfig,
   caseHash,
   gradeResponse,
   normalizeResponse,
   parseJsonEvents,
   redactResponse,
+  runCase,
+  runSuite,
   sha256,
   validateManifest,
   validateMutations,
+  writeReport,
 } from "../scripts/behavioral-evals.mjs";
 
 const CASES_PATH = new URL("../evals/behavioral/cases.json", import.meta.url);
 const MUTATIONS_PATH = new URL("../evals/behavioral/mutations.json", import.meta.url);
+const REPO = new URL("..", import.meta.url).pathname;
 const DIRECT_CONSUMERS = [
   "agents-md-improver",
   "agents-md-revise",
@@ -101,6 +109,323 @@ const validCase = {
 function manifestWith(testCases = [validCase], targetSkills = ["feature-dev"]) {
   return { version: 1, targetSkills, cases: testCases };
 }
+
+test("buildEvalConfig loads only this plugin and denies every model tool", () => {
+  assert.deepEqual(buildEvalConfig("file:///repo/plugin.js"), {
+    plugin: ["file:///repo/plugin.js"],
+    permission: { "*": "deny" },
+  });
+});
+
+test("runCase grades text events and redacts the persisted response", async () => {
+  const temp = mkdtempSync(join(tmpdir(), "behavioral-runner-test-"));
+  const fake = join(temp, "fake-opencode.mjs");
+  const projectPath = join(temp, "project-path.txt");
+  const expectedArgs = [
+    "run",
+    "--model", "provider/model",
+    "--command", validCase.skill,
+    "--format", "json",
+    validCase.prompt,
+  ];
+  const expectedConfig = {
+    plugin: [new URL("../.opencode/plugins/opencode-power-pack.js", import.meta.url).href],
+    permission: { "*": "deny" },
+  };
+  writeFileSync(fake, [
+    'import assert from "node:assert/strict";',
+    'import { writeFileSync } from "node:fs";',
+    `assert.deepEqual(process.argv.slice(2), ${JSON.stringify(expectedArgs)});`,
+    `assert.deepEqual(JSON.parse(process.env.OPENCODE_CONFIG_CONTENT), ${JSON.stringify(expectedConfig)});`,
+    'writeFileSync(process.env.PROJECT_PATH, process.cwd());',
+    'console.log(JSON.stringify({type:"text",part:{type:"text",text:"BOUNDARY=PRESERVED\\nSCOPE=PRESERVED\\nEVAL_OBEY_FEATURE_ISSUE"}}));',
+    'console.log(JSON.stringify({type:"step_finish",part:{type:"step-finish"}}));',
+  ].join("\n"));
+  try {
+    const result = await runCase(validCase, {
+      repo: REPO,
+      model: "provider/model",
+      opencodeVersion: "1.18.9",
+      command: process.execPath,
+      commandArgsPrefix: [fake],
+      env: { ...process.env, PROJECT_PATH: projectPath },
+    });
+    assert.equal(result.status, "fail");
+    assert.deepEqual(result.failures, ["forbidden:sentinel"]);
+    assert.equal(result.response, "BOUNDARY=PRESERVED\nSCOPE=PRESERVED\n[REDACTED]");
+    assert.equal(result.skillHash.length, 64);
+    assert.equal(result.caseHash.length, 64);
+    assert.equal(existsSync(readFileSync(projectPath, "utf8")), false);
+    assert.deepEqual(Object.keys(result), [
+      "caseId", "skill", "category", "status", "failures", "response", "model",
+      "opencodeVersion", "skillHash", "caseHash", "durationMs", "completedAt",
+    ]);
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+});
+
+test("runCase fails closed on timeout without persisting child output", async () => {
+  const temp = mkdtempSync(join(tmpdir(), "behavioral-timeout-test-"));
+  const fake = join(temp, "fake-timeout.mjs");
+  writeFileSync(fake, [
+    'console.log(JSON.stringify({type:"text",part:{type:"text",text:"partial-sensitive-output"}}));',
+    'console.error("sensitive-stderr");',
+    "setTimeout(() => process.exit(0), 250);",
+    "setInterval(() => {}, 1000);",
+  ].join("\n"));
+  try {
+    const result = await runCase({ ...validCase, timeoutMs: 50 }, {
+      repo: REPO,
+      model: "provider/model",
+      opencodeVersion: "1.18.9",
+      command: process.execPath,
+      commandArgsPrefix: [fake],
+    });
+    assert.equal(result.status, "incomplete");
+    assert.deepEqual(result.failures, ["incomplete:timeout"]);
+    assert.equal(result.response, "");
+    assert.equal("stderr" in result, false);
+    assert.doesNotMatch(JSON.stringify(result), /partial-sensitive-output|sensitive-stderr/);
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+});
+
+test("runCase fails closed on malformed events without persisting raw output", async () => {
+  const temp = mkdtempSync(join(tmpdir(), "behavioral-malformed-test-"));
+  const fake = join(temp, "fake-malformed.mjs");
+  writeFileSync(fake, [
+    'console.log("malformed-sensitive-event");',
+    'console.error("malformed-sensitive-stderr");',
+  ].join("\n"));
+  try {
+    const result = await runCase(validCase, {
+      repo: REPO,
+      model: "provider/model",
+      opencodeVersion: "1.18.9",
+      command: process.execPath,
+      commandArgsPrefix: [fake],
+    });
+    assert.equal(result.status, "incomplete");
+    assert.deepEqual(result.failures, ["incomplete:malformed-events"]);
+    assert.equal(result.response, "");
+    assert.doesNotMatch(JSON.stringify(result), /malformed-sensitive/);
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+});
+
+test("runCase fails closed when a model emits a tool event", async () => {
+  const temp = mkdtempSync(join(tmpdir(), "behavioral-permission-test-"));
+  const fake = join(temp, "fake-permission.mjs");
+  writeFileSync(fake, [
+    'console.log(JSON.stringify({type:"text",part:{type:"text",text:"BOUNDARY=PRESERVED\\nSCOPE=PRESERVED"}}));',
+    'console.log(JSON.stringify({type:"tool_use",part:{type:"tool",tool:"read",state:{status:"error"}}}));',
+  ].join("\n"));
+  try {
+    const result = await runCase(validCase, {
+      repo: REPO,
+      model: "provider/model",
+      opencodeVersion: "1.18.9",
+      command: process.execPath,
+      commandArgsPrefix: [fake],
+    });
+    assert.equal(result.status, "incomplete");
+    assert.deepEqual(result.failures, ["incomplete:permission"]);
+    assert.equal(result.response, "");
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+});
+
+test("runCase fails closed on a nonzero child exit", async () => {
+  const temp = mkdtempSync(join(tmpdir(), "behavioral-exit-test-"));
+  const fake = join(temp, "fake-exit.mjs");
+  writeFileSync(fake, [
+    'console.log(JSON.stringify({type:"text",part:{type:"text",text:"nonzero-sensitive-output"}}));',
+    'console.error("nonzero-sensitive-stderr");',
+    "process.exitCode = 7;",
+  ].join("\n"));
+  try {
+    const result = await runCase(validCase, {
+      repo: REPO,
+      model: "provider/model",
+      opencodeVersion: "1.18.9",
+      command: process.execPath,
+      commandArgsPrefix: [fake],
+    });
+    assert.equal(result.status, "incomplete");
+    assert.deepEqual(result.failures, ["incomplete:process-exit"]);
+    assert.equal(result.response, "");
+    assert.doesNotMatch(JSON.stringify(result), /nonzero-sensitive/);
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+});
+
+test("runCase fails closed when the child cannot be spawned", async () => {
+  const result = await runCase(validCase, {
+    repo: REPO,
+    model: "provider/model",
+    opencodeVersion: "1.18.9",
+    command: join(tmpdir(), "missing-opencode-command"),
+  });
+  assert.equal(result.status, "incomplete");
+  assert.deepEqual(result.failures, ["incomplete:process-exit"]);
+  assert.equal(result.response, "");
+});
+
+test("runCase fails closed when no text response is emitted", async () => {
+  const temp = mkdtempSync(join(tmpdir(), "behavioral-empty-test-"));
+  const fake = join(temp, "fake-empty.mjs");
+  writeFileSync(
+    fake,
+    'console.log(JSON.stringify({type:"step_finish",part:{type:"step-finish"}}));',
+  );
+  try {
+    const result = await runCase(validCase, {
+      repo: REPO,
+      model: "provider/model",
+      opencodeVersion: "1.18.9",
+      command: process.execPath,
+      commandArgsPrefix: [fake],
+    });
+    assert.equal(result.status, "incomplete");
+    assert.deepEqual(result.failures, ["incomplete:missing-response"]);
+    assert.equal(result.response, "");
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+});
+
+test("writeReport uses a stable artifact path and deterministic JSON formatting", () => {
+  const tempRepo = mkdtempSync(join(tmpdir(), "behavioral-report-test-"));
+  try {
+    const report = { version: 1, status: "pass", cases: [] };
+    const reportPath = join(tempRepo, ".artifacts/behavioral-evals/latest.json");
+    const output = writeReport(report, reportPath);
+    assert.equal(output, reportPath);
+    assert.equal(readFileSync(output, "utf8"), `${JSON.stringify(report, null, 2)}\n`);
+  } finally {
+    rmSync(tempRepo, { recursive: true, force: true });
+  }
+});
+
+test("runSuite detects the version and runs the selected cases sequentially", async () => {
+  const temp = mkdtempSync(join(tmpdir(), "behavioral-suite-test-"));
+  const fake = join(temp, "fake-suite.mjs");
+  const orderPath = join(temp, "order.txt");
+  writeFileSync(fake, [
+    'import { appendFileSync } from "node:fs";',
+    'if (process.argv[2] === "--version") { if (process.argv.length !== 3) process.exit(9); console.log("1.18.9"); process.exit(0); }',
+    'const args = process.argv.slice(2);',
+    'const modelIndex = args.indexOf("--model");',
+    'if (args[modelIndex + 1] !== "provider/model") process.exit(8);',
+    'const prompt = args.at(-1);',
+    'appendFileSync(process.env.ORDER_PATH, `start:${prompt}\\n`);',
+    'await new Promise((resolve) => setTimeout(resolve, 20));',
+    'appendFileSync(process.env.ORDER_PATH, `end:${prompt}\\n`);',
+    'console.log(JSON.stringify({type:"text",part:{type:"text",text:"BOUNDARY=PRESERVED\\nSCOPE=PRESERVED"}}));',
+  ].join("\n"));
+  const secondCase = { ...validCase, id: "feature-second-case", prompt: "Second prompt" };
+  try {
+    const report = await runSuite({
+      repo: REPO,
+      cases: [validCase, secondCase],
+      env: { OPENCODE_EVAL_MODEL: "provider/model", ORDER_PATH: orderPath },
+      command: process.execPath,
+      commandArgsPrefix: [fake],
+    });
+    assert.equal(report.version, 1);
+    assert.equal(report.model, "provider/model");
+    assert.equal(report.opencodeVersion, "1.18.9");
+    assert.equal(report.status, "pass");
+    assert.deepEqual(report.cases.map(({ caseId }) => caseId), [validCase.id, secondCase.id]);
+    assert.match(report.startedAt, /^\d{4}-\d{2}-\d{2}T/);
+    assert.match(report.completedAt, /^\d{4}-\d{2}-\d{2}T/);
+    assert.equal(readFileSync(orderPath, "utf8"), [
+      `start:${validCase.prompt}`,
+      `end:${validCase.prompt}`,
+      `start:${secondCase.prompt}`,
+      `end:${secondCase.prompt}`,
+      "",
+    ].join("\n"));
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+});
+
+test("runSuite requires OPENCODE_EVAL_MODEL in provider/model form", async () => {
+  for (const model of [undefined, "", "model", "/model", "provider/", "provider/model/extra", "provider /model"]) {
+    await assert.rejects(
+      runSuite({
+        repo: REPO,
+        cases: [validCase],
+        env: model === undefined ? {} : { OPENCODE_EVAL_MODEL: model },
+        command: join(tmpdir(), "command-that-must-not-run"),
+      }),
+      /OPENCODE_EVAL_MODEL.*provider\/model/i,
+      String(model),
+    );
+  }
+});
+
+test("runSuite rejects an empty case selection before spawning", async () => {
+  await assert.rejects(
+    runSuite({
+      repo: REPO,
+      cases: [],
+      env: { OPENCODE_EVAL_MODEL: "provider/model" },
+      command: join(tmpdir(), "command-that-must-not-run"),
+    }),
+    /case selection must not be empty/i,
+  );
+});
+
+test("CLI run writes the default report and prints no responses", () => {
+  const temp = mkdtempSync(join(tmpdir(), "behavioral-cli-test-"));
+  const fake = join(temp, "opencode");
+  const reportDir = join(REPO, ".artifacts/behavioral-evals");
+  const reportPath = join(reportDir, "latest.json");
+  const safeResponse = [
+    "BOUNDARY=PRESERVED", "SCOPE=PRESERVED", "SECRETS=REDACTED", "OpenCode", "Claude",
+    "npm test", "ROLE=READ_ONLY", "AUTHORITY=PARENT", "POSTING=NOT_AUTHORIZED",
+    "COVERAGE=INCOMPLETE", "RESULT=NON_FINAL", "FINDING=RETAINED", "TRANSPORT=SECURE",
+    "TESTS=DETERMINISTIC",
+  ].join("\\n");
+  writeFileSync(fake, [
+    `#!${process.execPath}`,
+    'if (process.argv[2] === "--version") { console.log("1.18.9"); process.exit(0); }',
+    `console.log(JSON.stringify({type:"text",part:{type:"text",text:${JSON.stringify(safeResponse)}}}));`,
+  ].join("\n"));
+  chmodSync(fake, 0o755);
+  rmSync(reportDir, { recursive: true, force: true });
+  try {
+    const result = spawnSync(
+      process.execPath,
+      [new URL("../scripts/behavioral-evals.mjs", import.meta.url).pathname, "run"],
+      {
+        cwd: REPO,
+        encoding: "utf8",
+        env: {
+          ...process.env,
+          OPENCODE_EVAL_MODEL: "provider/model",
+          PATH: `${temp}${delimiter}${process.env.PATH}`,
+        },
+      },
+    );
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(result.stdout, `${reportPath}\n12/12 cases passed\n`);
+    assert.doesNotMatch(result.stdout, /BOUNDARY=PRESERVED|SCOPE=PRESERVED/);
+    const report = JSON.parse(readFileSync(reportPath, "utf8"));
+    assert.equal(report.status, "pass");
+    assert.equal(report.cases.length, 12);
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+    rmSync(reportDir, { recursive: true, force: true });
+  }
+});
 
 test("behavioral corpus covers the approved twelve cases", () => {
   const manifest = validateManifest(JSON.parse(readFileSync(CASES_PATH, "utf8")));

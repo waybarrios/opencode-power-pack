@@ -44,6 +44,9 @@ NOTES.md
 .opencode/local.json
 .opencode/cache/
 
+# Local behavioral evaluation reports
+.artifacts/behavioral-evals/
+
 # Node / Bun
 node_modules/
 *.log
