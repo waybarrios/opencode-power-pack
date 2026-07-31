@@ -1,6 +1,16 @@
 import { createHash } from "node:crypto";
 import { spawn } from "node:child_process";
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  chmodSync,
+  copyFileSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  statSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -316,6 +326,10 @@ export function buildEvalConfig(pluginUrl) {
   return { plugin: [pluginUrl], permission: { "*": "deny" } };
 }
 
+export function defaultOpenCodeCommand(platform = process.platform) {
+  return platform === "win32" ? "opencode.exe" : "opencode";
+}
+
 function signalChild(child, signal) {
   try {
     if (process.platform === "win32") child.kill(signal);
@@ -323,6 +337,34 @@ function signalChild(child, signal) {
   } catch (error) {
     if (error.code !== "ESRCH") throw error;
   }
+}
+
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function processGroupExists(pid) {
+  try {
+    process.kill(-pid, 0);
+    return true;
+  } catch (error) {
+    if (error.code === "ESRCH") return false;
+    throw error;
+  }
+}
+
+async function terminateTimedOutChild(child) {
+  if (process.platform === "win32") {
+    signalChild(child, "SIGTERM");
+    await delay(100);
+    if (child.exitCode === null && child.signalCode === null) signalChild(child, "SIGKILL");
+    return;
+  }
+
+  signalChild(child, "SIGTERM");
+  await delay(100);
+  signalChild(child, "SIGKILL");
+  while (processGroupExists(child.pid)) await delay(10);
 }
 
 function reportEntry(testCase, options, started, status, failures, response) {
@@ -342,17 +384,81 @@ function reportEntry(testCase, options, started, status, failures, response) {
   };
 }
 
+function createRuntime(env) {
+  const root = mkdtempSync(path.join(tmpdir(), "behavioral-eval-"));
+  try {
+    const runtime = {
+      root,
+      project: path.join(root, "project"),
+      home: path.join(root, "home"),
+      config: path.join(root, "config"),
+      data: path.join(root, "data"),
+      cache: path.join(root, "cache"),
+      state: path.join(root, "state"),
+    };
+    for (const directory of [
+      runtime.project, runtime.home, runtime.config, runtime.data, runtime.cache, runtime.state,
+    ]) {
+      mkdirSync(directory, { recursive: true, mode: 0o700 });
+    }
+
+    const sourceData = env.XDG_DATA_HOME
+      || (env.HOME ? path.join(env.HOME, ".local", "share") : undefined);
+    const sourceAuth = sourceData && path.join(sourceData, "opencode", "auth.json");
+    if (sourceAuth && existsSync(sourceAuth)) {
+      const sourceAuthStat = statSync(sourceAuth);
+      if (!sourceAuthStat.isFile()) return runtime;
+      const targetDirectory = path.join(runtime.data, "opencode");
+      const targetAuth = path.join(targetDirectory, "auth.json");
+      mkdirSync(targetDirectory, { recursive: true, mode: 0o700 });
+      copyFileSync(sourceAuth, targetAuth);
+      chmodSync(targetAuth, (sourceAuthStat.mode & 0o600) || 0o600);
+    }
+    return runtime;
+  } catch (error) {
+    rmSync(root, { recursive: true, force: true });
+    throw error;
+  }
+}
+
+function isolatedEnv(env, runtime, model, pluginUrl) {
+  const childEnv = {};
+  const isolatedPaths = new Set([
+    "HOME", "USERPROFILE", "APPDATA", "LOCALAPPDATA",
+    "XDG_CONFIG_HOME", "XDG_DATA_HOME", "XDG_CACHE_HOME", "XDG_STATE_HOME",
+  ]);
+  for (const [key, value] of Object.entries(env)) {
+    const normalized = key.toUpperCase();
+    if (isolatedPaths.has(normalized)) continue;
+    if (normalized.startsWith("OPENCODE_")) continue;
+    childEnv[key] = value;
+  }
+  return {
+    ...childEnv,
+    HOME: runtime.home,
+    USERPROFILE: runtime.home,
+    APPDATA: runtime.config,
+    LOCALAPPDATA: runtime.data,
+    XDG_CONFIG_HOME: runtime.config,
+    XDG_DATA_HOME: runtime.data,
+    XDG_CACHE_HOME: runtime.cache,
+    XDG_STATE_HOME: runtime.state,
+    OPENCODE_EVAL_MODEL: model,
+    OPENCODE_CONFIG_CONTENT: JSON.stringify(buildEvalConfig(pluginUrl)),
+  };
+}
+
 export async function runCase(testCase, options) {
   const {
     repo,
     model,
     opencodeVersion,
-    command = process.platform === "win32" ? "opencode.cmd" : "opencode",
+    command = defaultOpenCodeCommand(),
     commandArgsPrefix = [],
     env = process.env,
   } = options;
   const started = Date.now();
-  const project = mkdtempSync(path.join(tmpdir(), "behavioral-eval-"));
+  const runtime = createRuntime(env);
   const pluginUrl = pathToFileURL(path.join(repo, ".opencode/plugins/opencode-power-pack.js")).href;
   const args = [
     ...commandArgsPrefix,
@@ -369,13 +475,10 @@ export async function runCase(testCase, options) {
       outcome = await new Promise((resolve, reject) => {
         const chunks = [];
         let timedOut = false;
-        let killTimer;
+        let termination;
         const child = spawn(command, args, {
-          cwd: project,
-          env: {
-            ...env,
-            OPENCODE_CONFIG_CONTENT: JSON.stringify(buildEvalConfig(pluginUrl)),
-          },
+          cwd: runtime.project,
+          env: isolatedEnv(env, runtime, model, pluginUrl),
           detached: process.platform !== "win32",
           shell: false,
           stdio: ["ignore", "pipe", "pipe"],
@@ -384,18 +487,20 @@ export async function runCase(testCase, options) {
         child.stderr.resume();
         const timeout = setTimeout(() => {
           timedOut = true;
-          signalChild(child, "SIGTERM");
-          killTimer = setTimeout(() => signalChild(child, "SIGKILL"), 100);
-          killTimer.unref();
+          termination = terminateTimedOutChild(child);
+          termination.catch(reject);
         }, testCase.timeoutMs);
         child.once("error", (error) => {
           clearTimeout(timeout);
-          clearTimeout(killTimer);
           reject(error);
         });
-        child.once("close", (code) => {
+        child.once("close", async (code) => {
           clearTimeout(timeout);
-          clearTimeout(killTimer);
+          try {
+            if (termination) await termination;
+          } catch {
+            return;
+          }
           resolve({ stdout: Buffer.concat(chunks).toString("utf8"), code, timedOut });
         });
       });
@@ -466,7 +571,7 @@ export async function runCase(testCase, options) {
       normalizeResponse(redactResponse(response, testCase)),
     );
   } finally {
-    rmSync(project, { recursive: true, force: true });
+    rmSync(runtime.root, { recursive: true, force: true });
   }
 }
 
@@ -506,7 +611,7 @@ export async function runSuite(options) {
     repo,
     cases,
     env = process.env,
-    command = process.platform === "win32" ? "opencode.cmd" : "opencode",
+    command = defaultOpenCodeCommand(),
     commandArgsPrefix = [],
   } = options;
   const startedAt = new Date().toISOString();
@@ -553,6 +658,7 @@ async function main() {
   const passed = report.cases.filter(({ status }) => status === "pass").length;
   console.log(outputPath);
   console.log(`${passed}/${report.cases.length} cases passed`);
+  if (report.status !== "pass") process.exitCode = 1;
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await main();
