@@ -28,6 +28,13 @@ test("published package relies on native commands and ships every skill", () => 
     packaged.has("skills/agents-md-improver/references/project-rule-resolution.md"),
     "project-rule resolution matrix is published",
   );
+  for (const prefix of ["evals/", "scripts/", "tests/", "docs/superpowers/"]) {
+    assert.equal(
+      files.some((file) => file.path.startsWith(prefix)),
+      false,
+      `${prefix} is contributor-only`,
+    );
+  }
 });
 
 test("plugin loads as an ES module without runtime warnings", () => {

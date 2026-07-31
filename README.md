@@ -193,6 +193,14 @@ npm run smoke:opencode
 npm pack --dry-run
 ```
 
+Live behavioral evaluation is opt-in, needs `OPENCODE_EVAL_MODEL`, and runs only from a source checkout:
+
+```bash
+OPENCODE_EVAL_MODEL=provider/model npm run eval:behavioral
+```
+
+See [`evals/behavioral/README.md`](evals/behavioral/README.md) for the replay, review, and acceptance workflow. Snapshots are content-addressed evidence from one reviewed model execution, not universal guarantees.
+
 Every skill must use a lowercase hyphenated directory/name, provide a trigger-specific description, remain under 500 lines where practical, and record its exact upstream in `UPSTREAMS.json`.
 
 ## Acknowledgments
