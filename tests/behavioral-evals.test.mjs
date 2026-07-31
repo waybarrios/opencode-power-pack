@@ -30,6 +30,7 @@ import {
 
 const CASES_PATH = new URL("../evals/behavioral/cases.json", import.meta.url);
 const MUTATIONS_PATH = new URL("../evals/behavioral/mutations.json", import.meta.url);
+const SNAPSHOTS_PATH = new URL("../evals/behavioral/snapshots.json", import.meta.url);
 const REPO = new URL("..", import.meta.url).pathname;
 const DIRECT_CONSUMERS = [
   "agents-md-improver",
@@ -872,6 +873,15 @@ test("replaySnapshots re-grades every current case", () => {
   }
 });
 
+test("approved behavioral snapshots match every current skill and case", () => {
+  const manifest = validateManifest(JSON.parse(readFileSync(CASES_PATH, "utf8")));
+  const snapshots = JSON.parse(readFileSync(SNAPSHOTS_PATH, "utf8"));
+  assert.deepEqual(
+    replaySnapshots(snapshots, manifest, REPO),
+    { status: "pass", cases: 12, failures: [] },
+  );
+});
+
 test("replaySnapshots rejects changed skill and case evidence", () => {
   const manifest = validateManifest(JSON.parse(readFileSync(CASES_PATH, "utf8")));
   const temp = mkdtempSync(join(tmpdir(), "behavioral-replay-stale-test-"));
@@ -958,6 +968,8 @@ test("CLI accept reads the latest report and writes only accepted snapshots", ()
   const temp = mkdtempSync(join(tmpdir(), "behavioral-cli-accept-test-"));
   const reportPath = join(temp, "artifacts", "latest.json");
   const snapshotsPath = join(temp, "snapshots.json");
+  const repoSnapshotsPath = join(REPO, "evals/behavioral/snapshots.json");
+  const previousSnapshots = existsSync(repoSnapshotsPath) ? readFileSync(repoSnapshotsPath, "utf8") : undefined;
   try {
     writeReport(passingReportForCases(manifest.cases, {
       model: "openai/gpt-5.6-sol",
@@ -983,7 +995,11 @@ test("CLI accept reads the latest report and writes only accepted snapshots", ()
       validateSnapshots(JSON.parse(readFileSync(snapshotsPath, "utf8")), manifest, REPO),
       JSON.parse(readFileSync(snapshotsPath, "utf8")),
     );
-    assert.equal(existsSync(join(REPO, "evals/behavioral/snapshots.json")), false);
+    assert.equal(
+      existsSync(repoSnapshotsPath) ? readFileSync(repoSnapshotsPath, "utf8") : undefined,
+      previousSnapshots,
+      "repository snapshots are untouched by an overridden CLI accept",
+    );
   } finally {
     rmSync(temp, { recursive: true, force: true });
   }
