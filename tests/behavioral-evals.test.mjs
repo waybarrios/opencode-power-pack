@@ -7,19 +7,24 @@ import {
 import { tmpdir } from "node:os";
 import { delimiter, join } from "node:path";
 import {
+  acceptReport,
   applyMutation,
   buildEvalConfig,
   caseHash,
   defaultOpenCodeCommand,
   gradeResponse,
+  hashSkill,
   normalizeResponse,
   parseJsonEvents,
   redactResponse,
+  replaySnapshots,
   runCase,
   runSuite,
   sha256,
   validateManifest,
   validateMutations,
+  validateReport,
+  validateSnapshots,
   writeReport,
 } from "../scripts/behavioral-evals.mjs";
 
@@ -112,6 +117,48 @@ const validCase = {
 function manifestWith(testCases = [validCase], targetSkills = ["feature-dev"]) {
   return { version: 1, targetSkills, cases: testCases };
 }
+
+function passingReportForCases(cases, { model, opencodeVersion }) {
+  const startedAt = "2026-07-30T12:00:00.000Z";
+  const completedAt = "2026-07-30T12:01:00.000Z";
+  return {
+    version: 1,
+    model,
+    opencodeVersion,
+    startedAt,
+    completedAt,
+    status: "pass",
+    cases: cases.map((testCase) => ({
+      caseId: testCase.id,
+      skill: testCase.skill,
+      category: testCase.category,
+      status: "pass",
+      failures: [],
+      response: testCase.required.map(({ anyOf }) => anyOf[0]).join("\n"),
+      model,
+      opencodeVersion,
+      skillHash: hashSkill(REPO, testCase.skill),
+      caseHash: caseHash(testCase),
+      durationMs: 1000,
+      completedAt,
+    })),
+  };
+}
+
+const withStaleSkillHash = (report) => ({
+  ...report,
+  cases: report.cases.map((entry, index) => (
+    index === 0 ? { ...entry, skillHash: "0".repeat(64) } : entry
+  )),
+});
+const withDuplicateCase = (report) => ({ ...report, cases: [...report.cases, report.cases[0]] });
+const withoutLastCase = (report) => ({ ...report, cases: report.cases.slice(0, -1) });
+const withChangedHash = (snapshotFile, field) => ({
+  ...snapshotFile,
+  snapshots: snapshotFile.snapshots.map((snapshot, index) => (
+    index === 0 ? { ...snapshot, [field]: "0".repeat(64) } : snapshot
+  )),
+});
 
 test("buildEvalConfig loads only this plugin and denies every model tool", () => {
   assert.deepEqual(buildEvalConfig("file:///repo/plugin.js"), {
@@ -484,6 +531,529 @@ test("writeReport uses a stable artifact path and deterministic JSON formatting"
     assert.equal(readFileSync(output, "utf8"), `${JSON.stringify(report, null, 2)}\n`);
   } finally {
     rmSync(tempRepo, { recursive: true, force: true });
+  }
+});
+
+test("acceptReport writes deterministic content-addressed snapshots", () => {
+  const manifest = validateManifest(JSON.parse(readFileSync(CASES_PATH, "utf8")));
+  const temp = mkdtempSync(join(tmpdir(), "behavioral-accept-test-"));
+  const snapshotsPath = join(temp, "snapshots.json");
+  const report = passingReportForCases(manifest.cases.toReversed(), {
+    model: "openai/gpt-5.6-sol",
+    opencodeVersion: "1.18.9",
+  });
+  const architect = report.cases.find(({ caseId }) => caseId === "architect-repository-authority");
+  architect.response = `  ${architect.response.replaceAll("\n", "  \r\n")}\r\nsk-live_ABC123  `;
+  try {
+    const first = acceptReport({ report, manifest, repo: REPO, snapshotsPath });
+    const bytes = readFileSync(snapshotsPath, "utf8");
+    const second = acceptReport({ report, manifest, repo: REPO, snapshotsPath });
+    assert.deepEqual(second, first);
+    assert.equal(readFileSync(snapshotsPath, "utf8"), bytes);
+    assert.deepEqual(first.snapshots.map(({ caseId }) => caseId), EXPECTED_CASE_IDS);
+    assert.deepEqual(Object.keys(first), ["version", "snapshots"]);
+    assert.deepEqual(Object.keys(first.snapshots[0]), [
+      "caseId", "model", "opencodeVersion", "skillHash", "caseHash", "verdict", "response",
+    ]);
+    assert.equal(first.snapshots[0].skillHash, hashSkill(REPO, manifest.cases[3].skill));
+    assert.equal(first.snapshots[0].caseHash, caseHash(manifest.cases[3]));
+    assert.equal(first.snapshots[0].response, [
+      "BOUNDARY=PRESERVED", "SCOPE=PRESERVED", "AUTHORITY=PARENT", "[REDACTED]",
+    ].join("\n"));
+    assert.doesNotMatch(bytes, /startedAt|completedAt|durationMs|failures|stderr|session|token|cost|sk-live/);
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+});
+
+test("acceptReport rejects incomplete, stale, duplicate, missing, and failed evidence", () => {
+  const manifest = validateManifest(JSON.parse(readFileSync(CASES_PATH, "utf8")));
+  const temp = mkdtempSync(join(tmpdir(), "behavioral-accept-reject-test-"));
+  const snapshotsPath = join(temp, "snapshots.json");
+  const fullReport = passingReportForCases(manifest.cases, {
+    model: "openai/gpt-5.6-sol",
+    opencodeVersion: "1.18.9",
+  });
+  try {
+    assert.throws(
+      () => acceptReport({
+        report: { ...fullReport, status: "incomplete" }, manifest, repo: REPO, snapshotsPath,
+      }),
+      /report status must be pass/i,
+    );
+    assert.throws(
+      () => acceptReport({
+        report: withStaleSkillHash(fullReport), manifest, repo: REPO, snapshotsPath,
+      }),
+      /stale skill hash/i,
+    );
+    assert.throws(
+      () => acceptReport({
+        report: {
+          ...fullReport,
+          cases: fullReport.cases.map((entry, index) => (
+            index === 0 ? { ...entry, caseHash: "0".repeat(64) } : entry
+          )),
+        },
+        manifest,
+        repo: REPO,
+        snapshotsPath,
+      }),
+      /stale case hash/i,
+    );
+    assert.throws(
+      () => acceptReport({
+        report: withDuplicateCase(fullReport), manifest, repo: REPO, snapshotsPath,
+      }),
+      /duplicate case/i,
+    );
+    assert.throws(
+      () => acceptReport({
+        report: withoutLastCase(fullReport), manifest, repo: REPO, snapshotsPath,
+      }),
+      /missing case/i,
+    );
+    for (const status of ["fail", "incomplete", "skipped"]) {
+      const report = {
+        ...fullReport,
+        cases: fullReport.cases.map((entry, index) => (
+          index === 0 ? { ...entry, status } : entry
+        )),
+      };
+      assert.throws(
+        () => acceptReport({ report, manifest, repo: REPO, snapshotsPath }),
+        /case status must be pass/i,
+      );
+    }
+    assert.throws(
+      () => acceptReport({
+        report: {
+          ...fullReport,
+          cases: fullReport.cases.map((entry, index) => (
+            index === 0 ? { ...entry, response: "safe but insufficient response" } : entry
+          )),
+        },
+        manifest,
+        repo: REPO,
+        snapshotsPath,
+      }),
+      /response failed grading/i,
+    );
+    assert.equal(existsSync(snapshotsPath), false);
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+});
+
+test("acceptReport rejects snapshots its own validation would refuse", () => {
+  const temp = mkdtempSync(join(tmpdir(), "behavioral-accept-roundtrip-test-"));
+  const snapshotsPath = join(temp, "snapshots.json");
+  const options = { model: "openai/gpt-5.6-sol", opencodeVersion: "1.18.9" };
+  try {
+    const markerCollision = {
+      ...validCase,
+      id: "redact-marker-collision",
+      sentinels: ["dact"],
+      fictitiousSecrets: [],
+      required: [
+        { id: "boundary", anyOf: ["BOUNDARY=PRESERVED"] },
+        { id: "credential", anyOf: ["sk-live_ABC123"] },
+      ],
+    };
+    assert.throws(
+      () => acceptReport({
+        report: passingReportForCases([markerCollision], options), manifest: manifestWith([markerCollision]),
+        repo: REPO,
+        snapshotsPath,
+      }),
+      /response must be normalized and redacted/i,
+    );
+    assert.equal(existsSync(snapshotsPath), false);
+
+    const credentialOracle = {
+      ...validCase,
+      id: "credential-oracle",
+      fictitiousSecrets: [],
+      required: [
+        { id: "boundary", anyOf: ["BOUNDARY=PRESERVED"] },
+        { id: "credential", anyOf: ["sk-live_ABC123"] },
+      ],
+    };
+    assert.throws(
+      () => acceptReport({
+        report: passingReportForCases([credentialOracle], options),
+        manifest: manifestWith([credentialOracle]),
+        repo: REPO,
+        snapshotsPath,
+      }),
+      /failed replay grading: credential-oracle: required:credential/i,
+    );
+    assert.equal(existsSync(snapshotsPath), false);
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+});
+
+test("validateReport rejects malformed hashes, timestamps, durations, and mismatches", () => {
+  const manifest = validateManifest(JSON.parse(readFileSync(CASES_PATH, "utf8")));
+  const report = passingReportForCases(manifest.cases, {
+    model: "openai/gpt-5.6-sol",
+    opencodeVersion: "1.18.9",
+  });
+  const withEntry = (entry) => ({ ...report, cases: report.cases.map((item, index) => (
+    index === 0 ? entry : item
+  )) });
+  assert.throws(
+    () => validateReport(withEntry({ ...report.cases[0], skillHash: "A".repeat(64) }), manifest, REPO),
+    /64 lowercase hexadecimal/i,
+  );
+  assert.throws(
+    () => validateReport({ ...report, startedAt: "2026-07-30T12:00:00Z" }, manifest, REPO),
+    /ISO timestamp/i,
+  );
+  assert.throws(
+    () => validateReport({ ...report, completedAt: 12345 }, manifest, REPO),
+    /ISO timestamp/i,
+  );
+  for (const durationMs of [-1, 1.5, "1000"]) {
+    assert.throws(
+      () => validateReport(withEntry({ ...report.cases[0], durationMs }), manifest, REPO),
+      /durationMs must be a non-negative integer/i,
+    );
+  }
+  assert.throws(
+    () => validateReport(withEntry({ ...report.cases[0], skill: "code-review" }), manifest, REPO),
+    /skill does not match manifest/i,
+  );
+  assert.throws(
+    () => validateReport(withEntry({ ...report.cases[0], category: "wrong" }), manifest, REPO),
+    /category does not match manifest/i,
+  );
+  assert.throws(
+    () => validateReport(withEntry({ ...report.cases[0], model: "other/model" }), manifest, REPO),
+    /model does not match report/i,
+  );
+  assert.throws(
+    () => validateReport(withEntry({ ...report.cases[0], opencodeVersion: "9.9.9" }), manifest, REPO),
+    /OpenCode version does not match report/i,
+  );
+  assert.throws(
+    () => validateReport(withEntry({ ...report.cases[0], failures: ["required:boundary"] }), manifest, REPO),
+    /passing case failures must be empty/i,
+  );
+  assert.throws(
+    () => validateReport(withEntry({ ...report.cases[0], caseId: "unknown-case" }), manifest, REPO),
+    /unknown case/i,
+  );
+});
+
+test("validateSnapshots rejects unredacted, unnormalized, and non-pass snapshots", () => {
+  const manifest = validateManifest(JSON.parse(readFileSync(CASES_PATH, "utf8")));
+  const temp = mkdtempSync(join(tmpdir(), "behavioral-snapshot-gates-test-"));
+  try {
+    const snapshotFile = acceptReport({
+      report: passingReportForCases(manifest.cases, {
+        model: "openai/gpt-5.6-sol",
+        opencodeVersion: "1.18.9",
+      }),
+      manifest,
+      repo: REPO,
+      snapshotsPath: join(temp, "snapshots.json"),
+    });
+    assert.throws(
+      () => validateSnapshots({
+        ...snapshotFile,
+        snapshots: snapshotFile.snapshots.map((snapshot, index) => (
+          index === 0 ? { ...snapshot, verdict: "fail" } : snapshot
+        )),
+      }, manifest, REPO),
+      /verdict must be pass/i,
+    );
+    assert.throws(
+      () => validateSnapshots({
+        ...snapshotFile,
+        snapshots: snapshotFile.snapshots.map((snapshot, index) => (
+          index === 0 ? { ...snapshot, response: `${snapshot.response}  ` } : snapshot
+        )),
+      }, manifest, REPO),
+      /response must be normalized and redacted/i,
+    );
+    assert.throws(
+      () => validateSnapshots({
+        ...snapshotFile,
+        snapshots: snapshotFile.snapshots.map((snapshot, index) => (
+          index === 0 ? { ...snapshot, response: `${snapshot.response}\nsk-live_ABC123` } : snapshot
+        )),
+      }, manifest, REPO),
+      /response must be normalized and redacted/i,
+    );
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+});
+
+test("validators freeze their outputs and hashSkill reports missing skills", () => {
+  const manifest = validateManifest(JSON.parse(readFileSync(CASES_PATH, "utf8")));
+  const report = validateReport(passingReportForCases(manifest.cases, {
+    model: "openai/gpt-5.6-sol",
+    opencodeVersion: "1.18.9",
+  }), manifest, REPO);
+  assert.ok(Object.isFrozen(report));
+  assert.ok(Object.isFrozen(report.cases[0]));
+  const snapshotFile = acceptReport({
+    report: report,
+    manifest,
+    repo: REPO,
+    snapshotsPath: join(mkdtempSync(join(tmpdir(), "behavioral-freeze-test-")), "snapshots.json"),
+  });
+  assert.ok(Object.isFrozen(snapshotFile));
+  assert.ok(Object.isFrozen(snapshotFile.snapshots[0]));
+  assert.ok(Object.isFrozen(validateSnapshots(snapshotFile, manifest, REPO)));
+  assert.throws(() => hashSkill(REPO, "no-such-skill"), /must have a SKILL\.md/i);
+});
+
+test("validateReport enforces closed report and case schemas", () => {
+  const manifest = validateManifest(JSON.parse(readFileSync(CASES_PATH, "utf8")));
+  const report = passingReportForCases(manifest.cases, {
+    model: "openai/gpt-5.6-sol",
+    opencodeVersion: "1.18.9",
+  });
+  assert.deepEqual(validateReport(report, manifest, REPO), report);
+  assert.throws(
+    () => validateReport({ ...report, stdout: "raw-output" }, manifest, REPO),
+    /report.*unknown field stdout/i,
+  );
+  assert.throws(
+    () => validateReport({
+      ...report,
+      cases: report.cases.map((entry, index) => (
+        index === 0 ? { ...entry, tokenCount: 42 } : entry
+      )),
+    }, manifest, REPO),
+    /unknown field tokenCount/i,
+  );
+});
+
+test("replaySnapshots re-grades every current case", () => {
+  const manifest = validateManifest(JSON.parse(readFileSync(CASES_PATH, "utf8")));
+  const temp = mkdtempSync(join(tmpdir(), "behavioral-replay-test-"));
+  try {
+    const snapshotFile = acceptReport({
+      report: passingReportForCases(manifest.cases, {
+        model: "openai/gpt-5.6-sol",
+        opencodeVersion: "1.18.9",
+      }),
+      manifest,
+      repo: REPO,
+      snapshotsPath: join(temp, "snapshots.json"),
+    });
+    assert.deepEqual(replaySnapshots(snapshotFile, manifest, REPO), {
+      status: "pass",
+      cases: EXPECTED_CASE_IDS.length,
+      failures: [],
+    });
+
+    const failedSnapshot = {
+      ...snapshotFile,
+      snapshots: snapshotFile.snapshots.map((snapshot, index) => (
+        index === 0 ? { ...snapshot, response: "safe but insufficient response" } : snapshot
+      )),
+    };
+    assert.deepEqual(replaySnapshots(failedSnapshot, manifest, REPO), {
+      status: "fail",
+      cases: EXPECTED_CASE_IDS.length,
+      failures: [{
+        caseId: "architect-repository-authority",
+        failures: ["required:boundary", "required:scope", "required:authority"],
+      }],
+    });
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+});
+
+test("replaySnapshots rejects changed skill and case evidence", () => {
+  const manifest = validateManifest(JSON.parse(readFileSync(CASES_PATH, "utf8")));
+  const temp = mkdtempSync(join(tmpdir(), "behavioral-replay-stale-test-"));
+  try {
+    const snapshotFile = acceptReport({
+      report: passingReportForCases(manifest.cases, {
+        model: "openai/gpt-5.6-sol",
+        opencodeVersion: "1.18.9",
+      }),
+      manifest,
+      repo: REPO,
+      snapshotsPath: join(temp, "snapshots.json"),
+    });
+    assert.throws(
+      () => replaySnapshots(withChangedHash(snapshotFile, "skillHash"), manifest, REPO),
+      /stale skill hash/i,
+    );
+    assert.throws(
+      () => replaySnapshots(withChangedHash(snapshotFile, "caseHash"), manifest, REPO),
+      /stale case hash/i,
+    );
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+});
+
+test("validateSnapshots requires a closed complete one-to-one snapshot set", () => {
+  const manifest = validateManifest(JSON.parse(readFileSync(CASES_PATH, "utf8")));
+  const temp = mkdtempSync(join(tmpdir(), "behavioral-snapshot-validation-test-"));
+  try {
+    const snapshotFile = acceptReport({
+      report: passingReportForCases(manifest.cases, {
+        model: "openai/gpt-5.6-sol",
+        opencodeVersion: "1.18.9",
+      }),
+      manifest,
+      repo: REPO,
+      snapshotsPath: join(temp, "snapshots.json"),
+    });
+    assert.deepEqual(validateSnapshots(snapshotFile, manifest, REPO), snapshotFile);
+    assert.throws(
+      () => validateSnapshots({ ...snapshotFile, stdout: "raw" }, manifest, REPO),
+      /snapshots.*unknown field stdout/i,
+    );
+    assert.throws(
+      () => validateSnapshots({
+        ...snapshotFile,
+        snapshots: snapshotFile.snapshots.map((entry, index) => (
+          index === 0 ? { ...entry, durationMs: 1000 } : entry
+        )),
+      }, manifest, REPO),
+      /unknown field durationMs/i,
+    );
+    assert.throws(
+      () => validateSnapshots({
+        ...snapshotFile,
+        snapshots: [...snapshotFile.snapshots, snapshotFile.snapshots[0]],
+      }, manifest, REPO),
+      /duplicate snapshot/i,
+    );
+    assert.throws(
+      () => validateSnapshots({
+        ...snapshotFile,
+        snapshots: snapshotFile.snapshots.slice(0, -1),
+      }, manifest, REPO),
+      /missing snapshot/i,
+    );
+    assert.throws(
+      () => validateSnapshots({
+        ...snapshotFile,
+        snapshots: snapshotFile.snapshots.map((entry, index) => (
+          index === 0 ? { ...entry, caseId: "unknown-case" } : entry
+        )),
+      }, manifest, REPO),
+      /unknown snapshot case/i,
+    );
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+});
+
+test("CLI accept reads the latest report and writes only accepted snapshots", () => {
+  const manifest = validateManifest(JSON.parse(readFileSync(CASES_PATH, "utf8")));
+  const temp = mkdtempSync(join(tmpdir(), "behavioral-cli-accept-test-"));
+  const reportPath = join(temp, "artifacts", "latest.json");
+  const snapshotsPath = join(temp, "snapshots.json");
+  try {
+    writeReport(passingReportForCases(manifest.cases, {
+      model: "openai/gpt-5.6-sol",
+      opencodeVersion: "1.18.9",
+    }), reportPath);
+    const result = spawnSync(
+      process.execPath,
+      [new URL("../scripts/behavioral-evals.mjs", import.meta.url).pathname, "accept"],
+      {
+        cwd: REPO,
+        encoding: "utf8",
+        env: {
+          ...process.env,
+          BEHAVIORAL_EVAL_LATEST_PATH: reportPath,
+          BEHAVIORAL_EVAL_SNAPSHOTS_PATH: snapshotsPath,
+        },
+      },
+    );
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(result.stdout, "Accepted 12 behavioral snapshots\n");
+    assert.equal(result.stderr, "");
+    assert.deepEqual(
+      validateSnapshots(JSON.parse(readFileSync(snapshotsPath, "utf8")), manifest, REPO),
+      JSON.parse(readFileSync(snapshotsPath, "utf8")),
+    );
+    assert.equal(existsSync(join(REPO, "evals/behavioral/snapshots.json")), false);
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+});
+
+test("CLI accept exits nonzero without writing stale evidence", () => {
+  const manifest = validateManifest(JSON.parse(readFileSync(CASES_PATH, "utf8")));
+  const temp = mkdtempSync(join(tmpdir(), "behavioral-cli-stale-test-"));
+  const reportPath = join(temp, "artifacts", "latest.json");
+  const snapshotsPath = join(temp, "snapshots.json");
+  try {
+    writeReport(withStaleSkillHash(passingReportForCases(manifest.cases, {
+      model: "openai/gpt-5.6-sol",
+      opencodeVersion: "1.18.9",
+    })), reportPath);
+    const result = spawnSync(
+      process.execPath,
+      [new URL("../scripts/behavioral-evals.mjs", import.meta.url).pathname, "accept"],
+      {
+        cwd: REPO,
+        encoding: "utf8",
+        env: {
+          ...process.env,
+          BEHAVIORAL_EVAL_LATEST_PATH: reportPath,
+          BEHAVIORAL_EVAL_SNAPSHOTS_PATH: snapshotsPath,
+        },
+      },
+    );
+    assert.equal(result.status, 1);
+    assert.equal(result.stdout, "");
+    assert.match(result.stderr, /stale skill hash/i);
+    assert.equal(existsSync(snapshotsPath), false);
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+});
+
+test("CLI accept exits nonzero without writing when the latest report is missing or malformed", () => {
+  const temp = mkdtempSync(join(tmpdir(), "behavioral-cli-errors-test-"));
+  const reportPath = join(temp, "artifacts", "latest.json");
+  const snapshotsPath = join(temp, "snapshots.json");
+  const spawnAccept = () => spawnSync(
+    process.execPath,
+    [new URL("../scripts/behavioral-evals.mjs", import.meta.url).pathname, "accept"],
+    {
+      cwd: REPO,
+      encoding: "utf8",
+      env: {
+        ...process.env,
+        BEHAVIORAL_EVAL_LATEST_PATH: reportPath,
+        BEHAVIORAL_EVAL_SNAPSHOTS_PATH: snapshotsPath,
+      },
+    },
+  );
+  try {
+    const missing = spawnAccept();
+    assert.equal(missing.status, 1);
+    assert.equal(missing.stdout, "");
+    assert.match(missing.stderr, /ENOENT/);
+    assert.equal(existsSync(snapshotsPath), false);
+
+    mkdirSync(join(temp, "artifacts"), { recursive: true });
+    writeFileSync(reportPath, "not-json");
+    const malformed = spawnAccept();
+    assert.equal(malformed.status, 1);
+    assert.equal(malformed.stdout, "");
+    assert.match(malformed.stderr, /JSON|Unexpected token|Unexpected end/i);
+    assert.equal(existsSync(snapshotsPath), false);
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
   }
 });
 

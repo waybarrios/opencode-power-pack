@@ -7,6 +7,7 @@ import {
   mkdirSync,
   mkdtempSync,
   readFileSync,
+  renameSync,
   rmSync,
   statSync,
   writeFileSync,
@@ -23,6 +24,17 @@ const CASE_FIELDS = new Set([
 const REQUIRED_FIELDS = new Set(["id", "anyOf"]);
 const FORBIDDEN_FIELDS = new Set(["id", "values"]);
 const MUTATION_FIELDS = new Set(["id", "caseId", "operation", "from", "value", "expectedFailure"]);
+const REPORT_FIELDS = new Set([
+  "version", "model", "opencodeVersion", "startedAt", "completedAt", "status", "cases",
+]);
+const REPORT_CASE_FIELDS = new Set([
+  "caseId", "skill", "category", "status", "failures", "response", "model",
+  "opencodeVersion", "skillHash", "caseHash", "durationMs", "completedAt",
+]);
+const SNAPSHOT_FILE_FIELDS = new Set(["version", "snapshots"]);
+const SNAPSHOT_FIELDS = new Set([
+  "caseId", "model", "opencodeVersion", "skillHash", "caseHash", "verdict", "response",
+]);
 
 export function sha256(value) {
   return createHash("sha256").update(value).digest("hex");
@@ -38,6 +50,12 @@ function canonical(value) {
 
 export function caseHash(testCase) {
   return sha256(JSON.stringify(canonical(testCase)));
+}
+
+export function hashSkill(repo, skill) {
+  const skillPath = path.join(repo, "skills", skill, "SKILL.md");
+  if (!existsSync(skillPath)) throw new TypeError(`skill ${skill} must have a SKILL.md`);
+  return sha256(readFileSync(skillPath));
 }
 
 function isObject(value) {
@@ -265,6 +283,204 @@ export function gradeResponse(testCase, response) {
   return { status: failures.length === 0 ? "pass" : "fail", failures };
 }
 
+function assertHash(value, label) {
+  if (typeof value !== "string" || !/^[a-f0-9]{64}$/.test(value)) {
+    throw new TypeError(`${label} must be 64 lowercase hexadecimal characters`);
+  }
+}
+
+function assertTimestamp(value, label) {
+  const parsed = typeof value === "string" ? new Date(value) : undefined;
+  if (!parsed || Number.isNaN(parsed.getTime()) || parsed.toISOString() !== value) {
+    throw new TypeError(`${label} must be an ISO timestamp`);
+  }
+}
+
+export function validateReport(value, manifest, repo) {
+  assertObject(value, "report");
+  assertFields(value, REPORT_FIELDS, "report");
+  if (value.version !== 1) throw new TypeError("report.version must equal 1");
+  assertNonEmptyString(value.model, "report.model");
+  assertNonEmptyString(value.opencodeVersion, "report.opencodeVersion");
+  assertTimestamp(value.startedAt, "report.startedAt");
+  assertTimestamp(value.completedAt, "report.completedAt");
+  if (value.status !== "pass") throw new TypeError("report status must be pass");
+  if (!Array.isArray(value.cases)) throw new TypeError("report.cases must be an array");
+
+  const currentCases = new Map(manifest.cases.map((testCase) => [testCase.id, testCase]));
+  const seen = new Set();
+  const cases = value.cases.map((entry, index) => {
+    const label = isObject(entry) && typeof entry.caseId === "string" && entry.caseId !== ""
+      ? entry.caseId
+      : `report.cases[${index}]`;
+    assertObject(entry, label);
+    assertFields(entry, REPORT_CASE_FIELDS, label);
+    assertNonEmptyString(entry.caseId, `${label}.caseId`);
+    if (seen.has(entry.caseId)) throw new TypeError(`duplicate case ${entry.caseId}`);
+    seen.add(entry.caseId);
+    const testCase = currentCases.get(entry.caseId);
+    if (!testCase) throw new TypeError(`unknown case ${entry.caseId}`);
+
+    assertNonEmptyString(entry.skill, `${label}.skill`);
+    assertNonEmptyString(entry.category, `${label}.category`);
+    if (entry.skill !== testCase.skill) throw new TypeError(`${label}: skill does not match manifest`);
+    if (entry.category !== testCase.category) {
+      throw new TypeError(`${label}: category does not match manifest`);
+    }
+    if (entry.status !== "pass") throw new TypeError(`${label}: case status must be pass`);
+    if (!Array.isArray(entry.failures) || entry.failures.length !== 0) {
+      throw new TypeError(`${label}: passing case failures must be empty`);
+    }
+    assertNonEmptyString(entry.response, `${label}.response`);
+    assertNonEmptyString(entry.model, `${label}.model`);
+    assertNonEmptyString(entry.opencodeVersion, `${label}.opencodeVersion`);
+    if (entry.model !== value.model) throw new TypeError(`${label}: model does not match report`);
+    if (entry.opencodeVersion !== value.opencodeVersion) {
+      throw new TypeError(`${label}: OpenCode version does not match report`);
+    }
+    assertHash(entry.skillHash, `${label}.skillHash`);
+    assertHash(entry.caseHash, `${label}.caseHash`);
+    if (entry.skillHash !== hashSkill(repo, testCase.skill)) {
+      throw new TypeError(`${label}: stale skill hash`);
+    }
+    if (entry.caseHash !== caseHash(testCase)) throw new TypeError(`${label}: stale case hash`);
+    if (!Number.isInteger(entry.durationMs) || entry.durationMs < 0) {
+      throw new TypeError(`${label}.durationMs must be a non-negative integer`);
+    }
+    assertTimestamp(entry.completedAt, `${label}.completedAt`);
+    const grade = gradeResponse(testCase, entry.response);
+    if (grade.status !== "pass") {
+      throw new TypeError(`${label}: response failed grading (${grade.failures.join(", ")})`);
+    }
+
+    return {
+      caseId: entry.caseId,
+      skill: entry.skill,
+      category: entry.category,
+      status: entry.status,
+      failures: [],
+      response: entry.response,
+      model: entry.model,
+      opencodeVersion: entry.opencodeVersion,
+      skillHash: entry.skillHash,
+      caseHash: entry.caseHash,
+      durationMs: entry.durationMs,
+      completedAt: entry.completedAt,
+    };
+  });
+
+  for (const testCase of manifest.cases) {
+    if (!seen.has(testCase.id)) throw new TypeError(`missing case ${testCase.id}`);
+  }
+  return deepFreeze({
+    version: 1,
+    model: value.model,
+    opencodeVersion: value.opencodeVersion,
+    startedAt: value.startedAt,
+    completedAt: value.completedAt,
+    status: "pass",
+    cases,
+  });
+}
+
+export function acceptReport({ report, manifest, repo, snapshotsPath }) {
+  const validated = validateReport(report, manifest, repo);
+  const currentCases = new Map(manifest.cases.map((testCase) => [testCase.id, testCase]));
+  const snapshots = validated.cases.map((entry) => {
+    const testCase = currentCases.get(entry.caseId);
+    return {
+      caseId: entry.caseId,
+      model: entry.model,
+      opencodeVersion: entry.opencodeVersion,
+      skillHash: entry.skillHash,
+      caseHash: entry.caseHash,
+      verdict: "pass",
+      response: normalizeResponse(redactResponse(entry.response, testCase)),
+    };
+  }).sort((left, right) => (left.caseId < right.caseId ? -1 : left.caseId > right.caseId ? 1 : 0));
+  const snapshotFile = deepFreeze({ version: 1, snapshots });
+  const replayed = replaySnapshots(snapshotFile, manifest, repo);
+  if (replayed.status !== "pass") {
+    const detail = replayed.failures
+      .map(({ caseId, failures }) => `${caseId}: ${failures.join(", ")}`)
+      .join("; ");
+    throw new TypeError(`snapshot responses failed replay grading: ${detail}`);
+  }
+  mkdirSync(path.dirname(snapshotsPath), { recursive: true });
+  writeFileSync(snapshotsPath, `${JSON.stringify(snapshotFile, null, 2)}\n`);
+  return snapshotFile;
+}
+
+export function validateSnapshots(value, manifest, repo) {
+  assertObject(value, "snapshots");
+  assertFields(value, SNAPSHOT_FILE_FIELDS, "snapshots");
+  if (value.version !== 1) throw new TypeError("snapshots.version must equal 1");
+  if (!Array.isArray(value.snapshots)) throw new TypeError("snapshots.snapshots must be an array");
+
+  const currentCases = new Map(manifest.cases.map((testCase) => [testCase.id, testCase]));
+  const seen = new Set();
+  const snapshots = value.snapshots.map((snapshot, index) => {
+    const label = isObject(snapshot) && typeof snapshot.caseId === "string" && snapshot.caseId !== ""
+      ? snapshot.caseId
+      : `snapshots[${index}]`;
+    assertObject(snapshot, label);
+    assertFields(snapshot, SNAPSHOT_FIELDS, label);
+    assertNonEmptyString(snapshot.caseId, `${label}.caseId`);
+    if (seen.has(snapshot.caseId)) throw new TypeError(`duplicate snapshot ${snapshot.caseId}`);
+    seen.add(snapshot.caseId);
+    const testCase = currentCases.get(snapshot.caseId);
+    if (!testCase) throw new TypeError(`unknown snapshot case ${snapshot.caseId}`);
+
+    assertNonEmptyString(snapshot.model, `${label}.model`);
+    assertNonEmptyString(snapshot.opencodeVersion, `${label}.opencodeVersion`);
+    assertHash(snapshot.skillHash, `${label}.skillHash`);
+    assertHash(snapshot.caseHash, `${label}.caseHash`);
+    if (snapshot.skillHash !== hashSkill(repo, testCase.skill)) {
+      throw new TypeError(`${label}: stale skill hash`);
+    }
+    if (snapshot.caseHash !== caseHash(testCase)) throw new TypeError(`${label}: stale case hash`);
+    if (snapshot.verdict !== "pass") throw new TypeError(`${label}: verdict must be pass`);
+    assertNonEmptyString(snapshot.response, `${label}.response`);
+    if (normalizeResponse(redactResponse(snapshot.response, testCase)) !== snapshot.response) {
+      throw new TypeError(`${label}: response must be normalized and redacted`);
+    }
+    return {
+      caseId: snapshot.caseId,
+      model: snapshot.model,
+      opencodeVersion: snapshot.opencodeVersion,
+      skillHash: snapshot.skillHash,
+      caseHash: snapshot.caseHash,
+      verdict: "pass",
+      response: snapshot.response,
+    };
+  });
+
+  for (const testCase of manifest.cases) {
+    if (!seen.has(testCase.id)) throw new TypeError(`missing snapshot ${testCase.id}`);
+  }
+  snapshots.sort((left, right) => (
+    left.caseId < right.caseId ? -1 : left.caseId > right.caseId ? 1 : 0
+  ));
+  return deepFreeze({ version: 1, snapshots });
+}
+
+export function replaySnapshots(snapshotFile, manifest, repo) {
+  const validated = validateSnapshots(snapshotFile, manifest, repo);
+  const currentCases = new Map(manifest.cases.map((testCase) => [testCase.id, testCase]));
+  const failures = [];
+  for (const snapshot of validated.snapshots) {
+    const grade = gradeResponse(currentCases.get(snapshot.caseId), snapshot.response);
+    if (grade.status === "fail") {
+      failures.push({ caseId: snapshot.caseId, failures: grade.failures });
+    }
+  }
+  return deepFreeze({
+    status: failures.length === 0 ? "pass" : "fail",
+    cases: validated.snapshots.length,
+    failures,
+  });
+}
+
 export function applyMutation(response, mutation) {
   if (!isObject(mutation) || typeof mutation.value !== "string") {
     throw new TypeError("mutation must contain a string value");
@@ -377,7 +593,7 @@ function reportEntry(testCase, options, started, status, failures, response) {
     response,
     model: options.model,
     opencodeVersion: options.opencodeVersion,
-    skillHash: sha256(readFileSync(path.join(options.repo, "skills", testCase.skill, "SKILL.md"))),
+    skillHash: hashSkill(options.repo, testCase.skill),
     caseHash: caseHash(testCase),
     durationMs: Date.now() - started,
     completedAt: new Date().toISOString(),
@@ -580,7 +796,9 @@ export function writeReport(
   outputPath = path.resolve(".artifacts/behavioral-evals/latest.json"),
 ) {
   mkdirSync(path.dirname(outputPath), { recursive: true });
-  writeFileSync(outputPath, `${JSON.stringify(report, null, 2)}\n`);
+  const tempPath = `${outputPath}.tmp`;
+  writeFileSync(tempPath, `${JSON.stringify(report, null, 2)}\n`);
+  renameSync(tempPath, outputPath);
   return outputPath;
 }
 
@@ -645,16 +863,29 @@ export async function runSuite(options) {
 
 async function main() {
   const mode = process.argv[2];
-  if (mode !== "run") throw new TypeError(`unsupported behavioral evaluation mode: ${mode || "missing"}`);
+  if (mode !== "run" && mode !== "accept") {
+    throw new TypeError(`unsupported behavioral evaluation mode: ${mode || "missing"}`);
+  }
   const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
   const manifest = validateManifest(JSON.parse(
     readFileSync(path.join(repo, "evals/behavioral/cases.json"), "utf8"),
   ));
+  const latestPath = process.env.BEHAVIORAL_EVAL_LATEST_PATH
+    || path.join(repo, ".artifacts/behavioral-evals/latest.json");
+  const snapshotsPath = process.env.BEHAVIORAL_EVAL_SNAPSHOTS_PATH
+    || path.join(repo, "evals/behavioral/snapshots.json");
+  if (mode === "accept") {
+    const snapshotFile = acceptReport({
+      report: JSON.parse(readFileSync(latestPath, "utf8")),
+      manifest,
+      repo,
+      snapshotsPath,
+    });
+    console.log(`Accepted ${snapshotFile.snapshots.length} behavioral snapshots`);
+    return;
+  }
   const report = await runSuite({ repo, cases: manifest.cases });
-  const outputPath = writeReport(
-    report,
-    path.join(repo, ".artifacts/behavioral-evals/latest.json"),
-  );
+  const outputPath = writeReport(report, latestPath);
   const passed = report.cases.filter(({ status }) => status === "pass").length;
   console.log(outputPath);
   console.log(`${passed}/${report.cases.length} cases passed`);
