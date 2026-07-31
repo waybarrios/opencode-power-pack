@@ -1,0 +1,22 @@
+name: OpenCode smoke
+
+on:
+  pull_request:
+    paths:
+      - ".opencode/**"
+      - "skills/**"
+      - "scripts/opencode-smoke.mjs"
+      - "package.json"
+      - ".github/workflows/opencode-smoke.yml"
+  workflow_dispatch:
+
+jobs:
+  opencode-1-18-7:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: node scripts/opencode-smoke.mjs 1.18.7

@@ -44,6 +44,13 @@ NOTES.md
 .opencode/local.json
 .opencode/cache/
 
+# Local behavioral evaluation reports
+.artifacts/behavioral-evals/
+
+# Planning docs for behavioral evaluations (not delivered to main)
+docs/superpowers/plans/2026-07-30-behavioral-evaluations*.md
+docs/superpowers/specs/2026-07-30-behavioral-evaluations*.md
+
 # Node / Bun
 node_modules/
 *.log

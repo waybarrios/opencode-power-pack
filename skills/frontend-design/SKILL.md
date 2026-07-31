@@ -8,6 +8,18 @@ This skill guides creation of distinctive, production-grade frontend interfaces 
 
 The user provides frontend requirements: a component, page, application, or interface to build. They may include context about the purpose, audience, or technical constraints.
 
+## Scope and requirements
+
+Before design thinking, classify the request and plan the appropriate ownership boundary. Ask only about missing information that materially changes structure, behavior, integration, or accessibility; when requirements are sufficient, proceed without a round trip.
+
+- **Page or application**: Plan the user journey, information architecture, content hierarchy, navigation and route context, page-level states, full-viewport responsive composition, and one coherent visual concept.
+- **Isolated or reusable component**: Plan its responsibility, public inputs and content, events, variants, loading/empty/error/disabled/selected states where applicable, host context, intrinsic sizing, keyboard and focus semantics, tokens, and composition boundaries.
+- **Hybrid work**: Plan both layers and keep page-owned requirements out of reusable component internals.
+
+A component must not invent an unrelated page shell, global landmarks, document-level `<h1>`, global typography or background, or viewport metadata. A page must not collapse planning into individual components without first establishing page hierarchy, navigation, content flow, and responsive behavior.
+
+All three tracks converge into the design thinking, implementation, anti-generic guidance, self-critique, and optional validation below; do not duplicate those stages per track.
+
 ## Design Thinking
 
 Before coding, understand the context and commit to a BOLD aesthetic direction:
@@ -62,11 +74,11 @@ Models tend to confidently praise their own mediocre output, so do not ask yours
 Accessibility:
 
 - Body-text contrast is at least 4.5:1; large text (24px+, or 18.66px+ bold) and the borders of UI controls and meaningful icons are at least 3:1. Meaning is never carried by color alone.
-- Semantics are native: `<button>` for actions, `<a href>` for navigation, real `<label>`s for inputs; exactly one `<h1>` with headings in order; `<header>`, `<nav>`, `<main>`, and `<footer>` landmarks.
+- Semantics are native: `<button>` for actions, `<a href>` for navigation, and real `<label>`s for inputs. A page or document has exactly one `<h1>`, headings in order, and appropriate `<header>`, `<nav>`, `<main>`, and `<footer>` landmarks. A component owns native controls, labels, accessible names, and local heading order; it does not add a document-level `<h1>`, global landmarks, or `<meta name="viewport">` merely to satisfy this rubric.
 - Every `<img>` has an `alt` attribute (empty `alt=""` when decorative); icon-only controls carry an accessible name.
 - First rule of ARIA: prefer a native element over an ARIA role — no ARIA beats wrong ARIA.
-- Every interactive element is keyboard-operable and shows a visible focus indicator; the default outline is never removed without a stronger replacement.
-- A `<meta name="viewport">` is present and zoom is not disabled; content reflows to a single column with no horizontal scrolling down to 320px wide.
+- Every interactive element is keyboard-operable and shows a visible focus indicator; each component owns this keyboard and focus behavior, and the default outline is never removed without a stronger replacement.
+- For a page or document, a `<meta name="viewport">` is present and zoom is not disabled; page-level content reflows to a single column with no horizontal page scrolling down to 320px wide. Components reflow inside their host or container. Intrinsically two-dimensional controls may preserve necessary internal scrolling while preventing unintended page overflow and retaining keyboard access.
 
 Craft:
 

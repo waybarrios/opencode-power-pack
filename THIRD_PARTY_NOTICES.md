@@ -4,10 +4,17 @@ The repository wrapper, plugin integration, packaging, tests, and original
 documentation are licensed under the root MIT `LICENSE` unless a file states
 otherwise.
 
+<<<<<<< HEAD
+The skills are modified derivatives of the sources recorded in
+`UPSTREAMS.json`. They are not represented as original work. Every entry
+records the immutable upstream commit, source path, Git blob, license, and
+adaptation type reviewed for this distribution.
+=======
 The skills and generated command prompts are modified derivatives of the
 sources recorded in `UPSTREAMS.json`. They are not represented as original
 work. Every entry records the immutable upstream commit, source path, Git blob,
 license, and adaptation type reviewed for this distribution.
+>>>>>>> origin/main
 
 ## Anthropic Official Plugins
 

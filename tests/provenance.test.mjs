@@ -48,9 +48,7 @@ test("distributed artifacts carry matching third-party license notices", () => {
   for (const entry of manifest.skills) {
     const expected = `${entry.license} (modified`;
     const skill = frontmatter(join(REPO, "skills", entry.name, "SKILL.md"));
-    const command = frontmatter(join(REPO, "commands", `${entry.name}.md`));
     assert.ok(skill.license?.startsWith(expected), `${entry.name}: skill marks the source as modified`);
-    assert.ok(command.license?.startsWith(expected), `${entry.name}: command marks the source as modified`);
   }
 
   for (const path of ["UPSTREAMS.json", "THIRD_PARTY_NOTICES.md", "LICENSES"]) {

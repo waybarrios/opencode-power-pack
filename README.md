@@ -3,46 +3,67 @@
 </p>
 
 <p align="center">
-  <i>Eleven Claude Code skills, ported to OpenCode.<br/>
-  Code review, security audit, feature dev, frontend design, and the rest of the kit — installable in one line.</i>
+  <i>Eleven Claude Code workflows, adapted for modern OpenCode.<br/>
+  Code review, security audit, feature development, frontend design, project memory, and authoring tools.</i>
 </p>
 
 <p align="center">
+<<<<<<< HEAD
+  <a href="THIRD_PARTY_NOTICES.md"><img alt="License: MIT and Apache-2.0" src="https://img.shields.io/badge/license-MIT%20%2B%20Apache--2.0-brightgreen?style=flat-square"></a>
+=======
   <a href="https://github.com/waybarrios/opencode-power-pack/blob/main/THIRD_PARTY_NOTICES.md"><img alt="License: MIT and Apache-2.0" src="https://img.shields.io/badge/license-MIT%20%2B%20Apache--2.0-brightgreen?style=flat-square"></a>
+>>>>>>> origin/main
   <a href="https://github.com/waybarrios/opencode-power-pack/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/waybarrios/opencode-power-pack?style=flat-square&color=FFD60A"></a>
   <a href="https://github.com/waybarrios/opencode-power-pack/commits/main"><img alt="Last commit" src="https://img.shields.io/github/last-commit/waybarrios/opencode-power-pack?style=flat-square"></a>
-  <a href="https://github.com/waybarrios/opencode-power-pack/issues"><img alt="Issues" src="https://img.shields.io/github/issues/waybarrios/opencode-power-pack?style=flat-square"></a>
-  <img alt="Skills" src="https://img.shields.io/badge/skills-11-FFD60A?style=flat-square&labelColor=0B0F14">
-  <img alt="OpenCode" src="https://img.shields.io/badge/opencode-compatible-0B0F14?style=flat-square&labelColor=FFD60A">
-  <img alt="Claude Code compat" src="https://img.shields.io/badge/claude--code-skills_format-D97706?style=flat-square">
+  <a href="https://github.com/waybarrios/opencode-power-pack/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/waybarrios/opencode-power-pack?style=flat-square"></a>
+  <img alt="Skills: 11" src="https://img.shields.io/badge/skills-11-FFD60A?style=flat-square&labelColor=0B0F14">
+  <img alt="OpenCode 1.18.7+" src="https://img.shields.io/badge/opencode-1.18.7%2B-0B0F14?style=flat-square&labelColor=FFD60A">
 </p>
 
 <p align="center">
   <a href="#installation"><b>Install</b></a> ·
   <a href="#whats-inside"><b>Skills</b></a> ·
   <a href="#slash-commands"><b>Commands</b></a> ·
-  <a href="#how-it-works"><b>How it works</b></a> ·
-  <a href="#acknowledgments"><b>Credits</b></a> ·
-  <a href="LICENSE"><b>License</b></a>
+  <a href="#how-it-works"><b>Architecture</b></a> ·
+  <a href="#acknowledgments"><b>Credits</b></a>
 </p>
 
+<<<<<<< HEAD
+## Why This Exists
+=======
 <p align="center">
   <i>Built on top of <a href="https://github.com/anthropics/claude-plugins-official">anthropics/claude-plugins-official</a>,
   <a href="https://github.com/anthropics/skills">anthropics/skills</a>,
   <a href="https://github.com/anthropics/claude-code-security-review">anthropics/claude-code-security-review</a>,
   and <a href="https://github.com/obra/superpowers">obra/superpowers</a>. See <a href="#acknowledgments">Acknowledgments</a>.</i>
 </p>
+>>>>>>> origin/main
 
----
+OpenCode reads `SKILL.md` natively, but many valuable Claude Code workflows originated as Claude-specific commands and agents. Copying those artifacts directly does not preserve their orchestration, permissions, or subagent behavior.
 
-## Why this exists
+This package adapts the portable methodology into OpenCode skills, registers the feature-development specialist roles as real read-only subagents, and ships immutable provenance for every upstream work.
 
-OpenCode reads Claude Code's `SKILL.md` format natively, but **most of Anthropic's official Claude Code plugins put their value in `commands/` and `agents/`** — and those are Claude-Code-only. So if you want `/code-review`, `/security-review`, or `/feature-dev` in OpenCode, copy-paste won't get you there.
+It complements [obra/superpowers](https://github.com/obra/superpowers), which provides process skills such as brainstorming, TDD, debugging, and plan execution.
 
-This pack does the **translation**: the multi-agent workflows from those plugins are rewritten as OpenCode-compatible skills, so the methodology survives the platform jump. Plus a few direct ports of skills that already lived in Anthropic's `skills/` repo.
+## What's Inside
 
-It pairs nicely with **[obra/superpowers](https://github.com/obra/superpowers)**, which provides the meta-workflow skills (brainstorming, TDD, executing-plans). This pack adds the domain-specific muscle.
+| Category | Skill | Purpose |
+|---|---|---|
+| Review | `code-review` | Multi-agent PR review with confidence filtering and reproduction scenarios |
+| Review | `security-review` | Security-focused review with category coverage and exploit-path validation |
+| Feature development | `feature-dev` | Seven-phase workflow from discovery through implementation and review |
+| Feature development | `code-explorer` | Trace a feature across entry points, layers, state, and dependencies |
+| Feature development | `code-architect` | Produce a file-level architecture and implementation blueprint |
+| Feature development | `code-reviewer` | Adversarial review of a focused local change set |
+| Design | `frontend-design` | Create distinctive interfaces with an accessibility and craft rubric |
+| Authoring | `mcp-builder` | Design and build MCP servers in TypeScript or Python |
+| Authoring | `skill-creator` | Create, test, and improve reusable `SKILL.md` workflows |
+| Project memory | `agents-md-improver` | Audit project rules and propose targeted improvements |
+| Project memory | `agents-md-revise` | Capture durable session learnings in project rules |
 
+<<<<<<< HEAD
+`code-explorer`, `code-architect`, and `code-reviewer` are available both as standalone skills and as least-privilege subagents used by `feature-dev`.
+=======
 ---
 
 ## What's inside
@@ -101,54 +122,32 @@ It pairs nicely with **[obra/superpowers](https://github.com/obra/superpowers)**
 </table>
 
 ---
+>>>>>>> origin/main
 
 ## Installation
 
 ### Prerequisites
 
-- **OpenCode** installed and on your PATH. If you do not have it: <https://opencode.ai>
-- **git** (used by OpenCode to fetch the plugin)
-- **Bun** is bundled with OpenCode, so the plugin's `npm install` step at startup is automatic
+- OpenCode 1.18.7 or newer: <https://opencode.ai>
+- Git, used by OpenCode to fetch Git-based plugins
 
-### Pick an install method
+### Install From GitHub
 
-Two paths that work today; pick whichever fits how you plan to use the pack.
-
-| | **A — Install from GitHub** | **B — Install from a local git clone** |
-|---|---|---|
-| Best for | Just using the pack | Tinkering, contributing, or running offline |
-| Requires | Network during first install | A local clone of the repo |
-| Updates | `git pull` + cache clear (the cache holds Bun's checkout) | `git pull` updates everything live; symlinks pick up changes immediately |
-| Internet at runtime | Only at first install / on cache miss | Never |
-
-Both methods share **steps 2 (symlink commands) and 3 (restart)**. Only step 1 differs.
-
----
-
-### A — Install from GitHub
-
-**Step 1A.** Add to `~/.config/opencode/opencode.json`:
-
-```jsonc
-{
-  "$schema": "https://opencode.ai/config.json",
-  "plugin": [
-    "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"
-  ]
-}
+```bash
+opencode plugin --global "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"
 ```
 
-If you already use other plugins (e.g. `superpowers`), keep all of them in the array:
+Restart OpenCode after installation. OpenCode discovers each skill and creates its same-named slash command automatically.
 
-```jsonc
-{
-  "plugin": [
-    "superpowers@git+https://github.com/obra/superpowers.git",
-    "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"
-  ]
-}
+To pin a published release, append its tag:
+
+```bash
+opencode plugin --global "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git#<tag>"
 ```
 
+<<<<<<< HEAD
+### Install From A Local Clone
+=======
 To pin a specific published tag:
 
 ```jsonc
@@ -156,267 +155,175 @@ To pin a specific published tag:
 ```
 
 You still need a local copy of the repo for **step 2** (the slash command files live there). Clone it next to wherever you keep code:
+>>>>>>> origin/main
 
 ```bash
 git clone https://github.com/waybarrios/opencode-power-pack.git ~/code/opencode-power-pack
+opencode plugin --global "opencode-power-pack@git+file:///home/you/code/opencode-power-pack"
 ```
 
-Then jump to **step 2 (symlink commands)** below.
+Use an absolute `file://` URL adjusted for your operating system. The target directory must be a Git repository.
 
----
-
-### B — Install from a local git clone
-
-This avoids the GitHub round-trip entirely. The plugin lives on your disk, and OpenCode reads it via a `file://` URL.
-
-**Step 1B.1.** Clone the repo wherever you keep code:
+### Verify
 
 ```bash
-git clone https://github.com/waybarrios/opencode-power-pack.git ~/code/opencode-power-pack
+opencode debug skill
+opencode debug agent code-explorer
 ```
 
-If the repo is not yet on GitHub and you only have it locally, skip the clone — just point at the existing directory.
-
-**Step 1B.2.** Add to `~/.config/opencode/opencode.json`, using the **absolute path** to your clone:
-
-```jsonc
-{
-  "$schema": "https://opencode.ai/config.json",
-  "plugin": [
-    "opencode-power-pack@git+file:///Users/you/code/opencode-power-pack"
-  ]
-}
-```
-
-Notes:
-
-- The `file://` URL needs to be an **absolute path** with three slashes (`file:///Users/...`) and no trailing slash.
-- The directory must be a git repo (have a `.git/`). If you copied the files without git, run `git init && git add . && git commit -m init` inside the directory first — Bun's git-style installer requires a real git tree.
-- Updating is just `cd ~/code/opencode-power-pack && git pull`, then clear the cache and restart (see [Updating](#updating)).
-
-Then continue to **step 2** below.
-
-### 2. Symlink the slash commands (both methods)
-
-The plugin auto-registers the skills directory programmatically. Slash commands, however, need to live in OpenCode's canonical commands path; the plugin ships physical markdown files under `commands/` for you to symlink in.
-
-```bash
-mkdir -p ~/.config/opencode/commands
-ln -s ~/code/opencode-power-pack/commands/*.md ~/.config/opencode/commands/
-```
-
-Adjust the source path if you cloned somewhere other than `~/code/opencode-power-pack`. If a command of the same name already exists in `~/.config/opencode/commands/`, that file wins — `ln -s` will refuse to overwrite, which is the desired behavior.
-
-If you prefer **copies** over symlinks (e.g. you do not want `git pull` to silently change your commands):
-
-```bash
-cp ~/code/opencode-power-pack/commands/*.md ~/.config/opencode/commands/
-```
-
-Trade-off: copies are static — you have to re-copy after every `git pull`. Symlinks track the working tree live.
-
-### 3. Restart OpenCode (both methods)
-
-```bash
-# kill ALL opencode processes (not just the active TUI)
-pkill -f opencode
-
-# clear the npm-style plugin cache so the new version is fetched fresh
-rm -rf ~/.cache/opencode/node_modules/opencode-power-pack 2>/dev/null
-
-# start again
-opencode
-```
-
-### 4. Verify
-
-In a new OpenCode session, run:
-
-```
-List the skills you have available.
-```
-
-You should see the eleven skills under the `opencode-power-pack:` namespace (or unprefixed, depending on your OpenCode version).
-
-Then hit **`ctrl+p`** to open the command palette and look for any of:
-
-- `code-review`
-- `security-review`
-- `feature-dev`
-- `frontend-design`
-- `agents-md-improver`
-
-If they show up, you're done. If not, see [Troubleshooting](#troubleshooting).
-
----
+The first command should include all eleven unprefixed skill names. The second should report a `subagent` with editing denied. In the TUI, `ctrl+p` should list `/code-review`, `/feature-dev`, `/frontend-design`, and the other skill-derived commands.
 
 ## Updating
 
+For a GitHub installation:
+
 ```bash
-# 1. Pull the latest skills + commands
-cd ~/code/opencode-power-pack
-git pull
-
-# 2. If new skills were added, the existing symlinks are unaffected,
-#    but new commands need to be linked in:
-ln -s ~/code/opencode-power-pack/commands/*.md ~/.config/opencode/commands/ 2>/dev/null
-
-# 3. Clear the plugin cache and restart OpenCode
-rm -rf ~/.cache/opencode/node_modules/opencode-power-pack
-pkill -f opencode
-opencode
+opencode plugin --global --force "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"
 ```
 
+<<<<<<< HEAD
+Restart OpenCode after the command finishes. For a pinned installation, update the tag first. Local-clone users should run `git pull` in the clone and reinstall with the same `git+file://` spec.
+=======
 If you pinned a version in `opencode.json`, bump the tag in the JSON before restarting, otherwise OpenCode keeps using the pinned commit.
 
 ---
+>>>>>>> origin/main
 
 ## Uninstalling
 
-```bash
-# 1. Remove from opencode.json
-#    delete the "opencode-power-pack@..." line from the "plugin" array
-
-# 2. Remove the symlinked commands
-for f in ~/code/opencode-power-pack/commands/*.md; do
-  rm -f ~/.config/opencode/commands/"$(basename "$f")"
-done
-
-# 3. Remove the plugin cache
-rm -rf ~/.cache/opencode/node_modules/opencode-power-pack
-
-# 4. Restart OpenCode
-pkill -f opencode
-opencode
-
-# 5. Optional: delete the local clone
-rm -rf ~/code/opencode-power-pack
-```
-
-To remove **just one skill** (keeping the rest), delete its symlink only:
-
-```bash
-rm ~/.config/opencode/commands/code-review.md
-```
-
-The skill itself remains discoverable via the native `skill` tool unless you also remove it from the skills directory, but the slash command will no longer appear.
-
----
+Remove the `opencode-power-pack@...` entry from the `plugin` array in the config where it was installed, then restart OpenCode. There are no command symlinks or copied command files to remove.
 
 ## Troubleshooting
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| `/code-review` not in command palette | Symlinks not in `~/.config/opencode/commands/` | Re-run the `ln -s` step from Installation |
-| `/code-review` shows the old meta-prompt ("If the skill is not yet loaded, load it via the native skill tool…") | Stale plugin cache from a pre-`v0.1.0` build | `rm -rf ~/.cache/opencode/node_modules/opencode-power-pack && pkill -f opencode && opencode` |
-| Skills do not appear when you run "list available skills" | Plugin entry missing or misspelled in `opencode.json` | Validate JSON: `python3 -m json.tool ~/.config/opencode/opencode.json` |
-| Plugin install fails with a git error | Bad URL, network issue, or private repo | Check the `git+...` URL works manually: `git ls-remote <url>` |
-| Symlink command fails on macOS with permission denied | `~/.config/opencode/commands/` does not exist | `mkdir -p ~/.config/opencode/commands` first |
-| Command appears but model "rushes" and gives a one-line answer | Local model not following multi-step instructions | Use a stronger backing model. The skill content is correct; small models may still skim. The skills mark themselves as "expected to take multiple minutes" — bigger models honor that. |
-| Want to disable for one project | Project-level override | Add `"plugin": []` (empty) to `<project>/.opencode/opencode.json` |
+| Skills or commands do not appear | OpenCode is older than 1.18.7 | Upgrade OpenCode, restart, and run `opencode debug skill` |
+| Skills are missing from debug output | Plugin installation failed or its config entry is absent | Re-run `opencode plugin --global --force <module-spec>` and inspect the reported error |
+| Specialist agents are missing | Stale plugin checkout | Force reinstall, restart, and run `opencode debug agent code-explorer` |
+| Installation reports a Git error | Invalid URL, network failure, or inaccessible repository | Validate the source with `git ls-remote <url>` |
+| A workflow is rushed or incomplete | The backing model skipped multi-stage instructions | Use a stronger model and inspect whether required subagent tools are available |
 
-If none of the above match: `tail -f ~/.cache/opencode/log/*.log` while you start OpenCode and look for plugin-load errors.
+## Slash Commands
 
----
+OpenCode 1.18.7+ automatically exposes every discovered skill as a same-named slash command:
 
----
-
-## Slash commands
-
-Each skill is exposed as a slash command. The command body inlines the **full skill workflow**, so the model receives the actual instructions as its prompt — not a meta-instruction telling it to load something else.
-
-```
-/code-review                Multi-agent PR review with cross-check and reproduction scenarios
-/security-review            OWASP-bucketed audit with three-stage filtering and PoC requirement
-/feature-dev                Start the 7-phase guided feature workflow
-/code-explorer              Trace a feature deeply across the codebase
-/code-architect             Produce a complete architecture blueprint for a feature
-/code-reviewer              Two-pass adversarial review of a small change set
-/frontend-design            Generate a distinctive frontend with a bold aesthetic direction
-/mcp-builder                Guide MCP server creation
-/skill-creator              Author a new SKILL.md
-/agents-md-improver         Audit and improve AGENTS.md / CLAUDE.md
-/agents-md-revise           Capture session learnings into the rules file
+```text
+/code-review
+/security-review
+/feature-dev
+/code-explorer
+/code-architect
+/code-reviewer
+/frontend-design
+/mcp-builder
+/skill-creator
+/agents-md-improver
+/agents-md-revise
 ```
 
-### Examples
+Examples:
 
-```
+```text
 /code-review --comment
-/code-review can you review https://github.com/owner/repo/pull/449
+/code-review review https://github.com/owner/repo/pull/449
 /feature-dev add a logout button to the topbar
 /security-review
 /frontend-design pricing page, brutalist tone, single-screen
-/agents-md-improver
 ```
 
-If you have a command of the same name in `~/.config/opencode/commands/foo.md` or under `command` in `opencode.json`, **your version wins** — the plugin only registers the skill discovery path, never overwrites a command.
+An explicit command with the same name takes precedence over a skill-derived command.
 
----
+## How It Works
 
-## How it works
-
-```
-┌─────────────────────────── opencode-power-pack ────────────────────────────┐
-│                                                                            │
-│   .opencode/plugins/opencode-power-pack.js                                 │
-│   ├── exports OpencodePowerPack(ctx) → { config(c) }                       │
-│   └── pushes  skills/  into  c.skills.paths   (live config singleton)      │
-│                                                                            │
-│   skills/<name>/SKILL.md                                                   │
-│   └── frontmatter: name + description (+ license)                          │
-│       body: the actual workflow the model executes                         │
-│                                                                            │
-│   commands/<name>.md          ──symlink──▶  ~/.config/opencode/commands/   │
-│   ├── frontmatter: description (for menu)                                  │
-│   └── body: full inlined SKILL.md content + $ARGUMENTS                     │
-│                                                                            │
-└────────────────────────────────────────────────────────────────────────────┘
+```text
+opencode-power-pack
+|
++-- .opencode/plugins/opencode-power-pack.js
+|   +-- registers skills/ in config.skills.paths
+|   +-- registers code-explorer as a read-only subagent
+|   +-- registers code-architect as a read-only subagent
+|   +-- registers code-reviewer with read-only Git commands
+|
++-- skills/<name>/SKILL.md
+|   +-- native skill-tool entry
+|   +-- native same-named slash command
+|   +-- immutable source and license metadata
+|
++-- UPSTREAMS.json
+    +-- repository, commit, path, blob, date, and adaptation type
 ```
 
-**Two surfaces, one source of truth.** The skills directory feeds OpenCode's native `skill` tool (so the model can load any skill on demand). The commands directory feeds the slash-command palette (so you can invoke a skill directly with `/<name>`). Both are generated from the same `SKILL.md` files — edit the SKILL.md, regenerate the command file with the script in the repo, and both paths stay in sync.
+Each `SKILL.md` is the single source for its workflow. The plugin derives specialist-agent prompts from those files at startup, so the agent and standalone skill cannot drift apart. Existing user-defined agents with the same names take precedence.
 
-The plugin entry-point only registers the skills path. Slash commands are **physical files**, not programmatic — this avoids OpenCode's runtime-config caching gotchas and means you can edit, symlink, or selectively delete commands without touching code.
+The packaged agents deny edits, external network access, and nested tasks. `code-reviewer` additionally allows a narrow set of read-only Git commands.
 
----
-
-## Scope and non-goals
+## Scope And Non-Goals
 
 | In scope | Out of scope |
 |---|---|
+<<<<<<< HEAD
+| Portable Claude Code workflow methodology | Claude Code hook contracts |
+| OpenCode-native skills, commands, and subagents | Proprietary or non-redistributable plugins |
+| Licensed adaptations with immutable provenance | Automatic trust of third-party skill catalogs |
+| Explicit permission boundaries and regression tests | Supporting OpenCode versions older than 1.18.7 |
+=======
 | Porting Claude Code skills where the methodology is portable | Claude Code slash commands ported as Claude-Code-style commands |
 | Translating commands and agents into SKILL.md format | Claude Code hooks |
 | Licensed adaptations of upstream skills with immutable provenance | Claude Code output styles |
 | OpenCode-native slash commands generated from skills | Anything that breaks if you also use Claude Code |
 
 ---
+>>>>>>> origin/main
 
 ## Contributing
 
-Pull requests welcome, especially for:
+Contributions are welcome for:
 
-- New skill ports (Trail of Bits security skills, language-specific packs from `wshobson/agents`, document skills, etc.)
-- Improvements to existing skill instructions based on real-world failure modes
-- Tooling to keep `commands/*.md` in sync with `skills/*/SKILL.md` automatically
+- Improvements based on reproducible workflow failures
+- Behavioral evaluations and adversarial fixtures
+- Portable references and deterministic helper scripts
+- New ports with a verified license and immutable upstream source
 
-Skill format must follow the OpenCode spec:
+Before opening a PR:
 
-- Directory name matches the `name` frontmatter field
-- Lowercase alphanumeric with single hyphens, regex `^[a-z0-9]+(-[a-z0-9]+)*$`
-- `description` 1–1024 chars, specific enough to trigger correctly
-- Body in markdown, ideally under 500 lines
-- Cite the upstream source in `license` frontmatter when porting
+```bash
+npm test
+npm run smoke:opencode
+npm pack --dry-run
+```
 
----
+Live behavioral evaluation is opt-in, needs `OPENCODE_EVAL_MODEL`, and runs only from a source checkout:
+
+```bash
+OPENCODE_EVAL_MODEL=provider/model npm run eval:behavioral
+```
+
+See [`evals/behavioral/README.md`](evals/behavioral/README.md) for the replay, review, and acceptance workflow. Snapshots are content-addressed evidence from one reviewed model execution, not universal guarantees.
+
+Every skill must use a lowercase hyphenated directory/name, provide a trigger-specific description, remain under 500 lines where practical, and record its exact upstream in `UPSTREAMS.json`.
 
 ## Acknowledgments
 
+<<<<<<< HEAD
+The bundled skills are modified upstream works. This repository contributes their OpenCode adaptation, packaging, additional workflow guidance, tests, and compatibility layer.
+=======
 **The bundled skills are modified upstream works.** Most content in `skills/` is adapted from skills, commands, or agent definitions written by **Anthropic**, plus an adaptation of the OpenCode plugin pattern from **Jesse Vincent (obra)**. This repository contributes the OpenCode port, packaging, and additional workflow guidance. Exact sources and Git blobs are recorded in [`UPSTREAMS.json`](UPSTREAMS.json).
+>>>>>>> origin/main
 
-### Upstream sources
-
-| Upstream | Project | What we use from it |
+| Upstream | Pinned source | Used for |
 |---|---|---|
+<<<<<<< HEAD
+| Anthropic | [`claude-plugins-official@bdca23e8`](https://github.com/anthropics/claude-plugins-official/tree/bdca23e8e46f8832d0030c05804ae207786ae37f) | Code review, feature development, frontend design, and project memory |
+| Anthropic | [`skills@5128e186`](https://github.com/anthropics/skills/tree/5128e1865d670f5d6c9cef000e6dfc4e951fb5b9) | MCP Builder and Skill Creator |
+| Anthropic | [`claude-code-security-review@0c6a49f1`](https://github.com/anthropics/claude-code-security-review/tree/0c6a49f1fa56a1d472575da86a94dbc1edb78eda) | Security Review |
+| Jesse Vincent | [`superpowers@6efe32c9`](https://github.com/obra/superpowers/tree/6efe32c9e2dd002d0c394e861e0529675d1ab32e) | OpenCode plugin registration pattern |
+
+See [`UPSTREAMS.json`](UPSTREAMS.json) for exact source paths and Git blobs. See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for attribution and modification notices.
+
+## License
+
+The wrapper code and original project material are MIT-licensed under [LICENSE](LICENSE). Modified skills derived from Anthropic's official plugins and skills are Apache-2.0, except `security-review`, whose upstream is MIT. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md), [UPSTREAMS.json](UPSTREAMS.json), and [LICENSES/](LICENSES/) for exact terms.
+=======
 | Anthropic | [`claude-plugins-official/code-review`](https://github.com/anthropics/claude-plugins-official/tree/bdca23e8e46f8832d0030c05804ae207786ae37f/plugins/code-review) | The confidence-filtered parallel-review methodology adapted as `code-review` |
 | Anthropic | [`claude-plugins-official/feature-dev`](https://github.com/anthropics/claude-plugins-official/tree/bdca23e8e46f8832d0030c05804ae207786ae37f/plugins/feature-dev) | The seven-phase workflow and three specialist roles |
 | Anthropic | [`claude-plugins-official/frontend-design`](https://github.com/anthropics/claude-plugins-official/tree/bdca23e8e46f8832d0030c05804ae207786ae37f/plugins/frontend-design) | The base `frontend-design` methodology, substantially extended here |
@@ -440,3 +347,4 @@ If you are one of the upstream authors and you'd like the attribution worded dif
 ## License
 
 The wrapper code and original project material are MIT-licensed under [LICENSE](LICENSE). Modified skills and command prompts derived from Anthropic's official plugins and skills are Apache-2.0, except `security-review`, whose upstream is MIT. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md), [UPSTREAMS.json](UPSTREAMS.json), and [LICENSES/](LICENSES/) for exact terms and sources.
+>>>>>>> origin/main

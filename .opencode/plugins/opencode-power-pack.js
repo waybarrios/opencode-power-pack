@@ -7,11 +7,9 @@
  * mcp-builder, skill-creator, agents-md-improver, agents-md-revise) without
  * requiring symlinks or manual config.
  *
- * Slash commands are NOT registered here on purpose — they are provided by
- * physical markdown files under `commands/` in this repo, intended to be
- * symlinked into `~/.config/opencode/commands/`. Each command file inlines
- * the full SKILL.md content, so the model receives the actual workflow as
- * its prompt rather than a meta-instruction telling it to load the skill.
+ * OpenCode 1.18.7+ exposes discovered skills as same-named slash commands.
+ * The plugin also registers the feature workflow's specialist roles as
+ * read-only subagents derived from their SKILL.md bodies.
  *
  * ──── Attribution ────────────────────────────────────────────────────────
  *
@@ -28,9 +26,11 @@
 
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { loadAgentConfigs } from './agent-config.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const skillsDir = path.resolve(__dirname, '../../skills');
+const bundledAgents = loadAgentConfigs(skillsDir);
 
 export const OpencodePowerPack = async () => {
   return {
@@ -39,6 +39,10 @@ export const OpencodePowerPack = async () => {
       config.skills.paths = config.skills.paths || [];
       if (!config.skills.paths.includes(skillsDir)) {
         config.skills.paths.push(skillsDir);
+      }
+      config.agent = config.agent || {};
+      for (const [name, agent] of Object.entries(bundledAgents)) {
+        if (!config.agent[name]) config.agent[name] = agent;
       }
     },
   };
