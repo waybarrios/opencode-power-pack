@@ -1,6 +1,6 @@
 {
   "name": "opencode-power-pack",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Eleven Claude Code workflows packaged for Codex, OpenCode, and Pi.",
   "author": {
     "name": "Wayner Barrios",

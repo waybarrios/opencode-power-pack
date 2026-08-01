@@ -74,7 +74,7 @@
   <!-- bottom-right voltage stamp -->
   <g transform="translate(1050, 290)" font-family="ui-monospace, monospace">
     <rect x="0" y="0" width="124" height="36" fill="none" stroke="#FFE15D" stroke-width="1.25"/>
-    <text x="62" y="24" font-size="14" font-weight="800" fill="#FFE15D" text-anchor="middle" letter-spacing="3">v0.2.0</text>
+    <text x="62" y="24" font-size="14" font-weight="800" fill="#FFE15D" text-anchor="middle" letter-spacing="3">v0.3.0</text>
   </g>
 
   <!-- top-left registry mark -->
