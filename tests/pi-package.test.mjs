@@ -13,10 +13,10 @@ test("Pi package declares the bundled skills directory", () => {
   assert.match(packageJson.description, /Pi/);
 });
 
-test("Pi package exposes all eleven SKILL.md workflows", () => {
+test("Pi package exposes all twelve SKILL.md workflows", () => {
   const skillRoot = join(REPO, packageJson.pi.skills[0]);
   const skills = readdirSync(skillRoot)
     .filter((name) => existsSync(join(skillRoot, name, "SKILL.md")));
 
-  assert.equal(skills.length, 11);
+  assert.equal(skills.length, 12);
 });
