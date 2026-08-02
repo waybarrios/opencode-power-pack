@@ -95,6 +95,19 @@
       }
     },
     {
+      "name": "code-quality",
+      "license": "MIT",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/Firstp1ck/pi-coding-agent-forge",
+        "commit": "bd36f19036e9948c8d63e1a85a32e7ace9db06e9",
+        "committedAt": "2026-06-18T12:19:40+02:00",
+        "path": "pi-skill-code-quality/skills/code-quality/SKILL.md",
+        "blob": "a65c247e1a2e452f0ef3a2b9bd63aa7d9ca6c3e3"
+      }
+    },
+    {
       "name": "code-reviewer",
       "license": "Apache-2.0",
       "adaptation": "ported",
@@ -105,6 +118,19 @@
         "committedAt": "2026-04-24T19:52:02Z",
         "path": "plugins/feature-dev/agents/code-reviewer.md",
         "blob": "7fb589cbd7140152fae41720e391290ba202e57e"
+      }
+    },
+    {
+      "name": "design-patterns",
+      "license": "MIT",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/Firstp1ck/pi-coding-agent-forge",
+        "commit": "bd36f19036e9948c8d63e1a85a32e7ace9db06e9",
+        "committedAt": "2026-06-18T12:19:40+02:00",
+        "path": "pi-skill-design-patterns/skills/design-patterns/SKILL.md",
+        "blob": "287ce08720be901678934552a711627d40dbf78b"
       }
     },
     {
@@ -121,6 +147,19 @@
       }
     },
     {
+      "name": "fp-check",
+      "license": "MIT",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/vigolium/piolium",
+        "commit": "890888a20d52a9378d20bbbc7b8850483d97362a",
+        "committedAt": "2026-05-23T20:30:16+08:00",
+        "path": "skills/fp-check/SKILL.md",
+        "blob": "992d901780562a5f73ec3270953f4c79ef0bb498"
+      }
+    },
+    {
       "name": "frontend-design",
       "license": "Apache-2.0",
       "adaptation": "adapted",
@@ -131,6 +170,19 @@
         "committedAt": "2026-04-24T19:52:02Z",
         "path": "plugins/frontend-design/skills/frontend-design/SKILL.md",
         "blob": "600b6db41fac7e2081c7528ec6982960892c819d"
+      }
+    },
+    {
+      "name": "insecure-defaults",
+      "license": "MIT",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/vigolium/piolium",
+        "commit": "890888a20d52a9378d20bbbc7b8850483d97362a",
+        "committedAt": "2026-05-23T20:30:16+08:00",
+        "path": "skills/insecure-defaults/SKILL.md",
+        "blob": "d1b29cd32f38fb5e62823628c8a8d4afeb0215a6"
       }
     },
     {
@@ -147,6 +199,19 @@
       }
     },
     {
+      "name": "paper-summarizer",
+      "license": "MIT",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/Firstp1ck/pi-coding-agent-forge",
+        "commit": "bd36f19036e9948c8d63e1a85a32e7ace9db06e9",
+        "committedAt": "2026-06-18T12:19:40+02:00",
+        "path": "pi-skill-paper-summarizer/skills/paper-summarizer/SKILL.md",
+        "blob": "c2ab246c8061db51d34861020edb452b7ac2f791"
+      }
+    },
+    {
       "name": "security-review",
       "license": "MIT",
       "adaptation": "adapted",
@@ -160,6 +225,19 @@
       }
     },
     {
+      "name": "sharp-edges",
+      "license": "MIT",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/vigolium/piolium",
+        "commit": "890888a20d52a9378d20bbbc7b8850483d97362a",
+        "committedAt": "2026-05-23T20:30:16+08:00",
+        "path": "skills/sharp-edges/SKILL.md",
+        "blob": "b5f86df960e094c851998752b7b7310555395d6d"
+      }
+    },
+    {
       "name": "skill-creator",
       "license": "Apache-2.0",
       "adaptation": "adapted",
@@ -170,6 +248,32 @@
         "committedAt": "2026-04-23T17:07:18Z",
         "path": "skills/skill-creator/SKILL.md",
         "blob": "65b3a402dbd09b8e83f9d637c6b553875189085c"
+      }
+    },
+    {
+      "name": "supply-chain-risk-auditor",
+      "license": "MIT",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/vigolium/piolium",
+        "commit": "890888a20d52a9378d20bbbc7b8850483d97362a",
+        "committedAt": "2026-05-23T20:30:16+08:00",
+        "path": "skills/supply-chain-risk-auditor/SKILL.md",
+        "blob": "1389de7b1c43aa6a9273478ea37dfc585e5ea6ca"
+      }
+    },
+    {
+      "name": "vuln-report",
+      "license": "MIT",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/vigolium/piolium",
+        "commit": "890888a20d52a9378d20bbbc7b8850483d97362a",
+        "committedAt": "2026-05-23T20:30:16+08:00",
+        "path": "skills/vuln-report/SKILL.md",
+        "blob": "bce9e57c7d3fccf8183a96d641a35f47ace4cdeb"
       }
     }
   ]
