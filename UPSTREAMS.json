@@ -82,19 +82,6 @@
       }
     },
     {
-      "name": "code-review",
-      "license": "Apache-2.0",
-      "adaptation": "adapted",
-      "reviewedAt": "2026-07-27",
-      "source": {
-        "repository": "https://github.com/anthropics/claude-plugins-official",
-        "commit": "bdca23e8e46f8832d0030c05804ae207786ae37f",
-        "committedAt": "2026-04-24T19:52:02Z",
-        "path": "plugins/code-review/commands/code-review.md",
-        "blob": "c46e327f19b6bb59dbf9060e8c9961e701908350"
-      }
-    },
-    {
       "name": "code-quality",
       "license": "MIT",
       "adaptation": "adapted",
@@ -105,6 +92,19 @@
         "committedAt": "2026-06-18T12:19:40+02:00",
         "path": "pi-skill-code-quality/skills/code-quality/SKILL.md",
         "blob": "a65c247e1a2e452f0ef3a2b9bd63aa7d9ca6c3e3"
+      }
+    },
+    {
+      "name": "code-review",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-07-27",
+      "source": {
+        "repository": "https://github.com/anthropics/claude-plugins-official",
+        "commit": "bdca23e8e46f8832d0030c05804ae207786ae37f",
+        "committedAt": "2026-04-24T19:52:02Z",
+        "path": "plugins/code-review/commands/code-review.md",
+        "blob": "c46e327f19b6bb59dbf9060e8c9961e701908350"
       }
     },
     {
@@ -170,6 +170,292 @@
         "committedAt": "2026-04-24T19:52:02Z",
         "path": "plugins/frontend-design/skills/frontend-design/SKILL.md",
         "blob": "600b6db41fac7e2081c7528ec6982960892c819d"
+      }
+    },
+    {
+      "name": "hf-cli",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/huggingface/skills",
+        "commit": "7039bdcf4510c30ec932637e8b2c1646aee7f185",
+        "committedAt": "2026-07-09T17:06:41+02:00",
+        "path": "skills/hf-cli/SKILL.md",
+        "blob": "4fd111f9df28b11d71c6a4f012a2b898f91c195a"
+      }
+    },
+    {
+      "name": "hf-cloud-aws-context-discovery",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/huggingface/skills",
+        "commit": "89d91fd4d0e6d4330471ba35f1c388489e94b496",
+        "committedAt": "2026-07-07T16:32:21+02:00",
+        "path": "skills/hf-cloud-aws-context-discovery/SKILL.md",
+        "blob": "fbf62203595b187ea833904f67ca0ae2fdaf39a6"
+      }
+    },
+    {
+      "name": "hf-cloud-python-env-setup",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/huggingface/skills",
+        "commit": "89d91fd4d0e6d4330471ba35f1c388489e94b496",
+        "committedAt": "2026-07-07T16:32:21+02:00",
+        "path": "skills/hf-cloud-python-env-setup/SKILL.md",
+        "blob": "462a6b99e7767576e1ba6c39c1456873d020de92"
+      }
+    },
+    {
+      "name": "hf-cloud-sagemaker-deployment-planner",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/huggingface/skills",
+        "commit": "89d91fd4d0e6d4330471ba35f1c388489e94b496",
+        "committedAt": "2026-07-07T16:32:21+02:00",
+        "path": "skills/hf-cloud-sagemaker-deployment-planner/SKILL.md",
+        "blob": "567bcd7be7529892217d7e9b07518b61ec78df65"
+      }
+    },
+    {
+      "name": "hf-cloud-sagemaker-iam-preflight",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/huggingface/skills",
+        "commit": "89d91fd4d0e6d4330471ba35f1c388489e94b496",
+        "committedAt": "2026-07-07T16:32:21+02:00",
+        "path": "skills/hf-cloud-sagemaker-iam-preflight/SKILL.md",
+        "blob": "8f15164327ff28e8086ae275a54b068ff32025e8"
+      }
+    },
+    {
+      "name": "hf-cloud-sagemaker-production-defaults",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/huggingface/skills",
+        "commit": "89d91fd4d0e6d4330471ba35f1c388489e94b496",
+        "committedAt": "2026-07-07T16:32:21+02:00",
+        "path": "skills/hf-cloud-sagemaker-production-defaults/SKILL.md",
+        "blob": "8e4f7f30f816f40b3eb364485de0b3c886f108f6"
+      }
+    },
+    {
+      "name": "hf-cloud-serving-image-selection",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/huggingface/skills",
+        "commit": "89d91fd4d0e6d4330471ba35f1c388489e94b496",
+        "committedAt": "2026-07-07T16:32:21+02:00",
+        "path": "skills/hf-cloud-serving-image-selection/SKILL.md",
+        "blob": "05f70d82c00da9160a086f477f31ff77e9bddea5"
+      }
+    },
+    {
+      "name": "hf-mem",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/huggingface/skills",
+        "commit": "c68f1b08d9eb3af22cdc1d3fb60e9cdb78522556",
+        "committedAt": "2026-06-12T11:25:39+02:00",
+        "path": "skills/hf-mem/SKILL.md",
+        "blob": "fadc48b0e2a510e21345e3860c69ac799255d9c0"
+      }
+    },
+    {
+      "name": "huggingface-best",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/huggingface/skills",
+        "commit": "be02c15f4b81c901b6d71a8896e56f93837d8050",
+        "committedAt": "2026-04-22T15:19:36+02:00",
+        "path": "skills/huggingface-best/SKILL.md",
+        "blob": "6073590ebf8b136bb405a567fed9d47840164713"
+      }
+    },
+    {
+      "name": "huggingface-community-evals",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/huggingface/skills",
+        "commit": "386571e3e65ef0c129af2747ff36d1fa6fc5b8a4",
+        "committedAt": "2026-03-23T15:24:34+00:00",
+        "path": "skills/huggingface-community-evals/SKILL.md",
+        "blob": "a68b2e79958930b3913cb8e7667e07000031e40b"
+      }
+    },
+    {
+      "name": "huggingface-datasets",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/huggingface/skills",
+        "commit": "b3df145a3a5a3e64ac075d781c625896d9d2bfcd",
+        "committedAt": "2026-04-30T09:17:59-04:00",
+        "path": "skills/huggingface-datasets/SKILL.md",
+        "blob": "abafddcbe62bd6e549c095ee9ce23b921081fe22"
+      }
+    },
+    {
+      "name": "huggingface-gradio",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/huggingface/skills",
+        "commit": "ff28908172004ae4def67d7fe8b31b77482aa594",
+        "committedAt": "2026-03-24T19:17:07+00:00",
+        "path": "skills/huggingface-gradio/SKILL.md",
+        "blob": "81dfb05834ab34a13cb0171a2fb03e4557b1e148"
+      }
+    },
+    {
+      "name": "huggingface-llm-trainer",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/huggingface/skills",
+        "commit": "d0d3f4301358fc1351d408a58596d5644b5a8114",
+        "committedAt": "2026-04-09T11:58:58+01:00",
+        "path": "skills/huggingface-llm-trainer/SKILL.md",
+        "blob": "74ad29af05eee633fb4c04376118f751c24cdd5e"
+      }
+    },
+    {
+      "name": "huggingface-local-models",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/huggingface/skills",
+        "commit": "f4ddab46b9847c7005d7979fdfec36da1aec4e26",
+        "committedAt": "2026-04-22T08:42:11+02:00",
+        "path": "skills/huggingface-local-models/SKILL.md",
+        "blob": "ece849559de75eaa8e9709a51e0e957e6ae630d3"
+      }
+    },
+    {
+      "name": "huggingface-lora-space-builder",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/huggingface/skills",
+        "commit": "86cdeee824b73e504198b6005bb113552cdfa7ba",
+        "committedAt": "2026-07-16T09:07:15+01:00",
+        "path": "skills/huggingface-lora-space-builder/SKILL.md",
+        "blob": "c1d0cbbfa60999ced1f97e136af5010ab86c814c"
+      }
+    },
+    {
+      "name": "huggingface-paper-publisher",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/huggingface/skills",
+        "commit": "386571e3e65ef0c129af2747ff36d1fa6fc5b8a4",
+        "committedAt": "2026-03-23T15:24:34+00:00",
+        "path": "skills/huggingface-paper-publisher/SKILL.md",
+        "blob": "01b7db0cb9e30912eda8aa2b73a744c17ab1e176"
+      }
+    },
+    {
+      "name": "huggingface-papers",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/huggingface/skills",
+        "commit": "386571e3e65ef0c129af2747ff36d1fa6fc5b8a4",
+        "committedAt": "2026-03-23T15:24:34+00:00",
+        "path": "skills/huggingface-papers/SKILL.md",
+        "blob": "e65fc90acabc30208883238ec89a27c4cdc1b57e"
+      }
+    },
+    {
+      "name": "huggingface-spaces",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/huggingface/skills",
+        "commit": "87f9ee5b670a630b022809a8742606c6da21812c",
+        "committedAt": "2026-07-25T06:31:31+02:00",
+        "path": "skills/huggingface-spaces/SKILL.md",
+        "blob": "9c054c071bc4d2bc2ba1d67b96b0d93825a559ce"
+      }
+    },
+    {
+      "name": "huggingface-tool-builder",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/huggingface/skills",
+        "commit": "95640aa22f447f49ff1321dfa221873644415171",
+        "committedAt": "2026-04-01T15:07:10-04:00",
+        "path": "skills/huggingface-tool-builder/SKILL.md",
+        "blob": "0634af706451240f82faf0871a15b0faac5f39a2"
+      }
+    },
+    {
+      "name": "huggingface-trackio",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/huggingface/skills",
+        "commit": "88e864e27586c1b43eb43610fd3d14252522400f",
+        "committedAt": "2026-07-06T19:39:01+02:00",
+        "path": "skills/huggingface-trackio/SKILL.md",
+        "blob": "df231aa06d661bf031aaad00dfa286ca83df4940"
+      }
+    },
+    {
+      "name": "huggingface-vision-trainer",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/huggingface/skills",
+        "commit": "386571e3e65ef0c129af2747ff36d1fa6fc5b8a4",
+        "committedAt": "2026-03-23T15:24:34+00:00",
+        "path": "skills/huggingface-vision-trainer/SKILL.md",
+        "blob": "5a2c554b04218a9c411c184fd749ffb6eb0daabe"
+      }
+    },
+    {
+      "name": "huggingface-zerogpu",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/huggingface/skills",
+        "commit": "5e3b4d2226d1beaa6a8a4df3739b6f68bd36521b",
+        "committedAt": "2026-05-20T16:18:47+01:00",
+        "path": "skills/huggingface-zerogpu/SKILL.md",
+        "blob": "7171d2b71c94eab597cbd8a4b38ba5ca489276af"
       }
     },
     {
@@ -261,6 +547,45 @@
         "committedAt": "2026-05-23T20:30:16+08:00",
         "path": "skills/supply-chain-risk-auditor/SKILL.md",
         "blob": "1389de7b1c43aa6a9273478ea37dfc585e5ea6ca"
+      }
+    },
+    {
+      "name": "train-sentence-transformers",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/huggingface/skills",
+        "commit": "3ac5910959e2b9fae3aea94badcc3b280781c9c2",
+        "committedAt": "2026-05-07T14:50:17+02:00",
+        "path": "skills/train-sentence-transformers/SKILL.md",
+        "blob": "6af33bdea3fd59e540cc852b65d515f282cd4a21"
+      }
+    },
+    {
+      "name": "transformers-js",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/huggingface/skills",
+        "commit": "4db6015affd7779ca959b7c7c53cdcd3c8f4737b",
+        "committedAt": "2026-04-10T17:57:42+02:00",
+        "path": "skills/transformers-js/SKILL.md",
+        "blob": "bc62aa1a63bc31ea9aea9456fed65b334e5010bd"
+      }
+    },
+    {
+      "name": "trl-training",
+      "license": "Apache-2.0",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/huggingface/skills",
+        "commit": "df04e76a36a84c20fb08267b0378465d64835f82",
+        "committedAt": "2026-06-08T08:34:04+02:00",
+        "path": "skills/trl-training/SKILL.md",
+        "blob": "1941385812d82abbbe1f466aa1204e0f8d775ea9"
       }
     },
     {

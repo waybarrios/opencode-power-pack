@@ -39,6 +39,29 @@ orchestration were removed or generalized to host-agnostic phrasing.
 Copyright 2026 Vigolium. The upstream notice is available at
 `LICENSES/Piolium-MIT.txt`.
 
+## Hugging Face Skills
+
+The modified `hf-cli`, `hf-cloud-aws-context-discovery`, `hf-cloud-python-env-setup`,
+`hf-cloud-sagemaker-deployment-planner`, `hf-cloud-sagemaker-iam-preflight`,
+`hf-cloud-sagemaker-production-defaults`, `hf-cloud-serving-image-selection`,
+`hf-mem`, `huggingface-best`, `huggingface-community-evals`,
+`huggingface-datasets`, `huggingface-gradio`, `huggingface-llm-trainer`,
+`huggingface-local-models`, `huggingface-lora-space-builder`,
+`huggingface-paper-publisher`, `huggingface-papers`, `huggingface-spaces`,
+`huggingface-tool-builder`, `huggingface-trackio`, `huggingface-vision-trainer`,
+`huggingface-zerogpu`, `train-sentence-transformers`, `transformers-js`, and
+`trl-training` skills derive from the Apache-2.0-licensed `huggingface/skills`
+repository, including their `scripts/`, `references/`, `templates/`, and
+`examples/` support files. Four skills (`huggingface-llm-trainer`,
+`huggingface-paper-publisher`, `huggingface-vision-trainer`, `transformers-js`)
+were condensed to fit this pack's skill-body length limit. Dangling
+cross-references to a `hugging-face-jobs` skill not present in the upstream
+snapshot were generalized to describe the underlying `hf jobs` CLI/API
+directly.
+
+Copyright 2026 Hugging Face. Licensed under Apache-2.0. The full license is
+available at `LICENSES/Apache-2.0.txt`.
+
 ## Anthropic Official Plugins
 
 The following modified skills derive from Apache-2.0 material in

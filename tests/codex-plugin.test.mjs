@@ -24,7 +24,7 @@ test("Codex plugin exposes every bundled skill with valid basic frontmatter", ()
   const names = readdirSync(join(REPO, "skills"))
     .filter((name) => existsSync(join(REPO, "skills", name, "SKILL.md")));
 
-  assert.equal(names.length, 20);
+  assert.equal(names.length, 45);
   for (const name of names) {
     const source = readFileSync(join(REPO, "skills", name, "SKILL.md"), "utf8");
     assert.match(source, /^---\r?\n/);
