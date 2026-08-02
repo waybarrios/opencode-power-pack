@@ -18,6 +18,27 @@ skill-body length limit; core rubric, tests, and severity model preserved).
 Copyright 2026 Leandro (LePro10). The upstream notice is available at
 `LICENSES/Omp-designer-MIT.txt`.
 
+## Firstpick pi Coding Agent Forge
+
+The modified `code-quality`, `design-patterns`, and `paper-summarizer` skills
+derive from the MIT-licensed `Firstp1ck/pi-coding-agent-forge` repository.
+Persona-specific footers and cross-references to skills not shipped in this
+pack were removed or generalized.
+
+Copyright 2026 Firstpick. The upstream notice is available at
+`LICENSES/Firstpick-MIT.txt`.
+
+## Vigolium Piolium
+
+The modified `supply-chain-risk-auditor`, `sharp-edges`, `insecure-defaults`,
+`fp-check`, and `vuln-report` skills derive from the MIT-licensed
+`vigolium/piolium` repository, including their `references/` support files.
+Frontmatter `allowed-tools` lists and mentions of piolium's own multi-agent
+orchestration were removed or generalized to host-agnostic phrasing.
+
+Copyright 2026 Vigolium. The upstream notice is available at
+`LICENSES/Piolium-MIT.txt`.
+
 ## Anthropic Official Plugins
 
 The following modified skills derive from Apache-2.0 material in
