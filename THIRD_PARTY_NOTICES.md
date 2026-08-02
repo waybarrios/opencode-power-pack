@@ -9,6 +9,15 @@ The skills are modified derivatives of the sources recorded in
 records the immutable upstream commit, source path, Git blob, license, and
 adaptation type reviewed for this distribution.
 
+## OMP Designer
+
+The modified `ai-slop` skill derives from the MIT-licensed `LePro10/omp-designer`
+repository (`skills/ai-slop.md`, condensed from ~740 to under 500 lines for the
+skill-body length limit; core rubric, tests, and severity model preserved).
+
+Copyright 2026 Leandro (LePro10). The upstream notice is available at
+`LICENSES/Omp-designer-MIT.txt`.
+
 ## Anthropic Official Plugins
 
 The following modified skills derive from Apache-2.0 material in

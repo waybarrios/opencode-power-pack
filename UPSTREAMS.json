@@ -43,6 +43,19 @@
       }
     },
     {
+      "name": "ai-slop",
+      "license": "MIT",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/LePro10/omp-designer",
+        "commit": "fc8abdc0d2046b64c2d442a361948b5c53f2e16f",
+        "committedAt": "2026-07-02T18:33:40+02:00",
+        "path": "skills/ai-slop.md",
+        "blob": "bf81402b348bdd158ae3aa9f1c29d07939db2fd3"
+      }
+    },
+    {
       "name": "code-architect",
       "license": "Apache-2.0",
       "adaptation": "ported",
