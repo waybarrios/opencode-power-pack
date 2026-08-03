@@ -52,10 +52,29 @@ async function waitForServer(url, child, stderr) {
   throw new Error(`Timed out waiting for OpenCode:\n${stderr.join("")}`);
 }
 
-export async function fetchJson(url, timeoutMs = 10_000) {
+export async function fetchJson(url, timeoutMs = 10_000, retries = 5) {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await fetchJsonOnce(url, timeoutMs);
+    } catch (error) {
+      // The health endpoint can report ready slightly before OpenCode finishes
+      // registering every plugin's skills as native commands. With enough
+      // skills, that window is long enough for a socket to be reset mid-response.
+      // Retry with backoff instead of failing on the first transient close.
+      const transient = error.cause?.code === "UND_ERR_SOCKET" || error.name === "TimeoutError";
+      if (!transient || attempt >= retries) throw error;
+      await new Promise((resolve) => setTimeout(resolve, 500 * (attempt + 1)));
+    }
+  }
+}
+
+async function fetchJsonOnce(url, timeoutMs) {
   try {
+    // No `Connection: close` header here: pairing it with a large, still-being-
+    // generated response body (the command list grows with every skill in the
+    // pack) reproducibly triggers a premature socket reset in undici. Let the
+    // client negotiate keep-alive normally instead.
     const response = await fetch(url, {
-      headers: { Connection: "close" },
       signal: AbortSignal.timeout(timeoutMs),
     });
     if (!response.ok) throw new Error(`${url} returned HTTP ${response.status}`);

@@ -31,10 +31,16 @@ Copyright 2026 Firstpick. The upstream notice is available at
 ## Vigolium Piolium
 
 The modified `supply-chain-risk-auditor`, `sharp-edges`, `insecure-defaults`,
-`fp-check`, and `vuln-report` skills derive from the MIT-licensed
-`vigolium/piolium` repository, including their `references/` support files.
-Frontmatter `allowed-tools` lists and mentions of piolium's own multi-agent
-orchestration were removed or generalized to host-agnostic phrasing.
+`fp-check`, `vuln-report`, `agentic-actions-auditor`, `security-threat-model`,
+`differential-review`, `variant-analysis`, `sarif-parsing`,
+`semgrep-rule-creator`, `semgrep-rule-variant-creator`, `semgrep`, `codeql`,
+and `wooyun-legacy` skills derive from the MIT-licensed `vigolium/piolium`
+repository, including their `references/`, `resources/`, and `workflows/`
+support files. Frontmatter `allowed-tools` lists, an unfilled Apache-2.0
+license template accidentally left in the `security-threat-model` directory,
+and mentions of piolium's own multi-agent orchestration (e.g. a specific
+`static-analysis:semgrep-scanner` subagent type) were removed or generalized
+to host-agnostic phrasing.
 
 Copyright 2026 Vigolium. The upstream notice is available at
 `LICENSES/Piolium-MIT.txt`.

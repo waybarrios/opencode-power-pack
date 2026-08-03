@@ -17,6 +17,19 @@
   ],
   "skills": [
     {
+      "name": "agentic-actions-auditor",
+      "license": "MIT",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/vigolium/piolium",
+        "commit": "890888a20d52a9378d20bbbc7b8850483d97362a",
+        "committedAt": "2026-05-23T20:30:16+08:00",
+        "path": "skills/agentic-actions-auditor/SKILL.md",
+        "blob": "50f44c1eb1768470895a2600097245ca5bc4b5ae"
+      }
+    },
+    {
       "name": "agents-md-improver",
       "license": "Apache-2.0",
       "adaptation": "adapted",
@@ -121,6 +134,19 @@
       }
     },
     {
+      "name": "codeql",
+      "license": "MIT",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/vigolium/piolium",
+        "commit": "890888a20d52a9378d20bbbc7b8850483d97362a",
+        "committedAt": "2026-05-23T20:30:16+08:00",
+        "path": "skills/codeql/SKILL.md",
+        "blob": "a59322096c1d82a687ac253a5eed8443473d8b4c"
+      }
+    },
+    {
       "name": "design-patterns",
       "license": "MIT",
       "adaptation": "adapted",
@@ -131,6 +157,19 @@
         "committedAt": "2026-06-18T12:19:40+02:00",
         "path": "pi-skill-design-patterns/skills/design-patterns/SKILL.md",
         "blob": "287ce08720be901678934552a711627d40dbf78b"
+      }
+    },
+    {
+      "name": "differential-review",
+      "license": "MIT",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/vigolium/piolium",
+        "commit": "890888a20d52a9378d20bbbc7b8850483d97362a",
+        "committedAt": "2026-05-23T20:30:16+08:00",
+        "path": "skills/differential-review/SKILL.md",
+        "blob": "b14a515767b0073631db74bdc41583205ec423dc"
       }
     },
     {
@@ -498,6 +537,19 @@
       }
     },
     {
+      "name": "sarif-parsing",
+      "license": "MIT",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/vigolium/piolium",
+        "commit": "890888a20d52a9378d20bbbc7b8850483d97362a",
+        "committedAt": "2026-05-23T20:30:16+08:00",
+        "path": "skills/sarif-parsing/SKILL.md",
+        "blob": "47e8464215d08c02208ca05d462bab57b6d29047"
+      }
+    },
+    {
       "name": "security-review",
       "license": "MIT",
       "adaptation": "adapted",
@@ -508,6 +560,58 @@
         "committedAt": "2026-02-11T18:01:23Z",
         "path": ".claude/commands/security-review.md",
         "blob": "93651ea8b92194a1f739eaf5115ea493746df300"
+      }
+    },
+    {
+      "name": "security-threat-model",
+      "license": "MIT",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/vigolium/piolium",
+        "commit": "890888a20d52a9378d20bbbc7b8850483d97362a",
+        "committedAt": "2026-05-23T20:30:16+08:00",
+        "path": "skills/security-threat-model/SKILL.md",
+        "blob": "abd3c1c95d49c4e0e0664f198f4bf168c6291aec"
+      }
+    },
+    {
+      "name": "semgrep",
+      "license": "MIT",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/vigolium/piolium",
+        "commit": "890888a20d52a9378d20bbbc7b8850483d97362a",
+        "committedAt": "2026-05-23T20:30:16+08:00",
+        "path": "skills/semgrep/SKILL.md",
+        "blob": "b00c781a64e2a5b9dc955894902cdfc2a22b355c"
+      }
+    },
+    {
+      "name": "semgrep-rule-creator",
+      "license": "MIT",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/vigolium/piolium",
+        "commit": "890888a20d52a9378d20bbbc7b8850483d97362a",
+        "committedAt": "2026-05-23T20:30:16+08:00",
+        "path": "skills/semgrep-rule-creator/SKILL.md",
+        "blob": "5c336b557400dbc5eb1eaf08ea14018e21afb3c1"
+      }
+    },
+    {
+      "name": "semgrep-rule-variant-creator",
+      "license": "MIT",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/vigolium/piolium",
+        "commit": "890888a20d52a9378d20bbbc7b8850483d97362a",
+        "committedAt": "2026-05-23T20:30:16+08:00",
+        "path": "skills/semgrep-rule-variant-creator/SKILL.md",
+        "blob": "0be73121ddc713b7a48d3e07f5d695da0417c188"
       }
     },
     {
@@ -589,6 +693,19 @@
       }
     },
     {
+      "name": "variant-analysis",
+      "license": "MIT",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/vigolium/piolium",
+        "commit": "890888a20d52a9378d20bbbc7b8850483d97362a",
+        "committedAt": "2026-05-23T20:30:16+08:00",
+        "path": "skills/variant-analysis/SKILL.md",
+        "blob": "cf70af1df5f9263f9f11504b19aac7293f599505"
+      }
+    },
+    {
       "name": "vuln-report",
       "license": "MIT",
       "adaptation": "adapted",
@@ -599,6 +716,19 @@
         "committedAt": "2026-05-23T20:30:16+08:00",
         "path": "skills/vuln-report/SKILL.md",
         "blob": "bce9e57c7d3fccf8183a96d641a35f47ace4cdeb"
+      }
+    },
+    {
+      "name": "wooyun-legacy",
+      "license": "MIT",
+      "adaptation": "adapted",
+      "reviewedAt": "2026-08-02",
+      "source": {
+        "repository": "https://github.com/vigolium/piolium",
+        "commit": "890888a20d52a9378d20bbbc7b8850483d97362a",
+        "committedAt": "2026-05-23T20:30:16+08:00",
+        "path": "skills/wooyun-legacy/SKILL.md",
+        "blob": "741a35ab4dd0486d32c3030be1ee1d9fd87cfe3a"
       }
     }
   ]

@@ -5,7 +5,7 @@
 <h1 align="center">OpenCode Power Pack for Codex, OpenCode + Pi</h1>
 
 <p align="center">
-  <i>Forty-five Claude Code workflows, adapted for Codex, OpenCode, and Pi.<br/>
+  <i>Fifty-five Claude Code workflows, adapted for Codex, OpenCode, and Pi.<br/>
   Code review, security audit, feature development, frontend design, project memory, and authoring tools.</i>
 </p>
 
@@ -14,7 +14,7 @@
   <a href="https://github.com/waybarrios/opencode-power-pack/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/waybarrios/opencode-power-pack?style=flat-square&color=FFD60A"></a>
   <a href="https://github.com/waybarrios/opencode-power-pack/commits/main"><img alt="Last commit" src="https://img.shields.io/github/last-commit/waybarrios/opencode-power-pack?style=flat-square"></a>
   <a href="https://github.com/waybarrios/opencode-power-pack/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/waybarrios/opencode-power-pack?style=flat-square"></a>
-  <img alt="Skills: 45" src="https://img.shields.io/badge/skills-45-FFD60A?style=flat-square&labelColor=0B0F14">
+  <img alt="Skills: 55" src="https://img.shields.io/badge/skills-55-FFD60A?style=flat-square&labelColor=0B0F14">
   <img alt="OpenCode 1.18.7+" src="https://img.shields.io/badge/opencode-1.18.7%2B-0B0F14?style=flat-square&labelColor=FFD60A">
   <img alt="Codex plugin" src="https://img.shields.io/badge/Codex-plugin-0B0F14?style=flat-square&labelColor=FFD60A">
   <img alt="Pi package" src="https://img.shields.io/badge/Pi-package-0B0F14?style=flat-square&labelColor=FFD60A">
@@ -45,7 +45,7 @@ Start a new Codex session, open `/plugins` to confirm the installation, or invok
 pi install git:github.com/waybarrios/opencode-power-pack
 ```
 
-Pi discovers the forty-five skills declared by the package. Use `pi list` to verify the installation. For a project-local installation recorded in `.pi/settings.json`, add `-l`:
+Pi discovers the fifty-five skills declared by the package. Use `pi list` to verify the installation. For a project-local installation recorded in `.pi/settings.json`, add `-l`:
 
 ```bash
 pi install git:github.com/waybarrios/opencode-power-pack -l
@@ -55,7 +55,7 @@ pi install git:github.com/waybarrios/opencode-power-pack -l
 
 Codex, OpenCode, and Pi read `SKILL.md` workflows, but many valuable Claude Code workflows originated as Claude-specific commands and agents. Copying those artifacts directly does not preserve their orchestration, permissions, or subagent behavior.
 
-This package adapts the portable methodology into shared skills, registers feature-development specialist roles as read-only OpenCode subagents, lets Codex execute the same phase assignments with its native subagent workflow, and exposes all forty-five skills as a Pi package. It ships immutable provenance for every upstream work.
+This package adapts the portable methodology into shared skills, registers feature-development specialist roles as read-only OpenCode subagents, lets Codex execute the same phase assignments with its native subagent workflow, and exposes all fifty-five skills as a Pi package. It ships immutable provenance for every upstream work.
 
 It complements [obra/superpowers](https://github.com/obra/superpowers), which provides process skills such as brainstorming, TDD, debugging, and plan execution.
 
@@ -70,6 +70,16 @@ It complements [obra/superpowers](https://github.com/obra/superpowers), which pr
 | Review | `insecure-defaults` | Detect fail-open insecure defaults (hardcoded secrets, weak auth, permissive config) |
 | Review | `fp-check` | Systematically verify a suspected security bug to a TRUE/FALSE POSITIVE verdict |
 | Review | `vuln-report` | Draft a single-vulnerability disclosure report in GitHub advisory style |
+| Review | `agentic-actions-auditor` | Audit GitHub Actions workflows for prompt-injection risk in AI agent integrations |
+| Review | `security-threat-model` | Repository-grounded threat modeling — trust boundaries, assets, abuse paths |
+| Review | `differential-review` | Security-focused differential review of a diff/PR with blast-radius analysis |
+| Review | `variant-analysis` | Find similar vulnerabilities/bugs across a codebase from one initial pattern |
+| Review | `sarif-parsing` | Parse, filter, dedupe, and convert SARIF output from CodeQL/Semgrep/other scanners |
+| Review | `semgrep` | Run a Semgrep static analysis scan with approval-gated ruleset selection |
+| Review | `semgrep-rule-creator` | Write custom Semgrep rules for a specific vulnerability/bug pattern |
+| Review | `semgrep-rule-variant-creator` | Port an existing Semgrep rule to additional target languages |
+| Review | `codeql` | Run a CodeQL scan using interprocedural data flow and taint tracking |
+| Review | `wooyun-legacy` | Web vulnerability testing methodology distilled from 88k+ real-world disclosure cases |
 | Feature development | `feature-dev` | Seven-phase workflow from discovery through implementation and review |
 | Feature development | `code-explorer` | Trace a feature across entry points, layers, state, and dependencies |
 | Feature development | `code-architect` | Produce a file-level architecture and implementation blueprint |
@@ -131,7 +141,7 @@ codex plugin add opencode-power-pack@opencode-power-pack
 codex plugin list --marketplace opencode-power-pack
 ```
 
-Start a new Codex session after installation so the forty-five bundled skills are loaded. Use `/plugins` to inspect the installed plugin or `$` to select one of its skills explicitly. Codex plugin packaging follows the [official plugin structure](https://developers.openai.com/plugins/build/plugins).
+Start a new Codex session after installation so the fifty-five bundled skills are loaded. Use `/plugins` to inspect the installed plugin or `$` to select one of its skills explicitly. Codex plugin packaging follows the [official plugin structure](https://developers.openai.com/plugins/build/plugins).
 
 ### OpenCode From GitHub
 
@@ -171,7 +181,7 @@ opencode debug skill
 opencode debug agent code-explorer
 ```
 
-The first command should include all forty-five unprefixed skill names. The second should report a `subagent` with editing denied. In the TUI, `ctrl+p` should list `/code-review`, `/feature-dev`, `/frontend-design`, and the other skill-derived commands.
+The first command should include all fifty-five unprefixed skill names. The second should report a `subagent` with editing denied. In the TUI, `ctrl+p` should list `/code-review`, `/feature-dev`, `/frontend-design`, and the other skill-derived commands.
 
 ### Verify Codex
 
