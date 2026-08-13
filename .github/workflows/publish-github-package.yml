@@ -1,0 +1,50 @@
+name: Publish GitHub Package
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Release tag to publish, for example v0.4.0
+        required: true
+        default: v0.4.0
+
+concurrency:
+  group: github-package-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.event.release.tag_name }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish npm package to GitHub Packages
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      packages: write
+    env:
+      RELEASE_REF: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.event.release.tag_name }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RELEASE_REF }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@waybarrios"
+      - name: Verify tag matches package version
+        run: |
+          node --input-type=module -e '
+            import fs from "node:fs";
+            const { version } = JSON.parse(fs.readFileSync("package.json", "utf8"));
+            const expected = `v${version}`;
+            if (process.env.RELEASE_REF !== expected) {
+              console.error(`Release ref ${process.env.RELEASE_REF} does not match package version ${expected}`);
+              process.exit(1);
+            }
+          '
+      - name: Publish release to GitHub Packages
+        run: npm publish --registry=https://npm.pkg.github.com --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

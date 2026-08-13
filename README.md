@@ -110,6 +110,27 @@ npm uninstall --global @waybarrios/opencode-power-pack
 
 The npm package is scoped as `@waybarrios/opencode-power-pack` to give it an unambiguous registry identity. The package still installs the shorter `opencode-power-pack` executable for direct CLI use. No global installation is required when using `npx`.
 
+### GitHub Packages mirror
+
+Every GitHub release can also be published from its immutable tag to the repository's GitHub Packages page. npmjs remains the recommended public installation source because it works without GitHub authentication.
+
+To install the GitHub Packages mirror, first authenticate with a GitHub personal access token (classic) that has `read:packages`, then select the GitHub registry explicitly:
+
+```bash
+npm login --scope=@waybarrios --auth-type=legacy --registry=https://npm.pkg.github.com
+npm install --global @waybarrios/opencode-power-pack --registry=https://npm.pkg.github.com
+
+opencode-power-pack list
+```
+
+Run the installer directly from the mirror after authentication:
+
+```bash
+npx --registry=https://npm.pkg.github.com @waybarrios/opencode-power-pack list
+```
+
+Maintainers publish the mirror with the `Publish GitHub Package` workflow. Release events publish automatically, while a manual run requires an existing release tag such as `v0.4.0`. The workflow verifies that the tag matches `package.json`, runs the complete `prepublishOnly` test suite, and authenticates with the repository-scoped `GITHUB_TOKEN`; no package token is stored in the repository.
+
 | Profile | Intended use |
 |---|---|
 | `recommended` | Balanced software development without the specialized security and ML catalogs |
