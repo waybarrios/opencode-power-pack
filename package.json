@@ -1,11 +1,15 @@
 {
   "name": "opencode-power-pack",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Fifty-five Claude Code workflows packaged for Codex, OpenCode, and Pi: code review, feature development, security review, frontend design, authoring, and project memory.",
   "type": "module",
   "main": ".opencode/plugins/opencode-power-pack.js",
   "bin": {
     "opencode-power-pack": "bin/opencode-power-pack.mjs"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "engines": {
     "node": ">=20",
@@ -24,6 +28,7 @@
   ],
   "scripts": {
     "test": "node --test",
+    "prepublishOnly": "npm test",
     "eval:behavioral": "node scripts/behavioral-evals.mjs run",
     "eval:behavioral:accept": "node scripts/behavioral-evals.mjs accept",
     "smoke:opencode": "node scripts/opencode-smoke.mjs 1.18.7"

@@ -81,6 +81,12 @@ test("plugin loads as an ES module without runtime warnings", () => {
 test("packed npm artifact exposes a working selective-installer executable", () => {
   const packedRoot = mkdtempSync(join(tmpdir(), "opp-packed-bin-"));
   const installRoot = join(packedRoot, "consumer");
+  const npmArtifactEnv = {
+    ...process.env,
+    npm_config_dry_run: "false",
+    npm_config_json: "false",
+    npm_config_loglevel: "silent",
+  };
   try {
     mkdirSync(installRoot, { recursive: true });
     writeFileSync(join(installRoot, "package.json"), '{"private":true}\n', "utf8");
@@ -90,14 +96,14 @@ test("packed npm artifact exposes a working selective-installer executable", () 
       {
         cwd: REPO,
         encoding: "utf8",
-        env: { ...process.env, npm_config_loglevel: "silent" },
+        env: npmArtifactEnv,
       },
     ).trim().split(/\r?\n/).at(-1);
     const tarball = join(packedRoot, tarballName);
     execFileSync(
       "npm",
       ["install", "--ignore-scripts", "--no-audit", "--no-fund", tarball],
-      { cwd: installRoot, encoding: "utf8" },
+      { cwd: installRoot, encoding: "utf8", env: npmArtifactEnv },
     );
 
     const executable = join(
