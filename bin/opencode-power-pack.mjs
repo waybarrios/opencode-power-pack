@@ -20,10 +20,10 @@ const PACKAGE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), 
 const USAGE = `OpenCode Power Pack selective skill installer
 
 Usage:
-  npx opencode-power-pack list
-  npx opencode-power-pack install <skill...> [options]
-  npx opencode-power-pack install --profile <name> [options]
-  npx opencode-power-pack install --all [options]
+  npx @waybarrios/opencode-power-pack list
+  npx @waybarrios/opencode-power-pack install <skill...> [options]
+  npx @waybarrios/opencode-power-pack install --profile <name> [options]
+  npx @waybarrios/opencode-power-pack install --all [options]
 
 Options:
   --profile <name>  Install a curated profile. Repeatable.

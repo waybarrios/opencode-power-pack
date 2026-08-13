@@ -69,25 +69,46 @@ pi install git:github.com/waybarrios/opencode-power-pack -l
 
 Install only the workflows you want into the shared `.agents/skills` location recognized by Codex, OpenCode, and Pi:
 
+Use `npx` when you want to run the latest installer without keeping a global copy:
+
 ```bash
 # Inspect every profile and skill
-npx opencode-power-pack list
+npx @waybarrios/opencode-power-pack list
 
 # Install the balanced recommended profile for your user
-npx opencode-power-pack install --profile recommended
+npx @waybarrios/opencode-power-pack install --profile recommended
 
 # Install individual skills
-npx opencode-power-pack install code-review security-review
+npx @waybarrios/opencode-power-pack install code-review security-review
 
 # Install a profile only for the current repository
-npx opencode-power-pack install --profile review --project
+npx @waybarrios/opencode-power-pack install --profile review --project
 
 # Preview a selection without writing anything
-npx opencode-power-pack install --profile security --dry-run
+npx @waybarrios/opencode-power-pack install --profile security --dry-run
 
 # Update previously copied skills from the latest package
-npx opencode-power-pack@latest install --profile review --force
+npx @waybarrios/opencode-power-pack@latest install --profile review --force
 ```
+
+Or install the package globally and use its shorter executable:
+
+```bash
+npm install --global @waybarrios/opencode-power-pack
+
+opencode-power-pack list
+opencode-power-pack install --profile recommended
+opencode-power-pack install code-review security-review
+```
+
+To update or remove the global installation:
+
+```bash
+npm update --global @waybarrios/opencode-power-pack
+npm uninstall --global @waybarrios/opencode-power-pack
+```
+
+The npm package is scoped as `@waybarrios/opencode-power-pack` to give it an unambiguous registry identity. The package still installs the shorter `opencode-power-pack` executable for direct CLI use. No global installation is required when using `npx`.
 
 | Profile | Intended use |
 |---|---|
