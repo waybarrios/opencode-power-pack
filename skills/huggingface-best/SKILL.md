@@ -1,6 +1,6 @@
 ---
 name: huggingface-best
-description: "Use when the user asks about finding the best, top, or recommended model for a task, wants to know what AI model to use, or wants to compare models by benchmark scores. Triggers on: \"best model for X\", \"what model should I use for\", \"top models for [task]\", \"which model runs on my laptop/machine/device\", \"recommend a model for\", \"what LLM should I use for\", \"compare models for\", \"what's state of the art for\", or any question about choosing an AI model for a specific use case. Always use this skill when the user wants model recommendations or comparisons, even if they don't explicitly mention HuggingFace or benchmarks."
+description: "Find and compare recommended Hugging Face models for a task using benchmarks, model size, and device constraints. Use for model selection questions; use huggingface-local-models for GGUF setup and hf-cli for Hub operations."
 license: Apache-2.0 (modified; see UPSTREAMS.json)
 ---
 

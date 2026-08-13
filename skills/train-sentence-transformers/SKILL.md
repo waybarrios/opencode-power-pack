@@ -1,6 +1,6 @@
 ---
 name: train-sentence-transformers
-description: Train or fine-tune sentence-transformers models across `SentenceTransformer` (bi-encoder; dense or static embedding model; for retrieval, similarity, clustering, classification, paraphrase mining, dedup, multimodal), `CrossEncoder` (reranker; pair scoring for two-stage retrieval / pair classification), and `SparseEncoder` (SPLADE, sparse embedding model; for learned-sparse retrieval). Covers loss selection, hard-negative mining, evaluators, distillation, LoRA, Matryoshka, and Hugging Face Hub publishing. Use for any sentence-transformers training task.
+description: "Train or fine-tune SentenceTransformer bi-encoders, CrossEncoder rerankers, or SparseEncoder models, including losses, negatives, evaluation, distillation, LoRA, and Matryoshka. Use for sentence-transformers training tasks."
 license: Apache-2.0 (modified; see UPSTREAMS.json)
 ---
 

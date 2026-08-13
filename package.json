@@ -1,7 +1,7 @@
 {
   "name": "opencode-power-pack",
   "version": "0.4.0",
-  "description": "Fifty-five Claude Code workflows packaged for Codex, OpenCode, and Pi: code review, feature development, security review, frontend design, authoring, and project memory.",
+  "description": "Fifty-four software-development workflows for Claude Code, Codex, OpenCode, and Pi: code review, feature development, security review, frontend design, authoring, and project memory.",
   "type": "module",
   "main": ".opencode/plugins/opencode-power-pack.js",
   "bin": {
@@ -17,6 +17,7 @@
   },
   "files": [
     "skills",
+    ".claude-plugin",
     ".codex-plugin",
     ".opencode",
     "bin",

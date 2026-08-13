@@ -1,6 +1,6 @@
 ---
 name: huggingface-spaces
-description: Build, deploy, and maintain applications on Hugging Face Spaces — Gradio / Docker / Static SDKs, ZeroGPU and dedicated hardware, model loading, debugging, buckets, inference providers, community grants. Use whenever the user asks to create or host an app on Hugging Face, port code onto ZeroGPU, fix a Space that won't build or run, or otherwise work with `hf spaces …`, `@spaces.GPU`, Space README frontmatter, or the `spaces` Python package.
+description: "Build, deploy, debug, or maintain a Hugging Face Space using Gradio, Docker, or Static SDKs. Use for general Space hosting and configuration; use huggingface-zerogpu for ZeroGPU runtime constraints and lora-space-builder for LoRA demos."
 license: Apache-2.0 (modified; see UPSTREAMS.json)
 ---
 

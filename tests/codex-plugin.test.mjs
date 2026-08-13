@@ -15,6 +15,7 @@ test("Codex plugin manifest identifies the repository and skills", () => {
   assert.equal(manifest.skills, "./skills/");
   assert.equal(manifest.repository, "https://github.com/waybarrios/opencode-power-pack");
   assert.match(manifest.description, /Codex/i);
+  assert.match(manifest.description, /Claude Code/i);
   assert.match(manifest.description, /OpenCode/i);
   assert.match(manifest.description, /Pi/i);
   assert.ok(manifest.keywords.includes("codex"));
@@ -24,7 +25,7 @@ test("Codex plugin exposes every bundled skill with valid basic frontmatter", ()
   const names = readdirSync(join(REPO, "skills"))
     .filter((name) => existsSync(join(REPO, "skills", name, "SKILL.md")));
 
-  assert.equal(names.length, 55);
+  assert.equal(names.length, 54);
   for (const name of names) {
     const source = readFileSync(join(REPO, "skills", name, "SKILL.md"), "utf8");
     assert.match(source, /^---\r?\n/);
@@ -58,7 +59,10 @@ test("Codex manifest does not declare absent plugin components", () => {
 
 test("repository marketplace installs the root plugin from main", () => {
   assert.equal(marketplace.name, "opencode-power-pack");
-  assert.equal(marketplace.interface.displayName, "Codex + OpenCode + Pi Power Pack");
+  assert.equal(
+    marketplace.interface.displayName,
+    "Claude Code + Codex + OpenCode + Pi Power Pack",
+  );
   assert.equal(marketplace.plugins.length, 1);
 
   const [entry] = marketplace.plugins;

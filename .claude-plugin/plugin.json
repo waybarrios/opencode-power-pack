@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "opencode-power-pack",
+  "displayName": "OpenCode Power Pack",
+  "version": "0.4.0",
+  "description": "Fifty-four software-development workflows for Claude Code, Codex, OpenCode, and Pi.",
+  "author": {
+    "name": "Wayner Barrios",
+    "url": "https://github.com/waybarrios"
+  },
+  "homepage": "https://github.com/waybarrios/opencode-power-pack",
+  "repository": "https://github.com/waybarrios/opencode-power-pack",
+  "license": "MIT AND Apache-2.0",
+  "keywords": [
+    "claude-code",
+    "codex",
+    "opencode",
+    "pi",
+    "skills",
+    "code-review",
+    "security-review",
+    "feature-development"
+  ],
+  "skills": "./skills/"
+}

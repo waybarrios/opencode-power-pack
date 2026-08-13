@@ -23,6 +23,7 @@ const skillsDir = join(REPO, "skills");
 const names = readdirSync(skillsDir).filter((n) =>
   existsSync(join(skillsDir, n, "SKILL.md"))
 );
+let catalogMetadataCharacters = 0;
 
 for (const name of names) {
   const skill = parse(readFileSync(join(skillsDir, name, "SKILL.md"), "utf8"));
@@ -32,9 +33,11 @@ for (const name of names) {
     assert.equal(skill.fm.name, name, "name matches the directory");
     assert.match(skill.fm.name ?? "", NAME_RE, "name matches the slug regex");
     const d = skill.fm.description ?? "";
-    assert.ok(d.length >= 1 && d.length <= 1024, `description length 1..1024 (is ${d.length})`);
+    assert.ok(d.length >= 1 && d.length <= 600, `description length 1..600 (is ${d.length})`);
     assert.ok((skill.fm.license ?? "").length > 0, "license present");
   });
+
+  catalogMetadataCharacters += name.length + (skill.fm.description ?? "").length;
 
   test(`${name}: SKILL.md body under 500 lines`, () => {
     assert.ok(skill.body.split(/\r?\n/).length < 500);
@@ -58,3 +61,10 @@ for (const name of names) {
     check("SKILL.md", readFileSync(join(skillsDir, name, "SKILL.md"), "utf8"));
   });
 }
+
+test("skill catalog stays within the phase-one routing budget", () => {
+  assert.ok(
+    catalogMetadataCharacters <= 15_500,
+    `name and description metadata is ${catalogMetadataCharacters} characters (budget 15500)`,
+  );
+});

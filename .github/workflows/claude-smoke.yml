@@ -1,0 +1,23 @@
+name: Claude Code smoke
+
+on:
+  pull_request:
+    paths:
+      - ".claude-plugin/**"
+      - "skills/**"
+      - "package.json"
+      - "README.md"
+      - ".github/workflows/claude-smoke.yml"
+  workflow_dispatch:
+
+jobs:
+  claude-2-1-231:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+      - name: Validate plugin and marketplace manifests
+        run: npx --yes @anthropic-ai/claude-code@2.1.231 plugin validate . --strict

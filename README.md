@@ -2,10 +2,10 @@
   <img src="assets/logo.svg" alt="opencode-power-pack" width="100%" />
 </p>
 
-<h1 align="center">OpenCode Power Pack for Codex, OpenCode + Pi</h1>
+<h1 align="center">OpenCode Power Pack for Claude Code, Codex, OpenCode + Pi</h1>
 
 <p align="center">
-  <i>Fifty-five Claude Code workflows, adapted for Codex, OpenCode, and Pi.<br/>
+  <i>Fifty-four portable workflows for Claude Code, Codex, OpenCode, and Pi.<br/>
   Code review, security audit, feature development, frontend design, project memory, and authoring tools.</i>
 </p>
 
@@ -14,7 +14,8 @@
   <a href="https://github.com/waybarrios/opencode-power-pack/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/waybarrios/opencode-power-pack?style=flat-square&color=FFD60A"></a>
   <a href="https://github.com/waybarrios/opencode-power-pack/commits/main"><img alt="Last commit" src="https://img.shields.io/github/last-commit/waybarrios/opencode-power-pack?style=flat-square"></a>
   <a href="https://github.com/waybarrios/opencode-power-pack/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/waybarrios/opencode-power-pack?style=flat-square"></a>
-  <img alt="Skills: 55" src="https://img.shields.io/badge/skills-55-FFD60A?style=flat-square&labelColor=0B0F14">
+  <img alt="Skills: 54" src="https://img.shields.io/badge/skills-54-FFD60A?style=flat-square&labelColor=0B0F14">
+  <img alt="Claude Code plugin" src="https://img.shields.io/badge/Claude_Code-plugin-0B0F14?style=flat-square&labelColor=FFD60A">
   <img alt="OpenCode 1.18.7+" src="https://img.shields.io/badge/opencode-1.18.7%2B-0B0F14?style=flat-square&labelColor=FFD60A">
   <img alt="Codex plugin" src="https://img.shields.io/badge/Codex-plugin-0B0F14?style=flat-square&labelColor=FFD60A">
   <img alt="Pi package" src="https://img.shields.io/badge/Pi-package-0B0F14?style=flat-square&labelColor=FFD60A">
@@ -23,6 +24,7 @@
 <p align="center">
   <a href="#installation"><b>Install</b></a> ·
   <a href="#selective-install-with-npm"><b>Select Skills</b></a> ·
+  <a href="#claude-code-quick-install"><b>Claude Code</b></a> ·
   <a href="#codex-quick-install"><b>Codex Quick Install</b></a> ·
   <a href="#pi-quick-install"><b>Pi Quick Install</b></a> ·
   <a href="#whats-inside"><b>Skills</b></a> ·
@@ -30,6 +32,17 @@
   <a href="#how-it-works"><b>Architecture</b></a> ·
   <a href="#acknowledgments"><b>Credits</b></a>
 </p>
+
+## Claude Code Quick Install
+
+Run these commands inside Claude Code:
+
+```text
+/plugin marketplace add waybarrios/opencode-power-pack
+/plugin install opencode-power-pack@opencode-power-pack
+```
+
+Run `/reload-plugins` if the installation summary requests it. Skills are namespaced to avoid collisions, so explicit invocations use names such as `/opencode-power-pack:code-review` and `/opencode-power-pack:feature-dev`.
 
 ## Codex Quick Install
 
@@ -46,7 +59,7 @@ Start a new Codex session, open `/plugins` to confirm the installation, or invok
 pi install git:github.com/waybarrios/opencode-power-pack
 ```
 
-Pi discovers the fifty-five skills declared by the package. Use `pi list` to verify the installation. For a project-local installation recorded in `.pi/settings.json`, add `-l`:
+Pi discovers the fifty-four skills declared by the package. Use `pi list` to verify the installation. For a project-local installation recorded in `.pi/settings.json`, add `-l`:
 
 ```bash
 pi install git:github.com/waybarrios/opencode-power-pack -l
@@ -89,13 +102,13 @@ npx opencode-power-pack@latest install --profile review --force
 
 Profiles automatically include required companion skills and can be combined with individual skill names. The default destination is `~/.agents/skills`; `--project` finds the current Git root and installs into its `.agents/skills` directory. Existing directories are skipped unless `--force` is provided, and replacements are staged with rollback plus per-skill locking. Every copied skill retains its provenance, third-party notices, and license texts. Use `--dry-run` to preview or `--all` to install the complete catalog.
 
-The npm installer and the full Codex/OpenCode plugin are alternative activation paths. If the full plugin is already active, selectively copying the same skills does not reduce that plugin's loaded catalog.
+The npm installer and the full Claude Code/Codex/OpenCode plugins are alternative activation paths. Claude Code users should prefer the namespaced plugin because the selective installer currently targets the portable `.agents/skills` location used by Codex, OpenCode, and Pi. If a full plugin is already active, selectively copying the same skills does not reduce that plugin's loaded catalog.
 
 ## Why This Exists
 
-Codex, OpenCode, and Pi read `SKILL.md` workflows, but many valuable Claude Code workflows originated as Claude-specific commands and agents. Copying those artifacts directly does not preserve their orchestration, permissions, or subagent behavior.
+Claude Code, Codex, OpenCode, and Pi read `SKILL.md` workflows, but many valuable workflows originated as Claude-specific commands and agents. Copying those artifacts directly does not preserve their orchestration, permissions, or subagent behavior.
 
-This package adapts the portable methodology into shared skills, registers feature-development specialist roles as read-only OpenCode subagents, lets Codex execute the same phase assignments with its native subagent workflow, and exposes all fifty-five skills as a Pi package. It ships immutable provenance for every upstream work.
+This package exposes the shared skills as a namespaced Claude Code plugin, registers feature-development specialist roles as read-only OpenCode subagents, lets Codex execute the same phase assignments with its native subagent workflow, and exposes all fifty-four skills as a Pi package. It ships immutable provenance for every upstream work.
 
 It complements [obra/superpowers](https://github.com/obra/superpowers), which provides process skills such as brainstorming, TDD, debugging, and plan execution.
 
@@ -119,7 +132,6 @@ It complements [obra/superpowers](https://github.com/obra/superpowers), which pr
 | Review | `semgrep-rule-creator` | Write custom Semgrep rules for a specific vulnerability/bug pattern |
 | Review | `semgrep-rule-variant-creator` | Port an existing Semgrep rule to additional target languages |
 | Review | `codeql` | Run a CodeQL scan using interprocedural data flow and taint tracking |
-| Review | `wooyun-legacy` | Web vulnerability testing methodology distilled from 88k+ real-world disclosure cases |
 | Feature development | `feature-dev` | Seven-phase workflow from discovery through implementation and review |
 | Feature development | `code-explorer` | Trace a feature across entry points, layers, state, and dependencies |
 | Feature development | `code-architect` | Produce a file-level architecture and implementation blueprint |
@@ -169,7 +181,7 @@ It complements [obra/superpowers](https://github.com/obra/superpowers), which pr
 | One file, function, or small local change | `code-reviewer` (Focused Code Review) | Uses a lighter two-pass review with full-file and caller context |
 | `feature-dev` quality phase | `code-reviewer` (Focused Code Review) | Acts as the focused specialist role dispatched by the feature workflow |
 
-They are complementary rather than duplicate workflows. Codex shows the distinct user-facing titles above, while the stable skill IDs continue to work across Codex, OpenCode, and Pi. Start with `code-review` for merge decisions and `code-reviewer` for focused iteration.
+They are complementary rather than duplicate workflows. Codex shows distinct user-facing titles, Claude Code namespaces both under `opencode-power-pack`, and the stable skill IDs continue to work across every host. Start with `code-review` for merge decisions and `code-reviewer` for focused iteration.
 
 ## Installation
 
@@ -178,9 +190,21 @@ They are complementary rather than duplicate workflows. Codex shows the distinct
 - Git
 - Node.js 20 or newer, including npm/npx, for [selective installation](#selective-install-with-npm)
 - One supported host:
+  - A current Claude Code installation with plugin support: <https://code.claude.com/docs/en/plugins>
   - OpenCode 1.18.7 or newer: <https://opencode.ai>
   - A current Codex CLI or Codex desktop environment with plugin support: <https://developers.openai.com/codex/>
   - A current Pi coding agent installation: <https://pi.dev/>
+
+### Claude Code
+
+Add the repository marketplace and install its plugin from inside Claude Code:
+
+```text
+/plugin marketplace add waybarrios/opencode-power-pack
+/plugin install opencode-power-pack@opencode-power-pack
+```
+
+Run `/reload-plugins` if prompted. Claude Code loads plugin skills from the repository-level `skills/` directory and prefixes them with the plugin namespace, preventing collisions with built-in or separately installed skills. For local development, run `claude --plugin-dir .` from a clone of this repository.
 
 ### Codex CLI And Desktop
 
@@ -192,7 +216,7 @@ codex plugin add opencode-power-pack@opencode-power-pack
 codex plugin list --marketplace opencode-power-pack
 ```
 
-Start a new Codex session after installation so the fifty-five bundled skills are loaded. Use `/plugins` to inspect the installed plugin or `$` to select one of its skills explicitly. Codex plugin packaging follows the [official plugin structure](https://developers.openai.com/plugins/build/plugins).
+Start a new Codex session after installation so the fifty-four bundled skills are loaded. Use `/plugins` to inspect the installed plugin or `$` to select one of its skills explicitly. Codex plugin packaging follows the [official plugin structure](https://developers.openai.com/plugins/build/plugins).
 
 For a smaller personal or repository-specific set, use the [selective npm installer](#selective-install-with-npm) instead of the full plugin.
 
@@ -229,6 +253,16 @@ Pi installs the Git package and loads the `skills/` directory declared in `packa
 
 Pi can also narrow an installed package through `pi config`. The npm installer is useful when you want the same selected set to be discovered by Pi, Codex, and OpenCode from `.agents/skills`.
 
+### Verify Claude Code
+
+From a local clone, validate both the plugin and marketplace manifests:
+
+```bash
+claude plugin validate . --strict
+```
+
+After marketplace installation, run `/plugin` and confirm that `opencode-power-pack` is enabled. Invoke `/opencode-power-pack:code-review` for a first test.
+
 ### Verify OpenCode
 
 ```bash
@@ -236,7 +270,7 @@ opencode debug skill
 opencode debug agent code-explorer
 ```
 
-The first command should include all fifty-five unprefixed skill names. The second should report a `subagent` with editing denied. In the TUI, `ctrl+p` should list `/code-review`, `/feature-dev`, `/frontend-design`, and the other skill-derived commands.
+The first command should include all fifty-four unprefixed skill names. The second should report a `subagent` with editing denied. In the TUI, `ctrl+p` should list `/code-review`, `/feature-dev`, `/frontend-design`, and the other skill-derived commands.
 
 ### Verify Codex
 
@@ -255,6 +289,15 @@ pi list
 The package list should include the Git source for `waybarrios/opencode-power-pack`. Start a new Pi session after installation so its bundled skills are available.
 
 ## Updating
+
+For Claude Code:
+
+```text
+/plugin marketplace update opencode-power-pack
+/plugin update opencode-power-pack@opencode-power-pack
+```
+
+Run `/reload-plugins` if prompted.
 
 For Codex:
 
@@ -281,6 +324,12 @@ Restart OpenCode after the command finishes. For a pinned installation, update t
 
 ## Uninstalling
 
+For Claude Code:
+
+```text
+/plugin uninstall opencode-power-pack@opencode-power-pack
+```
+
 For Codex:
 
 ```bash
@@ -299,6 +348,8 @@ For OpenCode, remove the `opencode-power-pack@...` entry from the `plugin` array
 
 | Symptom | Cause | Fix |
 |---|---|---|
+| Claude Code cannot add the marketplace | The checkout predates `.claude-plugin/marketplace.json` or the repository is inaccessible | Update the checkout, verify repository access, and run `claude plugin validate . --strict` locally |
+| Claude Code installed the plugin but a skill name conflicts | The unprefixed skill came from another source | Invoke the namespaced form, such as `/opencode-power-pack:code-review` |
 | Codex cannot find the marketplace | Marketplace snapshot is missing or stale | Run `codex plugin marketplace add waybarrios/opencode-power-pack --ref main`, or upgrade the existing marketplace |
 | Codex installed the plugin but skills do not appear | The current session predates installation | Start a new Codex session and inspect `/plugins` |
 | Pi does not show the skills | Package is absent, disabled, or the session predates installation | Run `pi list`, inspect `pi config`, and start a new Pi session |
@@ -310,7 +361,7 @@ For OpenCode, remove the `opencode-power-pack@...` entry from the `plugin` array
 
 ## Invocation
 
-Codex exposes installed skills through `$` mentions, OpenCode 1.18.7+ exposes each discovered skill as a same-named slash command, and Pi loads the workflows from the installed skills package:
+Claude Code exposes plugin skills as `/opencode-power-pack:<skill>`, Codex uses `$` mentions, OpenCode 1.18.7+ exposes same-named slash commands, and Pi loads workflows from the installed skills package:
 
 ```text
 /code-review
@@ -336,6 +387,8 @@ $feature-dev add a logout button to the topbar
 /feature-dev add a logout button to the topbar
 /security-review
 /frontend-design pricing page, brutalist tone, single-screen
+/opencode-power-pack:code-review
+/opencode-power-pack:feature-dev add a logout button to the topbar
 ```
 
 In OpenCode, an explicit command with the same name takes precedence over a skill-derived command.
@@ -344,6 +397,10 @@ In OpenCode, an explicit command with the same name takes precedence over a skil
 
 ```text
 opencode-power-pack
+|
++-- .claude-plugin/
+|   +-- plugin.json declares the namespaced Claude Code plugin
+|   +-- marketplace.json makes the repository installable in Claude Code
 |
 +-- .codex-plugin/plugin.json
 |   +-- packages all skills/ for Codex and compatible plugin surfaces
@@ -369,7 +426,7 @@ opencode-power-pack
     +-- repository, commit, path, blob, date, and adaptation type
 ```
 
-Each `SKILL.md` is the single source for its workflow. The OpenCode plugin derives specialist-agent prompts from those files at startup. Codex loads the same skills from the plugin and follows `feature-dev`'s specialist assignments with its native subagent workflow; installing a skill does not itself create a named custom agent.
+Each `SKILL.md` is the single source for its workflow. Claude Code loads the directory through its plugin namespace. The OpenCode plugin derives specialist-agent prompts from those files at startup. Codex loads the same skills from its plugin and follows `feature-dev`'s specialist assignments with its native subagent workflow; installing a skill does not itself create a named custom agent.
 
 The packaged agents deny edits, external network access, and nested tasks. `code-reviewer` additionally allows a narrow set of read-only Git commands.
 
@@ -377,8 +434,8 @@ The packaged agents deny edits, external network access, and nested tasks. `code
 
 | In scope | Out of scope |
 |---|---|
-| Portable Claude Code workflow methodology | Claude Code hook contracts |
-| Codex, OpenCode, and Pi skills, invocation, and subagent orchestration | Proprietary or non-redistributable plugins |
+| Claude Code, Codex, OpenCode, and Pi skills and invocation | Claude Code hook contracts |
+| Portable and host-native subagent orchestration | Proprietary or non-redistributable plugins |
 | Licensed adaptations with immutable provenance | Automatic trust of third-party skill catalogs |
 | Explicit permission boundaries and regression tests | Supporting OpenCode versions older than 1.18.7 or obsolete Codex plugin formats |
 
@@ -411,7 +468,7 @@ Every skill must use a lowercase hyphenated directory/name, provide a trigger-sp
 
 ## Acknowledgments
 
-The bundled skills are modified upstream works. This repository contributes their Codex, OpenCode, and Pi adaptation, packaging, additional workflow guidance, tests, and compatibility layer.
+The bundled skills are modified upstream works. This repository contributes their Claude Code, Codex, OpenCode, and Pi packaging, additional workflow guidance, tests, and compatibility layer.
 
 | Upstream | Pinned source | Used for |
 |---|---|---|

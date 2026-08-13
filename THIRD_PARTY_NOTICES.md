@@ -33,8 +33,8 @@ Copyright 2026 Firstpick. The upstream notice is available at
 The modified `supply-chain-risk-auditor`, `sharp-edges`, `insecure-defaults`,
 `fp-check`, `vuln-report`, `agentic-actions-auditor`, `security-threat-model`,
 `differential-review`, `variant-analysis`, `sarif-parsing`,
-`semgrep-rule-creator`, `semgrep-rule-variant-creator`, `semgrep`, `codeql`,
-and `wooyun-legacy` skills derive from the MIT-licensed `vigolium/piolium`
+`semgrep-rule-creator`, `semgrep-rule-variant-creator`, `semgrep`, and `codeql`
+skills derive from the MIT-licensed `vigolium/piolium`
 repository, including their `references/`, `resources/`, and `workflows/`
 support files. Frontmatter `allowed-tools` lists, an unfilled Apache-2.0
 license template accidentally left in the `security-threat-model` directory,

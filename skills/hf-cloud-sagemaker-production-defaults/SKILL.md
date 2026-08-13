@@ -1,6 +1,6 @@
 ---
 name: hf-cloud-sagemaker-production-defaults
-description: 'Create a SageMaker endpoint (real-time or async) with autoscaling, CloudWatch alarms, and tagging enabled by default. Use this skill whenever about to create a SageMaker endpoint, write deployment code that calls `create_endpoint`, or finalize a deployment after the image URI and IAM role are known. Provides deploy.py for real-time endpoints and deploy_async.py for async endpoints (with genuine scale-to-zero support). This is the last step in the SageMaker deployment workflow. Never generate a bare `create_endpoint` call without these defaults — endpoints without autoscaling or alarms are demos, not deployments.'
+description: "Implement a production SageMaker endpoint with autoscaling, CloudWatch alarms, and tags. Use after the serving image and IAM role are known; use the deployment planner first when architecture is undecided."
 license: Apache-2.0 (modified; see UPSTREAMS.json)
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: huggingface-lora-space-builder
-description: Build and publish a Gradio demo on Hugging Face Spaces for a user-provided LoRA. Use when someone asks to create, generate, ship, or publish a Space, demo, Gradio app, or playground for a LoRA — including LoRAs for Qwen-Image, Qwen-Image-Edit, LTX-Video, Wan, FLUX, SDXL, or other diffusion base models. Also triggers when someone describes a LoRA they trained or hosts on the Hub and wants to share it. Covers picking the right base pipeline and `diffusers` inference recipe, designing a UI tailored to the LoRA's task and inputs (Union/multi-task control, edit, video, image, etc.), respecting model-card recommendations (trigger words, steps, guidance, LoRA scale, example inputs), and shipping to ZeroGPU hardware as a private Space by default.
+description: "Build and publish a Gradio Hugging Face Space for a user-provided image or video LoRA, including pipeline selection and model-card settings. Use for LoRA demos; use huggingface-spaces for general Space work."
 license: Apache-2.0 (modified; see UPSTREAMS.json)
 ---
 

@@ -717,19 +717,6 @@
         "path": "skills/vuln-report/SKILL.md",
         "blob": "bce9e57c7d3fccf8183a96d641a35f47ace4cdeb"
       }
-    },
-    {
-      "name": "wooyun-legacy",
-      "license": "MIT",
-      "adaptation": "adapted",
-      "reviewedAt": "2026-08-02",
-      "source": {
-        "repository": "https://github.com/vigolium/piolium",
-        "commit": "890888a20d52a9378d20bbbc7b8850483d97362a",
-        "committedAt": "2026-05-23T20:30:16+08:00",
-        "path": "skills/wooyun-legacy/SKILL.md",
-        "blob": "741a35ab4dd0486d32c3030be1ee1d9fd87cfe3a"
-      }
     }
   ]
 }
