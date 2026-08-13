@@ -33,6 +33,23 @@ test("Codex plugin exposes every bundled skill with valid basic frontmatter", ()
   }
 });
 
+test("overlapping code review skills have distinct Codex-facing identities", () => {
+  const comprehensive = readFileSync(
+    join(REPO, "skills", "code-review", "agents", "openai.yaml"),
+    "utf8",
+  );
+  const focused = readFileSync(
+    join(REPO, "skills", "code-reviewer", "agents", "openai.yaml"),
+    "utf8",
+  );
+
+  assert.match(comprehensive, /display_name: "Comprehensive Code Review"/);
+  assert.match(comprehensive, /default_prompt: "Use \$code-review /);
+  assert.match(focused, /display_name: "Focused Code Review"/);
+  assert.match(focused, /default_prompt: "Use \$code-reviewer /);
+  assert.notEqual(comprehensive, focused);
+});
+
 test("Codex manifest does not declare absent plugin components", () => {
   assert.equal("apps" in manifest, false);
   assert.equal("mcpServers" in manifest, false);

@@ -4,6 +4,9 @@
   "description": "Fifty-five Claude Code workflows packaged for Codex, OpenCode, and Pi: code review, feature development, security review, frontend design, authoring, and project memory.",
   "type": "module",
   "main": ".opencode/plugins/opencode-power-pack.js",
+  "bin": {
+    "opencode-power-pack": "bin/opencode-power-pack.mjs"
+  },
   "engines": {
     "node": ">=20",
     "opencode": ">=1.18.7"
@@ -12,7 +15,9 @@
     "skills",
     ".codex-plugin",
     ".opencode",
+    "bin",
     "assets",
+    "skillsets.json",
     "UPSTREAMS.json",
     "THIRD_PARTY_NOTICES.md",
     "LICENSES"

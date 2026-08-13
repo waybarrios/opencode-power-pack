@@ -22,6 +22,7 @@
 
 <p align="center">
   <a href="#installation"><b>Install</b></a> ·
+  <a href="#selective-install-with-npm"><b>Select Skills</b></a> ·
   <a href="#codex-quick-install"><b>Codex Quick Install</b></a> ·
   <a href="#pi-quick-install"><b>Pi Quick Install</b></a> ·
   <a href="#whats-inside"><b>Skills</b></a> ·
@@ -50,6 +51,45 @@ Pi discovers the fifty-five skills declared by the package. Use `pi list` to ver
 ```bash
 pi install git:github.com/waybarrios/opencode-power-pack -l
 ```
+
+## Selective Install With npm
+
+Install only the workflows you want into the shared `.agents/skills` location recognized by Codex, OpenCode, and Pi:
+
+```bash
+# Inspect every profile and skill
+npx opencode-power-pack list
+
+# Install the balanced recommended profile for your user
+npx opencode-power-pack install --profile recommended
+
+# Install individual skills
+npx opencode-power-pack install code-review security-review
+
+# Install a profile only for the current repository
+npx opencode-power-pack install --profile review --project
+
+# Preview a selection without writing anything
+npx opencode-power-pack install --profile security --dry-run
+
+# Update previously copied skills from the latest package
+npx opencode-power-pack@latest install --profile review --force
+```
+
+| Profile | Intended use |
+|---|---|
+| `recommended` | Balanced software development without the specialized security and ML catalogs |
+| `review` | Comprehensive and focused code review plus quality and differential review |
+| `feature-dev` | End-to-end feature workflow with its explorer, architect, and reviewer dependencies |
+| `frontend` | Frontend implementation and anti-generic design critique |
+| `security` | Security review, threat modeling, static analysis, validation, and reporting |
+| `huggingface` | Model discovery, local inference, training, evaluation, Spaces, and AWS deployment |
+| `authoring` | Skill and MCP authoring plus technical-paper summarization |
+| `project-memory` | Audit and maintain durable project guidance |
+
+Profiles automatically include required companion skills and can be combined with individual skill names. The default destination is `~/.agents/skills`; `--project` finds the current Git root and installs into its `.agents/skills` directory. Existing directories are skipped unless `--force` is provided, and replacements are staged with rollback plus per-skill locking. Every copied skill retains its provenance, third-party notices, and license texts. Use `--dry-run` to preview or `--all` to install the complete catalog.
+
+The npm installer and the full Codex/OpenCode plugin are alternative activation paths. If the full plugin is already active, selectively copying the same skills does not reduce that plugin's loaded catalog.
 
 ## Why This Exists
 
@@ -121,11 +161,22 @@ It complements [obra/superpowers](https://github.com/obra/superpowers), which pr
 
 `code-explorer`, `code-architect`, and `code-reviewer` are standalone skills and specialist roles used by `feature-dev`. OpenCode registers named least-privilege agents; Codex can carry out the same assignments with native subagents and can use matching custom agents when the user configures them.
 
+### Which Code Review Skill?
+
+| Situation | Use | Why |
+|---|---|---|
+| PR, branch, commit range, or complete pending diff | `code-review` (Comprehensive Code Review) | Freezes the scope, runs multiple review lenses, cross-checks candidates, and can post validated findings to GitHub when requested |
+| One file, function, or small local change | `code-reviewer` (Focused Code Review) | Uses a lighter two-pass review with full-file and caller context |
+| `feature-dev` quality phase | `code-reviewer` (Focused Code Review) | Acts as the focused specialist role dispatched by the feature workflow |
+
+They are complementary rather than duplicate workflows. Codex shows the distinct user-facing titles above, while the stable skill IDs continue to work across Codex, OpenCode, and Pi. Start with `code-review` for merge decisions and `code-reviewer` for focused iteration.
+
 ## Installation
 
 ### Prerequisites
 
 - Git
+- Node.js 20 or newer, including npm/npx, for [selective installation](#selective-install-with-npm)
 - One supported host:
   - OpenCode 1.18.7 or newer: <https://opencode.ai>
   - A current Codex CLI or Codex desktop environment with plugin support: <https://developers.openai.com/codex/>
@@ -142,6 +193,8 @@ codex plugin list --marketplace opencode-power-pack
 ```
 
 Start a new Codex session after installation so the fifty-five bundled skills are loaded. Use `/plugins` to inspect the installed plugin or `$` to select one of its skills explicitly. Codex plugin packaging follows the [official plugin structure](https://developers.openai.com/plugins/build/plugins).
+
+For a smaller personal or repository-specific set, use the [selective npm installer](#selective-install-with-npm) instead of the full plugin.
 
 ### OpenCode From GitHub
 
@@ -173,6 +226,8 @@ pi install git:github.com/waybarrios/opencode-power-pack
 ```
 
 Pi installs the Git package and loads the `skills/` directory declared in `package.json`. Use `-l` to save it to project settings instead of user settings. See the [Pi package documentation](https://pi.dev/docs/latest/packages) for source, update, filtering, and trust behavior.
+
+Pi can also narrow an installed package through `pi config`. The npm installer is useful when you want the same selected set to be discovered by Pi, Codex, and OpenCode from `.agents/skills`.
 
 ### Verify OpenCode
 
