@@ -1,0 +1,4 @@
+interface:
+  display_name: "Comprehensive Code Review"
+  short_description: "Review a PR, branch, range, or complete change set."
+  default_prompt: "Use $code-review to review the complete change set."

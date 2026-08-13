@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "profiles": {
+    "recommended": {
+      "description": "A balanced software-development toolkit without the specialized security and ML catalogs.",
+      "skills": [
+        "agents-md-improver",
+        "agents-md-revise",
+        "code-quality",
+        "code-review",
+        "feature-dev",
+        "frontend-design",
+        "mcp-builder",
+        "skill-creator"
+      ]
+    },
+    "review": {
+      "description": "General code review, focused review, quality checks, and security-oriented differential review.",
+      "skills": [
+        "code-quality",
+        "code-review",
+        "code-reviewer",
+        "differential-review"
+      ]
+    },
+    "feature-dev": {
+      "description": "The end-to-end feature workflow and its explorer, architect, and reviewer specialists.",
+      "skills": [
+        "feature-dev"
+      ]
+    },
+    "frontend": {
+      "description": "Frontend implementation and anti-generic design critique.",
+      "skills": [
+        "ai-slop",
+        "frontend-design"
+      ]
+    },
+    "security": {
+      "description": "Security review, threat modeling, static analysis, finding validation, and reporting.",
+      "skills": [
+        "agentic-actions-auditor",
+        "codeql",
+        "differential-review",
+        "fp-check",
+        "insecure-defaults",
+        "sarif-parsing",
+        "security-review",
+        "security-threat-model",
+        "semgrep",
+        "semgrep-rule-creator",
+        "semgrep-rule-variant-creator",
+        "sharp-edges",
+        "supply-chain-risk-auditor",
+        "variant-analysis",
+        "vuln-report",
+        "wooyun-legacy"
+      ]
+    },
+    "huggingface": {
+      "description": "Hugging Face discovery, local inference, training, evaluation, Spaces, and AWS deployment workflows.",
+      "skills": [
+        "hf-cli",
+        "hf-cloud-aws-context-discovery",
+        "hf-cloud-python-env-setup",
+        "hf-cloud-sagemaker-deployment-planner",
+        "hf-cloud-sagemaker-iam-preflight",
+        "hf-cloud-sagemaker-production-defaults",
+        "hf-cloud-serving-image-selection",
+        "hf-mem",
+        "huggingface-best",
+        "huggingface-community-evals",
+        "huggingface-datasets",
+        "huggingface-gradio",
+        "huggingface-llm-trainer",
+        "huggingface-local-models",
+        "huggingface-lora-space-builder",
+        "huggingface-paper-publisher",
+        "huggingface-papers",
+        "huggingface-spaces",
+        "huggingface-tool-builder",
+        "huggingface-trackio",
+        "huggingface-vision-trainer",
+        "huggingface-zerogpu",
+        "train-sentence-transformers",
+        "transformers-js",
+        "trl-training"
+      ]
+    },
+    "authoring": {
+      "description": "Create reusable skills and MCP servers, and summarize technical papers.",
+      "skills": [
+        "mcp-builder",
+        "paper-summarizer",
+        "skill-creator"
+      ]
+    },
+    "project-memory": {
+      "description": "Audit and update durable AGENTS.md and CLAUDE.md project guidance.",
+      "skills": [
+        "agents-md-improver",
+        "agents-md-revise"
+      ]
+    }
+  },
+  "dependencies": {
+    "agents-md-revise": [
+      "agents-md-improver"
+    ],
+    "feature-dev": [
+      "code-architect",
+      "code-explorer",
+      "code-reviewer"
+    ],
+    "hf-cloud-sagemaker-deployment-planner": [
+      "hf-cloud-aws-context-discovery",
+      "hf-cloud-python-env-setup",
+      "hf-cloud-sagemaker-iam-preflight",
+      "hf-cloud-serving-image-selection",
+      "hf-cloud-sagemaker-production-defaults"
+    ],
+    "semgrep-rule-variant-creator": [
+      "semgrep-rule-creator"
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Focused Code Review"
+  short_description: "Review one file, function, or small local change."
+  default_prompt: "Use $code-reviewer for a focused review of this change."
