@@ -1,6 +1,6 @@
 ---
 name: vuln-report
-description: Draft a single-vulnerability report in GitHub advisory style from an audit finding, bug note, patch diff, PoC, or code review evidence. Use when the agent needs to turn one confirmed security issue into a clean disclosure-ready report with Summary, Details, Root Cause, Proof of Concept, Impact, embedded code snippets, explanatory prose that points to the vulnerable code, inline GitHub markdown links to source evidence, and clearly-scoped optional sections such as CWE, CVSS, references, attack preconditions, or patch metadata.
+description: "Turn one confirmed security finding into a disclosure-ready GitHub advisory with root cause, proof of concept, impact, and source evidence. Use for reporting an established vulnerability, not discovering or validating one."
 license: MIT (modified; see UPSTREAMS.json)
 ---
 

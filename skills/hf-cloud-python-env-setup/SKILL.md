@@ -1,6 +1,6 @@
 ---
 name: hf-cloud-python-env-setup
-description: 'Set up an isolated Python environment for SageMaker / AWS work, with the right Python version and current boto3. Use this skill whenever Python code will be executed for a SageMaker deployment, training job, or any AWS automation — including when about to run `pip install`, when about to invoke `boto3`, when creating or activating a virtualenv, or when the user asks to "set up the environment". Never use system Python and never `pip install` into it. Always isolate. This skill prevents the most common failure modes: wrong Python version, dependency conflicts, and stale SDKs.'
+description: "Create an isolated Python environment with a compatible Python version and boto3 for SageMaker or AWS automation. Use before executing AWS Python code; do not use for general Python environment setup."
 license: Apache-2.0 (modified; see UPSTREAMS.json)
 ---
 

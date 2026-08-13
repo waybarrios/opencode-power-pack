@@ -53,8 +53,7 @@
         "sharp-edges",
         "supply-chain-risk-auditor",
         "variant-analysis",
-        "vuln-report",
-        "wooyun-legacy"
+        "vuln-report"
       ]
     },
     "huggingface": {

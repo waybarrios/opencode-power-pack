@@ -14,3 +14,12 @@ jobs:
         with:
           node-version: "lts/*"
       - run: node --test
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Validate Agent Skills specification
+        run: |
+          python -m pip install skills-ref==0.1.1
+          for skill in skills/*; do
+            agentskills validate "$skill"
+          done

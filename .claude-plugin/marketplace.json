@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "opencode-power-pack",
+  "owner": {
+    "name": "Wayner Barrios",
+    "url": "https://github.com/waybarrios"
+  },
+  "description": "Portable software-development skills for Claude Code, Codex, OpenCode, and Pi.",
+  "plugins": [
+    {
+      "name": "opencode-power-pack",
+      "source": "./",
+      "description": "Fifty-four workflows for review, security, feature development, frontend work, authoring, and ML tooling.",
+      "category": "productivity",
+      "tags": [
+        "software-development",
+        "code-review",
+        "security",
+        "skills"
+      ]
+    }
+  ]
+}

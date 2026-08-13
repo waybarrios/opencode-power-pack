@@ -38,6 +38,11 @@ test("published package relies on native commands and ships every skill", () => 
     "project-rule resolution matrix is published",
   );
   assert.ok(packaged.has(".codex-plugin/plugin.json"), "Codex plugin manifest is published");
+  assert.ok(packaged.has(".claude-plugin/plugin.json"), "Claude Code plugin manifest is published");
+  assert.ok(
+    packaged.has(".claude-plugin/marketplace.json"),
+    "Claude Code marketplace is published",
+  );
   assert.ok(
     packaged.has("skills/code-review/agents/openai.yaml"),
     "comprehensive review metadata is published",

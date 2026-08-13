@@ -1,6 +1,6 @@
 ---
 name: codeql
-description: "Scans a codebase for security vulnerabilities using CodeQL's interprocedural data flow and taint tracking analysis. Triggers on \"run codeql\", \"codeql scan\", \"codeql analysis\", \"build codeql database\", or \"find vulnerabilities with codeql\". Supports \"run all\" (security-and-quality suite) and \"important only\" (high-precision security findings) scan modes. Also handles creating data extension models and processing CodeQL SARIF output."
+description: "Run CodeQL database creation and security queries, add data-extension models, or process CodeQL SARIF. Use when CodeQL is explicitly requested; use security-review for a broader manual security review."
 license: MIT (modified; see UPSTREAMS.json)
 ---
 

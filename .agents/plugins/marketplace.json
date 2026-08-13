@@ -1,7 +1,7 @@
 {
   "name": "opencode-power-pack",
   "interface": {
-    "displayName": "Codex + OpenCode + Pi Power Pack"
+    "displayName": "Claude Code + Codex + OpenCode + Pi Power Pack"
   },
   "plugins": [
     {
