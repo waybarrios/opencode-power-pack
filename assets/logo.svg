@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" role="img" aria-label="OpenCode Power Pack for Codex, OpenCode, and Pi">
-  <title>OpenCode Power Pack for Codex, OpenCode, and Pi</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" role="img" aria-label="OpenCode Power Pack for Claude Code, Codex, OpenCode, and Pi">
+  <title>OpenCode Power Pack for Claude Code, Codex, OpenCode, and Pi</title>
 
   <defs>
     <linearGradient id="bolt" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -66,15 +66,15 @@
     <!-- bottom line: POWER PACK -->
     <text x="320" y="240" fill="url(#boltText)" font-size="76" letter-spacing="6">POWER PACK</text>
     <!-- tagline -->
-    <text x="320" y="282" fill="#7B8794" font-size="16" letter-spacing="4" font-weight="600">
-      ELEVEN  SKILLS  ·  OPENCODE  +  CODEX  +  PI
+    <text x="320" y="282" fill="#7B8794" font-size="15" letter-spacing="3" font-weight="600">
+      54  SKILLS  ·  CLAUDE  +  CODEX  +  OPENCODE  +  PI
     </text>
   </g>
 
   <!-- bottom-right voltage stamp -->
   <g transform="translate(1050, 290)" font-family="ui-monospace, monospace">
     <rect x="0" y="0" width="124" height="36" fill="none" stroke="#FFE15D" stroke-width="1.25"/>
-    <text x="62" y="24" font-size="14" font-weight="800" fill="#FFE15D" text-anchor="middle" letter-spacing="3">v0.3.0</text>
+    <text x="62" y="24" font-size="14" font-weight="800" fill="#FFE15D" text-anchor="middle" letter-spacing="3">v0.4.0</text>
   </g>
 
   <!-- top-left registry mark -->
