@@ -321,6 +321,31 @@ code {
   width: 100%;
 }
 
+.agent-prompt-full {
+  width: 100%;
+  max-height: 32rem;
+  margin: var(--space-4) 0 0;
+  padding: var(--space-5);
+  overflow: auto;
+  border: 1px solid var(--line-strong);
+  color: #dce3e9;
+  background: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.agent-prompt-full[hidden] {
+  display: none;
+}
+
+.agent-prompt-full:focus-visible {
+  outline: 2px solid var(--power);
+  outline-offset: 2px;
+}
+
 .terminal-bar {
   display: flex;
   justify-content: space-between;

@@ -279,16 +279,19 @@
                 type="button"
                 data-copy-label="Agent prompt"
                 data-copy-target="agent-install-prompt"
+                data-reveal-target="agent-install-prompt"
+                aria-controls="agent-install-prompt"
+                aria-expanded="false"
               >
                 <span class="copy-command-text">
                   <small>Paste this into your coding agent</small>
                   <code>Ask what I need. Recommend the smallest pack. Preview, install, and verify it.</code>
                 </span>
-                <b>Copy full prompt</b>
+                <b>Copy + show prompt</b>
               </button>
               <p class="copy-status" aria-live="polite"></p>
             </div>
-            <pre id="agent-install-prompt" hidden>Help me choose and install the right OpenCode Power Pack skills safely and project-locally in the current Git repository.
+            <pre id="agent-install-prompt" class="agent-prompt-full" tabindex="0" hidden>Help me choose and install the right OpenCode Power Pack skills safely and project-locally in the current Git repository.
 
 Your goal is to understand what I need, recommend the smallest useful profile or set of individual skills, obtain my explicit selection, install it for the active coding-agent host, preserve all existing project work, and leave a reproducible verification report.
 

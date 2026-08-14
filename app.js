@@ -1,4 +1,26 @@
-const copyButtons = document.querySelectorAll("[data-copy]");
+const copyButtons = document.querySelectorAll("[data-copy], [data-copy-target]");
+
+async function copyText(value) {
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(value);
+      return;
+    } catch {
+      // Fall back when Clipboard API is blocked by the browser or permission policy.
+    }
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = value;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  document.body.append(textarea);
+  textarea.select();
+  const copied = document.execCommand("copy");
+  textarea.remove();
+  if (!copied) throw new Error("Clipboard access is unavailable.");
+}
 
 for (const button of copyButtons) {
   button.addEventListener("click", async () => {
@@ -8,20 +30,36 @@ for (const button of copyButtons) {
     const value = source?.textContent.trim() || button.dataset.copy;
     const copyLabel = button.dataset.copyLabel ?? "Command";
     const status = button.closest(".terminal-shell")?.querySelector(".copy-status");
+    const revealTarget = button.dataset.revealTarget
+      ? document.getElementById(button.dataset.revealTarget)
+      : null;
+
+    if (revealTarget) {
+      revealTarget.hidden = false;
+      button.setAttribute("aria-expanded", "true");
+    }
 
     try {
       if (!value) throw new Error("No copyable content was found.");
-      await navigator.clipboard.writeText(value);
-      if (status) status.textContent = `${copyLabel} copied to clipboard.`;
+      await copyText(value);
+      if (status) {
+        status.textContent = revealTarget
+          ? `${copyLabel} copied. The complete prompt is shown below.`
+          : `${copyLabel} copied to clipboard.`;
+      }
       const label = button.querySelector("b") ?? button;
       const original = label.textContent;
-      label.textContent = "Copied";
+      label.textContent = revealTarget ? "Copied + shown" : "Copied";
       window.setTimeout(() => {
         label.textContent = original;
         if (status) status.textContent = "";
       }, 1800);
     } catch {
-      if (status) status.textContent = "Copy failed. Select the command manually.";
+      if (status) {
+        status.textContent = revealTarget
+          ? "The complete prompt is shown below. Select it and copy it manually."
+          : "Copy failed. Select the command manually.";
+      }
     }
   });
 }
