@@ -274,24 +274,19 @@
                 <span>AGENT INSTALL</span>
                 <span>DRY RUN → INSTALL → VERIFY</span>
               </div>
-              <button
-                class="copy-command"
-                type="button"
-                data-copy-label="Agent prompt"
-                data-copy-target="agent-install-prompt"
-                data-reveal-target="agent-install-prompt"
-                aria-controls="agent-install-prompt"
-                aria-expanded="false"
-              >
-                <span class="copy-command-text">
-                  <small>Paste this into your coding agent</small>
-                  <code>Ask what I need. Recommend the smallest pack. Preview, install, and verify it.</code>
-                </span>
-                <b>Copy + show prompt</b>
-              </button>
-              <p class="copy-status" aria-live="polite"></p>
-            </div>
-            <pre id="agent-install-prompt" class="agent-prompt-full" tabindex="0" hidden>Help me choose and install the right OpenCode Power Pack skills safely and project-locally in the current Git repository.
+              <details class="agent-prompt-disclosure">
+                <summary class="copy-command agent-prompt-summary">
+                  <span class="copy-command-text">
+                    <small>Full agent installation runbook</small>
+                    <code>Ask what I need. Recommend the smallest pack. Preview, install, and verify it.</code>
+                  </span>
+                  <b>
+                    <span class="prompt-show-label">Show full prompt</span>
+                    <span class="prompt-hide-label">Hide prompt</span>
+                  </b>
+                </summary>
+                <div class="agent-prompt-expanded">
+                  <pre id="agent-install-prompt" class="agent-prompt-full" tabindex="0">Help me choose and install the right OpenCode Power Pack skills safely and project-locally in the current Git repository.
 
 Your goal is to understand what I need, recommend the smallest useful profile or set of individual skills, obtain my explicit selection, install it for the active coding-agent host, preserve all existing project work, and leave a reproducible verification report.
 
@@ -361,6 +356,21 @@ Phase 6: verify and report.
    - OpenCode: run opencode debug skill, then invoke /code-review.
    - Pi: run pi list, then request a task that matches an installed workflow.
 6. Finish with a concise structured report containing: stated need, approved selection and rationale, alternatives not chosen, host, Node/npm versions, Git root, destination, exact commands run, resolved skill count and names, installed entries, preserved/skipped entries, warnings or failures, worktree comparison, verification result, and any user action still required.</pre>
+                  <div class="agent-prompt-actions">
+                    <button
+                      type="button"
+                      class="small-copy"
+                      data-copy-label="Agent prompt"
+                      data-copy-target="agent-install-prompt"
+                    >
+                      Copy complete prompt
+                    </button>
+                    <a href="agent-install.md">Open the Markdown guide</a>
+                  </div>
+                  <p class="copy-status" aria-live="polite"></p>
+                </div>
+              </details>
+            </div>
             <p class="hero-install-note">
               Copies a needs-based selection, preflight, install, and verification runbook. <a href="agent-install.md">Read it first.</a>
             </p>
