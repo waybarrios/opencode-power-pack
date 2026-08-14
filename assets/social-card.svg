@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="OpenCode Power Pack social preview">
+  <defs>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0v48" fill="none" stroke="#263340" stroke-width="1" opacity=".22"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="#0b0f14"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <rect x="24" y="24" width="1152" height="582" fill="none" stroke="#263340"/>
+  <rect x="24" y="24" width="1152" height="14" fill="#ffd60a"/>
+  <g transform="translate(80 100)">
+    <path d="M145 0 0 190h103L78 335l170-219H138z" fill="#ffd60a"/>
+  </g>
+  <g font-family="IBM Plex Mono,monospace">
+    <text x="390" y="150" fill="#9aa6b2" font-size="22" font-weight="700" letter-spacing="5">OPEN SOURCE // v0.4.0</text>
+    <text x="390" y="270" fill="#f1f0eb" font-family="Barlow Condensed,sans-serif" font-size="112" font-weight="800" letter-spacing="-2">OPENCODE</text>
+    <text x="390" y="370" fill="#ffd60a" font-family="Barlow Condensed,sans-serif" font-size="112" font-weight="800" letter-spacing="2">POWER PACK</text>
+    <text x="390" y="440" fill="#f1f0eb" font-size="28" font-weight="600">54 SKILLS · FOUR CODING AGENTS</text>
+    <text x="390" y="492" fill="#9aa6b2" font-size="20">CLAUDE CODE  +  CODEX  +  OPENCODE  +  PI</text>
+  </g>
+  <g transform="translate(390 540)" font-family="IBM Plex Mono,monospace" font-size="16" font-weight="700">
+    <rect width="500" height="42" fill="#111821" stroke="#263340"/>
+    <text x="20" y="27" fill="#79f2a2">npm</text>
+    <text x="72" y="27" fill="#f1f0eb">@waybarrios/opencode-power-pack</text>
+  </g>
+</svg>

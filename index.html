@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OpenCode Power Pack | 54 Skills for AI Coding Agents</title>
+    <meta
+      name="description"
+      content="Install 54 production-grade Agent Skills for Claude Code, Codex, OpenCode, and Pi. Code review, security, feature development, frontend, MCP, and ML workflows."
+   >
+    <meta name="author" content="Wayner Barrios">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+    <meta name="theme-color" content="#0b0f14">
+    <link rel="canonical" href="https://skills.waybarrios.com/">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="sitemap" type="application/xml" href="sitemap.xml">
+    <link rel="describedby" type="text/markdown" href="llms.txt" title="LLM project summary">
+    <link rel="alternate" type="text/markdown" href="index.md" title="Markdown version">
+
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="OpenCode Power Pack">
+    <meta property="og:title" content="54 Skills. Four Coding Agents. One Power Pack.">
+    <meta
+      property="og:description"
+      content="Portable code review, security, feature development, frontend, MCP, and ML workflows for Claude Code, Codex, OpenCode, and Pi."
+   >
+    <meta property="og:url" content="https://skills.waybarrios.com/">
+    <meta
+      property="og:image"
+      content="https://skills.waybarrios.com/assets/social-card.png"
+   >
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/png">
+    <meta
+      property="og:image:alt"
+      content="OpenCode Power Pack, 54 skills for Claude Code, Codex, OpenCode, and Pi"
+   >
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="54 Skills. Four Coding Agents. One Power Pack.">
+    <meta
+      name="twitter:description"
+      content="Production-grade Agent Skills for code review, security, feature development, frontend, MCP, and ML workflows."
+   >
+    <meta
+      name="twitter:image"
+      content="https://skills.waybarrios.com/assets/social-card.png"
+   >
+    <meta
+      name="twitter:image:alt"
+      content="OpenCode Power Pack, 54 skills for Claude Code, Codex, OpenCode, and Pi"
+   >
+    <meta name="twitter:image:width" content="1200">
+    <meta name="twitter:image:height" content="630">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&amp;family=IBM+Plex+Mono:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+   >
+    <link rel="stylesheet" href="styles.css">
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://skills.waybarrios.com/#website",
+            "url": "https://skills.waybarrios.com/",
+            "name": "OpenCode Power Pack",
+            "alternateName": "opencode-power-pack",
+            "description": "Fifty-four portable software-development workflows for Claude Code, Codex, OpenCode, and Pi.",
+            "inLanguage": "en",
+            "publisher": { "@id": "https://github.com/waybarrios#person" }
+          },
+          {
+            "@type": "SoftwareSourceCode",
+            "@id": "https://skills.waybarrios.com/#software",
+            "name": "OpenCode Power Pack",
+            "alternateName": "@waybarrios/opencode-power-pack",
+            "description": "A curated collection of 54 Agent Skills for code review, security auditing, feature development, frontend design, MCP authoring, and machine-learning workflows.",
+            "codeRepository": "https://github.com/waybarrios/opencode-power-pack",
+            "downloadUrl": "https://www.npmjs.com/package/@waybarrios/opencode-power-pack",
+            "softwareVersion": "0.4.0",
+            "runtimePlatform": ["Claude Code", "Codex", "OpenCode", "Pi"],
+            "programmingLanguage": ["Markdown", "JavaScript", "Python"],
+            "license": [
+              "https://spdx.org/licenses/MIT.html",
+              "https://spdx.org/licenses/Apache-2.0.html"
+            ],
+            "sameAs": [
+              "https://github.com/waybarrios/opencode-power-pack",
+              "https://www.npmjs.com/package/@waybarrios/opencode-power-pack",
+              "https://github.com/users/waybarrios/packages/npm/package/opencode-power-pack"
+            ],
+            "isAccessibleForFree": true,
+            "author": { "@id": "https://github.com/waybarrios#person" },
+            "mainEntityOfPage": { "@id": "https://skills.waybarrios.com/#website" },
+            "keywords": "Agent Skills, Claude Code, Codex, OpenCode, Pi, code review, security review, feature development, MCP, Hugging Face"
+          },
+          {
+            "@type": "Person",
+            "@id": "https://github.com/waybarrios#person",
+            "name": "Wayner Barrios",
+            "url": "https://github.com/waybarrios",
+            "sameAs": ["https://github.com/waybarrios"]
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://skills.waybarrios.com/#faq",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is an Agent Skill?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "An Agent Skill is a reusable workflow centered on a SKILL.md file. It provides durable instructions, references, scripts, and decision rules for a specific job."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Does the same skill work in Claude Code, Codex, OpenCode, and Pi?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The stable workflow IDs are shared, while packaging and activation follow each host's native model."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What is the difference between code-review and code-reviewer?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "code-review is a comprehensive, merge-oriented review for a pull request or complete change set. code-reviewer is a focused implementation review for small changes and feature-development handoffs."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I install only one skill?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. Run npx @waybarrios/opencode-power-pack install followed by the skill name. The installer also includes required companion skills."
+                }
+              }
+            ]
+          },
+          {
+            "@type": "ItemList",
+            "@id": "https://skills.waybarrios.com/#profiles",
+            "name": "OpenCode Power Pack installable profiles",
+            "numberOfItems": 8,
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "recommended", "url": "https://skills.waybarrios.com/#profiles", "description": "Balanced everyday software-engineering workflows." },
+              { "@type": "ListItem", "position": 2, "name": "review", "url": "https://skills.waybarrios.com/#profiles", "description": "Comprehensive, focused, quality, and differential code review." },
+              { "@type": "ListItem", "position": 3, "name": "feature-dev", "url": "https://skills.waybarrios.com/#profiles", "description": "Structured feature exploration, architecture, implementation, and review." },
+              { "@type": "ListItem", "position": 4, "name": "frontend", "url": "https://skills.waybarrios.com/#profiles", "description": "Frontend implementation and anti-generic design critique." },
+              { "@type": "ListItem", "position": 5, "name": "security", "url": "https://skills.waybarrios.com/#profiles", "description": "Application-security review, scanning, validation, threat modeling, and reporting." },
+              { "@type": "ListItem", "position": 6, "name": "huggingface", "url": "https://skills.waybarrios.com/#profiles", "description": "Model discovery, inference, training, evaluation, Spaces, and AWS deployment." },
+              { "@type": "ListItem", "position": 7, "name": "authoring", "url": "https://skills.waybarrios.com/#profiles", "description": "Agent Skill, MCP server, and technical-research authoring." },
+              { "@type": "ListItem", "position": 8, "name": "project-memory", "url": "https://skills.waybarrios.com/#profiles", "description": "Durable AGENTS.md and CLAUDE.md project context." }
+            ]
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="status-rail" aria-hidden="true">
+      <span>POWER BUS // ONLINE</span>
+      <span>54 MODULES</span>
+      <span>4 RUNTIMES</span>
+    </div>
+
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="OpenCode Power Pack home">
+        <svg class="brand-bolt" viewBox="0 0 38 48" aria-hidden="true">
+          <path d="M22 1 3 27h14l-3 20 21-29H21z" />
+        </svg>
+        <span><b>OPENCODE</b> POWER PACK</span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="docs/#npm">Install</a>
+        <a href="#profiles">Profiles</a>
+        <a href="#platforms">Platforms</a>
+        <a href="#skills">Skills</a>
+        <a href="#quality">Quality</a>
+        <a href="docs/">Docs</a>
+      </nav>
+      <a class="header-link" href="https://github.com/waybarrios/opencode-power-pack">
+        GitHub <span aria-hidden="true">↗</span>
+      </a>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">[ OPEN SOURCE · v0.4.0 · MIT + APACHE-2.0 ]</p>
+          <h1 id="hero-title">
+            One power pack.<br>
+            <span>Every coding agent.</span>
+          </h1>
+          <p class="hero-lede">
+            54 portable Agent Skills for <strong>Claude Code</strong>, <strong>Codex</strong>,
+            <strong>OpenCode</strong>, and <strong>Pi</strong>. Install the workflows you need for
+            code review, security, feature delivery, frontend craft, MCP authoring, and ML.
+          </p>
+        </div>
+
+        <section class="terminal-shell" aria-label="Quick npm installation command">
+          <div class="terminal-bar">
+            <span>TERMINAL</span>
+            <span>RECOMMENDED PROFILE</span>
+          </div>
+          <button
+            class="copy-command"
+            type="button"
+            data-copy="npx @waybarrios/opencode-power-pack install --profile recommended"
+          >
+            <span class="copy-command-text">
+              <small>Recommended profile</small>
+              <code>npx @waybarrios/opencode-power-pack install --profile recommended</code>
+            </span>
+            <b>Copy</b>
+          </button>
+          <p class="copy-status" aria-live="polite"></p>
+        </section>
+
+        <p class="hero-install-note">Installs a balanced skill pack for Claude Code, Codex, OpenCode, and Pi.</p>
+
+        <nav class="hero-routes" aria-label="Explore OpenCode Power Pack">
+          <a href="docs/skills/">Browse all 54 skills <span aria-hidden="true">→</span></a>
+          <a href="docs/#reviews">Compare review workflows <span aria-hidden="true">→</span></a>
+          <a href="docs/#how-skills-work">Learn how Agent Skills work <span aria-hidden="true">→</span></a>
+          <a href="docs/#npm">Installation examples <span aria-hidden="true">→</span></a>
+          <a href="docs/#agent-install">Let your agent install it <span aria-hidden="true">→</span></a>
+          <a href="#profiles">Browse skill packs <span aria-hidden="true">→</span></a>
+          <a href="#profiles">Who each pack is for <span aria-hidden="true">→</span></a>
+        </nav>
+
+        <div class="hero-actions">
+          <a class="button button-primary" href="#profiles">Choose a skill pack</a>
+          <a class="button button-secondary" href="https://github.com/waybarrios/opencode-power-pack">
+            View on GitHub
+          </a>
+        </div>
+      </section>
+
+      <section class="proof-strip" aria-label="Project facts">
+        <div><strong>54</strong><span>curated skills</span></div>
+        <div><strong>4</strong><span>agent hosts</span></div>
+        <div><strong>362</strong><span>automated tests</span></div>
+        <div><strong>0</strong><span>runtime dependencies</span></div>
+      </section>
+
+      <section class="section install-section" id="profiles" aria-labelledby="install-title">
+        <div class="section-index">01 / PROFILES</div>
+        <div class="section-heading">
+          <p class="kicker">Eight installable skill packs</p>
+          <h2 id="install-title">Choose by job, not by guesswork.</h2>
+          <p>
+            Each profile has a specific audience. Preview any pack with <code>--dry-run</code>, install
+            it at user or project scope, and let the installer resolve required companion skills.
+          </p>
+        </div>
+
+        <div class="profile-grid">
+          <article class="profile-card profile-featured">
+            <div><span>RECOMMENDED</span><b>11 resolved skills</b></div>
+            <h3>Everyday engineering</h3>
+            <p><strong>For:</strong> developers who want a balanced default for building, reviewing, documenting, and maintaining software.</p>
+            <small>Includes code review, feature delivery, frontend design, MCP authoring, project memory, and required companions.</small>
+            <code>npx @waybarrios/opencode-power-pack install --profile recommended</code>
+            <button type="button" class="small-copy" data-copy="npx @waybarrios/opencode-power-pack install --profile recommended">Copy command</button>
+          </article>
+
+          <article class="profile-card">
+            <div><span>REVIEW</span><b>4 skills</b></div>
+            <h3>Pull request review</h3>
+            <p><strong>For:</strong> maintainers and teams that need comprehensive, focused, quality, and security-differential review modes.</p>
+            <small>Includes code-review, code-reviewer, code-quality, and differential-review.</small>
+            <code>npx @waybarrios/opencode-power-pack install --profile review</code>
+            <button type="button" class="small-copy" data-copy="npx @waybarrios/opencode-power-pack install --profile review">Copy command</button>
+          </article>
+
+          <article class="profile-card">
+            <div><span>FEATURE-DEV</span><b>4 resolved skills</b></div>
+            <h3>Structured feature delivery</h3>
+            <p><strong>For:</strong> engineers implementing non-trivial features that need exploration, architecture, implementation, and review.</p>
+            <small>Includes feature-dev plus code-explorer, code-architect, and code-reviewer.</small>
+            <code>npx @waybarrios/opencode-power-pack install --profile feature-dev</code>
+            <button type="button" class="small-copy" data-copy="npx @waybarrios/opencode-power-pack install --profile feature-dev">Copy command</button>
+          </article>
+
+          <article class="profile-card">
+            <div><span>FRONTEND</span><b>2 skills</b></div>
+            <h3>Interface craft</h3>
+            <p><strong>For:</strong> frontend developers and designers building distinctive, responsive interfaces with an anti-generic quality rubric.</p>
+            <small>Includes frontend-design and ai-slop.</small>
+            <code>npx @waybarrios/opencode-power-pack install --profile frontend</code>
+            <button type="button" class="small-copy" data-copy="npx @waybarrios/opencode-power-pack install --profile frontend">Copy command</button>
+          </article>
+
+          <article class="profile-card">
+            <div><span>SECURITY</span><b>15 skills</b></div>
+            <h3>Application security</h3>
+            <p><strong>For:</strong> AppSec engineers and security-conscious maintainers who audit, validate, scan, model threats, and report findings.</p>
+            <small>Includes security review, CodeQL, Semgrep, threat modeling, variant analysis, validation, and reporting workflows.</small>
+            <code>npx @waybarrios/opencode-power-pack install --profile security</code>
+            <button type="button" class="small-copy" data-copy="npx @waybarrios/opencode-power-pack install --profile security">Copy command</button>
+          </article>
+
+          <article class="profile-card">
+            <div><span>HUGGINGFACE</span><b>25 skills</b></div>
+            <h3>ML and Hugging Face</h3>
+            <p><strong>For:</strong> ML engineers and researchers working on model discovery, inference, training, evaluation, Spaces, or AWS deployment.</p>
+            <small>Includes the complete Hugging Face and machine-learning workflow catalog.</small>
+            <code>npx @waybarrios/opencode-power-pack install --profile huggingface</code>
+            <button type="button" class="small-copy" data-copy="npx @waybarrios/opencode-power-pack install --profile huggingface">Copy command</button>
+          </article>
+
+          <article class="profile-card">
+            <div><span>AUTHORING</span><b>3 skills</b></div>
+            <h3>Reusable agent tools</h3>
+            <p><strong>For:</strong> builders creating new Agent Skills, MCP servers, or engineering summaries from technical research.</p>
+            <small>Includes skill-creator, mcp-builder, and paper-summarizer.</small>
+            <code>npx @waybarrios/opencode-power-pack install --profile authoring</code>
+            <button type="button" class="small-copy" data-copy="npx @waybarrios/opencode-power-pack install --profile authoring">Copy command</button>
+          </article>
+
+          <article class="profile-card">
+            <div><span>PROJECT-MEMORY</span><b>2 skills</b></div>
+            <h3>Durable project context</h3>
+            <p><strong>For:</strong> teams that want accurate AGENTS.md and CLAUDE.md rules preserved and improved across agent sessions.</p>
+            <small>Includes agents-md-improver and agents-md-revise.</small>
+            <code>npx @waybarrios/opencode-power-pack install --profile project-memory</code>
+            <button type="button" class="small-copy" data-copy="npx @waybarrios/opencode-power-pack install --profile project-memory">Copy command</button>
+          </article>
+        </div>
+      </section>
+
+      <section class="section platform-section" id="platforms" aria-labelledby="platform-title">
+        <div class="section-index">02 / RUNTIMES</div>
+        <div class="section-heading">
+          <p class="kicker">One catalog, native activation</p>
+          <h2 id="platform-title">Meet each coding agent where it lives.</h2>
+          <p>
+            The same stable skill IDs are packaged for each host. Use native plugin installation or
+            copy selected workflows into the portable <code>.agents/skills</code> location.
+          </p>
+        </div>
+
+        <div class="platform-grid">
+          <article class="platform-card platform-claude">
+            <span class="platform-number">A</span>
+            <h3>Claude Code</h3>
+            <p>Namespaced plugin skills with native marketplace installation.</p>
+            <code>/plugin marketplace add waybarrios/opencode-power-pack</code>
+          </article>
+          <article class="platform-card platform-codex">
+            <span class="platform-number">B</span>
+            <h3>Codex</h3>
+            <p>Plugin marketplace metadata, explicit skill mentions, and focused display identities.</p>
+            <code>codex plugin add opencode-power-pack@opencode-power-pack</code>
+          </article>
+          <article class="platform-card platform-opencode">
+            <span class="platform-number">C</span>
+            <h3>OpenCode</h3>
+            <p>Native plugin loading plus least-privilege feature-development specialists.</p>
+            <code>opencode plugin --global "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"</code>
+          </article>
+          <article class="platform-card platform-pi">
+            <span class="platform-number">D</span>
+            <h3>Pi</h3>
+            <p>All workflows exposed through the package's declared skills directory.</p>
+            <code>pi install git:github.com/waybarrios/opencode-power-pack</code>
+          </article>
+        </div>
+      </section>
+
+      <section class="section catalog-section" id="skills" aria-labelledby="skills-title">
+        <div class="section-index">03 / CATALOG</div>
+        <div class="section-heading catalog-heading">
+          <div>
+            <p class="kicker">Searchable skill inventory</p>
+            <h2 id="skills-title">54 workflows. Three operational bands.</h2>
+          </div>
+          <div class="skill-search">
+            <label for="skill-filter">Filter skills</label>
+            <input id="skill-filter" type="search" placeholder="Try: review, semgrep, huggingface">
+            <p id="filter-status" aria-live="polite">Showing all 54 skills</p>
+            <a class="catalog-reference-link" href="docs/skills/">Descriptions + install commands →</a>
+          </div>
+        </div>
+
+        <div class="catalog-groups">
+          <section class="skill-group" aria-labelledby="core-title">
+            <div class="group-header">
+              <span>CORE</span>
+              <h3 id="core-title">Build, review, and author</h3>
+              <b>14</b>
+            </div>
+            <ul class="skill-list">
+              <li data-skill="agents-md-improver project memory rules"><a href="docs/skills/#agents-md-improver">agents-md-improver</a></li>
+              <li data-skill="agents-md-revise project memory rules"><a href="docs/skills/#agents-md-revise">agents-md-revise</a></li>
+              <li data-skill="ai-slop frontend design critique"><a href="docs/skills/#ai-slop">ai-slop</a></li>
+              <li data-skill="code-architect feature architecture"><a href="docs/skills/#code-architect">code-architect</a></li>
+              <li data-skill="code-explorer feature discovery"><a href="docs/skills/#code-explorer">code-explorer</a></li>
+              <li data-skill="code-quality lint complexity"><a href="docs/skills/#code-quality">code-quality</a></li>
+              <li data-skill="code-review comprehensive pull request"><a href="docs/skills/#code-review">code-review</a></li>
+              <li data-skill="code-reviewer focused review"><a href="docs/skills/#code-reviewer">code-reviewer</a></li>
+              <li data-skill="design-patterns architecture"><a href="docs/skills/#design-patterns">design-patterns</a></li>
+              <li data-skill="feature-dev implementation workflow"><a href="docs/skills/#feature-dev">feature-dev</a></li>
+              <li data-skill="frontend-design web interface accessibility"><a href="docs/skills/#frontend-design">frontend-design</a></li>
+              <li data-skill="mcp-builder model context protocol"><a href="docs/skills/#mcp-builder">mcp-builder</a></li>
+              <li data-skill="paper-summarizer research"><a href="docs/skills/#paper-summarizer">paper-summarizer</a></li>
+              <li data-skill="skill-creator agent skills authoring"><a href="docs/skills/#skill-creator">skill-creator</a></li>
+            </ul>
+          </section>
+
+          <section class="skill-group" aria-labelledby="security-title">
+            <div class="group-header">
+              <span>SECURITY</span>
+              <h3 id="security-title">Find, verify, and report</h3>
+              <b>15</b>
+            </div>
+            <ul class="skill-list">
+              <li data-skill="agentic-actions-auditor github actions security"><a href="docs/skills/#agentic-actions-auditor">agentic-actions-auditor</a></li>
+              <li data-skill="codeql static analysis security"><a href="docs/skills/#codeql">codeql</a></li>
+              <li data-skill="differential-review security diff"><a href="docs/skills/#differential-review">differential-review</a></li>
+              <li data-skill="fp-check false positive verification"><a href="docs/skills/#fp-check">fp-check</a></li>
+              <li data-skill="insecure-defaults security configuration"><a href="docs/skills/#insecure-defaults">insecure-defaults</a></li>
+              <li data-skill="sarif-parsing static analysis results"><a href="docs/skills/#sarif-parsing">sarif-parsing</a></li>
+              <li data-skill="security-review audit vulnerability"><a href="docs/skills/#security-review">security-review</a></li>
+              <li data-skill="security-threat-model trust boundaries"><a href="docs/skills/#security-threat-model">security-threat-model</a></li>
+              <li data-skill="semgrep static analysis security"><a href="docs/skills/#semgrep">semgrep</a></li>
+              <li data-skill="semgrep-rule-creator custom rules"><a href="docs/skills/#semgrep-rule-creator">semgrep-rule-creator</a></li>
+              <li data-skill="semgrep-rule-variant-creator port rules languages"><a href="docs/skills/#semgrep-rule-variant-creator">semgrep-rule-variant-creator</a></li>
+              <li data-skill="sharp-edges footguns security api"><a href="docs/skills/#sharp-edges">sharp-edges</a></li>
+              <li data-skill="supply-chain-risk-auditor dependencies"><a href="docs/skills/#supply-chain-risk-auditor">supply-chain-risk-auditor</a></li>
+              <li data-skill="variant-analysis vulnerability patterns"><a href="docs/skills/#variant-analysis">variant-analysis</a></li>
+              <li data-skill="vuln-report security advisory"><a href="docs/skills/#vuln-report">vuln-report</a></li>
+            </ul>
+          </section>
+
+          <section class="skill-group skill-group-wide" aria-labelledby="ml-title">
+            <div class="group-header">
+              <span>ML + HUGGING FACE</span>
+              <h3 id="ml-title">Discover, train, evaluate, and deploy</h3>
+              <b>25</b>
+            </div>
+            <ul class="skill-list skill-list-wide">
+              <li data-skill="hf-cli hugging face hub"><a href="docs/skills/#hf-cli">hf-cli</a></li>
+              <li data-skill="hf-cloud-aws-context-discovery aws"><a href="docs/skills/#hf-cloud-aws-context-discovery">hf-cloud-aws-context-discovery</a></li>
+              <li data-skill="hf-cloud-python-env-setup aws python"><a href="docs/skills/#hf-cloud-python-env-setup">hf-cloud-python-env-setup</a></li>
+              <li data-skill="hf-cloud-sagemaker-deployment-planner aws"><a href="docs/skills/#hf-cloud-sagemaker-deployment-planner">hf-cloud-sagemaker-deployment-planner</a></li>
+              <li data-skill="hf-cloud-sagemaker-iam-preflight aws security"><a href="docs/skills/#hf-cloud-sagemaker-iam-preflight">hf-cloud-sagemaker-iam-preflight</a></li>
+              <li data-skill="hf-cloud-sagemaker-production-defaults aws deploy"><a href="docs/skills/#hf-cloud-sagemaker-production-defaults">hf-cloud-sagemaker-production-defaults</a></li>
+              <li data-skill="hf-cloud-serving-image-selection aws container"><a href="docs/skills/#hf-cloud-serving-image-selection">hf-cloud-serving-image-selection</a></li>
+              <li data-skill="hf-mem model memory"><a href="docs/skills/#hf-mem">hf-mem</a></li>
+              <li data-skill="huggingface-best model discovery"><a href="docs/skills/#huggingface-best">huggingface-best</a></li>
+              <li data-skill="huggingface-community-evals evaluation"><a href="docs/skills/#huggingface-community-evals">huggingface-community-evals</a></li>
+              <li data-skill="huggingface-datasets data"><a href="docs/skills/#huggingface-datasets">huggingface-datasets</a></li>
+              <li data-skill="huggingface-gradio ui demo"><a href="docs/skills/#huggingface-gradio">huggingface-gradio</a></li>
+              <li data-skill="huggingface-llm-trainer training"><a href="docs/skills/#huggingface-llm-trainer">huggingface-llm-trainer</a></li>
+              <li data-skill="huggingface-local-models inference gguf"><a href="docs/skills/#huggingface-local-models">huggingface-local-models</a></li>
+              <li data-skill="huggingface-lora-space-builder demo"><a href="docs/skills/#huggingface-lora-space-builder">huggingface-lora-space-builder</a></li>
+              <li data-skill="huggingface-paper-publisher research"><a href="docs/skills/#huggingface-paper-publisher">huggingface-paper-publisher</a></li>
+              <li data-skill="huggingface-papers research"><a href="docs/skills/#huggingface-papers">huggingface-papers</a></li>
+              <li data-skill="huggingface-spaces deploy demo"><a href="docs/skills/#huggingface-spaces">huggingface-spaces</a></li>
+              <li data-skill="huggingface-tool-builder api scripts"><a href="docs/skills/#huggingface-tool-builder">huggingface-tool-builder</a></li>
+              <li data-skill="huggingface-trackio experiment tracking"><a href="docs/skills/#huggingface-trackio">huggingface-trackio</a></li>
+              <li data-skill="huggingface-vision-trainer training"><a href="docs/skills/#huggingface-vision-trainer">huggingface-vision-trainer</a></li>
+              <li data-skill="huggingface-zerogpu spaces gpu"><a href="docs/skills/#huggingface-zerogpu">huggingface-zerogpu</a></li>
+              <li data-skill="train-sentence-transformers embeddings training"><a href="docs/skills/#train-sentence-transformers">train-sentence-transformers</a></li>
+              <li data-skill="transformers-js javascript inference"><a href="docs/skills/#transformers-js">transformers-js</a></li>
+              <li data-skill="trl-training llm post training"><a href="docs/skills/#trl-training">trl-training</a></li>
+            </ul>
+          </section>
+        </div>
+      </section>
+
+      <section class="section quality-section" id="quality" aria-labelledby="quality-title">
+        <div class="section-index">04 / TRUST</div>
+        <div class="quality-layout">
+          <div class="section-heading">
+            <p class="kicker">Curated means verified</p>
+            <h2 id="quality-title">Portable workflows with an evidence trail.</h2>
+            <p>
+              This is not a bulk mirror. Skills are reviewed, adapted for cross-host behavior, and
+              shipped with provenance, notices, licenses, host validation, and regression coverage.
+            </p>
+          </div>
+          <ol class="quality-list">
+            <li><b>01</b><span><strong>54 / 54</strong> official Agent Skills validations</span></li>
+            <li><b>02</b><span><strong>362</strong> automated behavioral and packaging tests</span></li>
+            <li><b>03</b><span><strong>Strict</strong> Claude plugin and marketplace validation</span></li>
+            <li><b>04</b><span><strong>Minimum + latest</strong> OpenCode smoke coverage</span></li>
+            <li><b>05</b><span><strong>Immutable</strong> upstream provenance and license records</span></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="section faq-section" aria-labelledby="faq-title">
+        <div class="section-index">05 / FAQ</div>
+        <div class="section-heading">
+          <p class="kicker">Before you connect the pack</p>
+          <h2 id="faq-title">Common questions.</h2>
+        </div>
+        <div class="faq-list">
+          <details>
+            <summary>What is an Agent Skill?</summary>
+            <p>
+              An Agent Skill is a reusable workflow centered on a <code>SKILL.md</code> file. It gives
+              a coding agent durable instructions, references, scripts, and decision rules for a
+              specific job such as code review, threat modeling, or feature development.
+            </p>
+          </details>
+          <details>
+            <summary>Does the same skill work in Claude Code, Codex, OpenCode, and Pi?</summary>
+            <p>
+              The stable workflow IDs are shared, while packaging and activation follow each host's
+              native model. Host-specific orchestration is documented and tested where behavior differs.
+            </p>
+          </details>
+          <details>
+            <summary>What is the difference between code-review and code-reviewer?</summary>
+            <p>
+              <code>code-review</code> is a comprehensive, merge-oriented review for a pull request or
+              complete change set. <code>code-reviewer</code> is a focused implementation review for
+              small changes and feature-development handoffs.
+            </p>
+          </details>
+          <details>
+            <summary>Can I install only one skill?</summary>
+            <p>
+              Yes. Run <code>npx @waybarrios/opencode-power-pack install &lt;skill-name&gt;</code>. The
+              installer includes required companion skills and supports user-level or project-local targets.
+              The <a href="docs/skills/">complete skill reference</a> provides a copyable command for every ID.
+            </p>
+          </details>
+        </div>
+      </section>
+
+      <section class="final-cta" aria-labelledby="cta-title">
+        <p class="eyebrow">[ READY TO ROUTE ]</p>
+        <h2 id="cta-title">Give your agent a better operating manual.</h2>
+        <div class="hero-actions">
+          <a class="button button-primary" href="https://www.npmjs.com/package/@waybarrios/opencode-power-pack">
+            Open npm package
+          </a>
+          <a class="button button-secondary" href="https://github.com/waybarrios/opencode-power-pack">
+            Star on GitHub
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <strong>OPENCODE POWER PACK</strong>
+        <span>Built by <a href="https://github.com/waybarrios">Wayner Barrios</a></span>
+      </div>
+      <nav aria-label="Footer navigation">
+        <a href="docs/">Documentation</a>
+        <a href="https://www.npmjs.com/package/@waybarrios/opencode-power-pack">npm</a>
+        <a href="https://github.com/users/waybarrios/packages/npm/package/opencode-power-pack">GitHub Packages</a>
+        <a href="https://github.com/waybarrios/opencode-power-pack/releases">Releases</a>
+        <a href="llms.txt">AI summary</a>
+        <a href="https://github.com/waybarrios/opencode-power-pack/blob/main/LICENSE">License</a>
+      </nav>
+      <span>v0.4.0 // 2026</span>
+    </footer>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>

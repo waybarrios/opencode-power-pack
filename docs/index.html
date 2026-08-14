@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Documentation | OpenCode Power Pack</title>
+    <meta
+      name="description"
+      content="Install and use OpenCode Power Pack Agent Skills with Claude Code, Codex, OpenCode, and Pi. npm profiles, host setup, skill selection, updates, and troubleshooting."
+   >
+    <meta name="robots" content="index, follow, max-snippet:-1">
+    <meta name="theme-color" content="#0b0f14">
+    <link rel="canonical" href="https://skills.waybarrios.com/docs/">
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <link rel="sitemap" type="application/xml" href="../sitemap.xml">
+    <link rel="describedby" type="text/markdown" href="../llms.txt" title="LLM project summary">
+    <link rel="alternate" type="text/markdown" href="index.md" title="Markdown version">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="OpenCode Power Pack">
+    <meta property="og:title" content="OpenCode Power Pack Documentation">
+    <meta
+      property="og:description"
+      content="Installation and usage guides for 54 Agent Skills across Claude Code, Codex, OpenCode, and Pi."
+   >
+    <meta property="og:url" content="https://skills.waybarrios.com/docs/">
+    <meta
+      property="og:image"
+      content="https://skills.waybarrios.com/assets/social-card.png"
+   >
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:alt" content="OpenCode Power Pack installation and operations documentation">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OpenCode Power Pack Documentation">
+    <meta name="twitter:description" content="Install and use 54 Agent Skills across Claude Code, Codex, OpenCode, and Pi.">
+    <meta name="twitter:image" content="https://skills.waybarrios.com/assets/social-card.png">
+    <meta name="twitter:image:alt" content="OpenCode Power Pack installation and operations documentation">
+    <meta name="twitter:image:width" content="1200">
+    <meta name="twitter:image:height" content="630">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&amp;family=IBM+Plex+Mono:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+   >
+    <link rel="stylesheet" href="../styles.css">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "headline": "OpenCode Power Pack Documentation",
+        "description": "Installation and usage documentation for OpenCode Power Pack Agent Skills.",
+        "url": "https://skills.waybarrios.com/docs/",
+        "dateModified": "2026-08-13",
+        "author": {
+          "@type": "Person",
+          "name": "Wayner Barrios",
+          "url": "https://github.com/waybarrios"
+        },
+        "about": {
+          "@type": "SoftwareSourceCode",
+          "name": "OpenCode Power Pack",
+          "codeRepository": "https://github.com/waybarrios/opencode-power-pack"
+        },
+        "breadcrumb": {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "OpenCode Power Pack",
+              "item": "https://skills.waybarrios.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Documentation",
+              "item": "https://skills.waybarrios.com/docs/"
+            }
+          ]
+        }
+      }
+    </script>
+  </head>
+  <body class="docs-body">
+    <a class="skip-link" href="#docs-main">Skip to documentation</a>
+    <div class="status-rail" aria-hidden="true">
+      <span>DOCUMENTATION // v0.4.0</span>
+      <span>54 MODULES</span>
+      <span>LAST UPDATED 2026-08-13</span>
+    </div>
+
+    <div class="docs-shell">
+      <aside class="docs-sidebar">
+        <a class="brand" href="../" aria-label="OpenCode Power Pack home">
+          <svg class="brand-bolt" viewBox="0 0 38 48" aria-hidden="true">
+            <path d="M22 1 3 27h14l-3 20 21-29H21z" />
+          </svg>
+          <span><b>POWER PACK</b> DOCS</span>
+        </a>
+        <nav aria-label="Documentation sections">
+          <a href="#quick-start">Choose an install</a>
+          <a href="#npm">Selective npm</a>
+          <a href="#agent-install">Agent-assisted install</a>
+          <a href="#cli">CLI reference</a>
+          <a href="#how-skills-work">How skills work</a>
+          <a href="#hosts">Full host installs</a>
+          <a href="#profiles">Profiles + contents</a>
+          <a href="skills/">All 54 skills</a>
+          <a href="#reviews">Review skills</a>
+          <a href="#maintenance">Update and remove</a>
+          <a href="#troubleshooting">Troubleshooting</a>
+        </nav>
+        <a class="back-link" href="../">← Back to overview</a>
+      </aside>
+
+      <main class="docs-content" id="docs-main">
+        <header>
+          <nav class="breadcrumbs" aria-label="Breadcrumb">
+            <a href="../">OpenCode Power Pack</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Documentation</span>
+          </nav>
+          <p class="eyebrow">[ INSTALLATION + OPERATIONS ]</p>
+          <h1>Documentation</h1>
+          <p>
+            Start with the installation model, then choose a profile or individual workflow. This guide
+            explains destinations, dependency resolution, host activation, invocation, verification,
+            updates, removal, and the purpose of every bundled skill.
+          </p>
+        </header>
+
+        <section class="docs-section" id="quick-start">
+          <h2>Choose an installation path</h2>
+          <p>The two paths solve different problems. Choose one before running commands.</p>
+          <div class="install-choice-grid">
+            <article>
+              <span>SELECTIVE</span>
+              <h3>npm installer</h3>
+              <p>Best when Codex, OpenCode, or Pi should load only the workflows you select.</p>
+              <ul>
+                <li>Install one skill, several skills, a profile, or all 54.</li>
+                <li>Choose user-level or repository-local scope.</li>
+                <li>Requires Node.js 20 or newer.</li>
+              </ul>
+              <div class="docs-code"><code>npx @waybarrios/opencode-power-pack install --profile recommended</code></div>
+              <a href="#npm">Follow the selective guide →</a>
+            </article>
+            <article>
+              <span>COMPLETE CATALOG</span>
+              <h3>Native host plugin</h3>
+              <p>Best when you want all 54 workflows through the host's normal package manager.</p>
+              <ul>
+                <li>Claude Code receives collision-safe namespaced skills.</li>
+                <li>Codex, OpenCode, and Pi receive native package integration.</li>
+                <li>Updates are managed by the host.</li>
+              </ul>
+              <div class="docs-code"><code># Choose your host below
+/plugin install ...
+codex plugin add ...
+opencode plugin ...
+pi install ...</code></div>
+              <a href="#hosts">Choose a host →</a>
+            </article>
+          </div>
+          <p class="note">
+            Installing the full native plugin and copying the same skills with npm does not make the
+            catalog smaller. Prefer one activation path for a given host and scope.
+          </p>
+        </section>
+
+        <section class="docs-section" id="npm">
+          <h2>Selective npm installer</h2>
+          <ol class="installation-steps">
+            <li>
+              <h3>Inspect the catalog</h3>
+              <p>This prints the eight profiles and all 54 available skill IDs. It does not modify files.</p>
+              <div class="docs-code"><code>npx @waybarrios/opencode-power-pack list</code></div>
+            </li>
+            <li>
+              <h3>Select skills or a profile</h3>
+              <p>Pass any number of skill IDs, or use one or more repeatable <code>--profile</code> flags.</p>
+              <div class="docs-code"><code># One skill
+npx @waybarrios/opencode-power-pack install code-review
+
+# Several skills
+npx @waybarrios/opencode-power-pack install code-review security-review
+
+# A curated profile
+npx @waybarrios/opencode-power-pack install --profile review
+
+# Combine a profile with another skill
+npx @waybarrios/opencode-power-pack install --profile frontend code-quality</code></div>
+              <p><a href="skills/">Compare all 54 skills and copy individual commands →</a></p>
+            </li>
+            <li>
+              <h3>Choose the destination</h3>
+              <p>
+                The default <code>--global</code> scope writes to <code>~/.agents/skills</code> for your
+                user. <code>--project</code> finds the current Git root and writes to
+                <code>&lt;repo&gt;/.agents/skills</code> so the selection travels with one repository.
+              </p>
+              <div class="docs-code"><code># User-level, the default
+npx @waybarrios/opencode-power-pack install code-review --global
+
+# Current Git repository only
+npx @waybarrios/opencode-power-pack install --profile review --project</code></div>
+            </li>
+            <li>
+              <h3>Preview, install, and restart</h3>
+              <p>Use <code>--dry-run</code> first when you want to inspect the resolved selection.</p>
+              <div class="docs-code"><code>npx @waybarrios/opencode-power-pack install --profile security --dry-run
+npx @waybarrios/opencode-power-pack install --profile security</code></div>
+              <p>Start a new Codex, OpenCode, or Pi session if the newly copied skills do not appear automatically.</p>
+            </li>
+          </ol>
+
+          <h3>What the installer copies</h3>
+          <p>
+            Each selected directory is copied intact, including its <code>SKILL.md</code>, references,
+            scripts, or assets. The installer also attaches <code>UPSTREAMS.json</code>, third-party
+            notices, and license texts to every copied skill. Declared companion skills are resolved
+            recursively and added automatically.
+          </p>
+          <p class="note">
+            Existing directories are skipped by default. <code>--force</code> stages the replacement,
+            locks the skill, preserves a rollback copy during promotion, and restores it if promotion fails.
+          </p>
+        </section>
+
+        <section class="docs-section" id="agent-install">
+          <h2>Let your agent install it</h2>
+          <p>
+            Paste the prompt below into a terminal-capable Codex, OpenCode, or Pi session. It makes the
+            agent preview the exact destination and dependency closure before writing project-local skills.
+            It does not modify <code>package.json</code> or add an application runtime dependency.
+          </p>
+
+          <article class="agent-install-panel">
+            <header><span>AGENT PROMPT</span><b>SAFE PROJECT INSTALL</b></header>
+            <div class="docs-code"><code>Install OpenCode Power Pack's recommended profile in this Git repository.
+
+1. Run node --version and require Node.js 20 or newer.
+2. Run: npx @waybarrios/opencode-power-pack install --profile recommended --project --dry-run
+3. Report the resolved destination, selected skills, automatic companions, and conflicts.
+4. If the preview is safe, run the same command without --dry-run.
+5. Do not use --force and do not modify package.json.
+6. Explain how to start a new session and verify the installed skills for the current host.
+
+If this is Claude Code, do not use the portable npm path. Show me the two native plugin commands instead.</code></div>
+            <button
+              type="button"
+              class="small-copy"
+              data-copy="Install OpenCode Power Pack's recommended profile in this Git repository. First require Node.js 20 or newer. Run npx @waybarrios/opencode-power-pack install --profile recommended --project --dry-run and report the resolved destination, selected skills, automatic companions, and conflicts. If the preview is safe, run the same command without --dry-run. Do not use --force and do not modify package.json. Explain how to start a new session and verify the installed skills for the current host. If this is Claude Code, do not use the portable npm path; show me the two native plugin commands instead."
+            >
+              Copy agent prompt
+            </button>
+          </article>
+
+          <h3>Direct command for terminal-capable agents</h3>
+          <div class="docs-code"><code>npx @waybarrios/opencode-power-pack install --profile recommended --project --dry-run
+npx @waybarrios/opencode-power-pack install --profile recommended --project</code></div>
+          <p>
+            Remove <code>--project</code> for a user-level install. Replace <code>recommended</code> with
+            <code>review</code>, <code>feature-dev</code>, <code>frontend</code>, <code>security</code>,
+            <code>huggingface</code>, <code>authoring</code>, or <code>project-memory</code>.
+          </p>
+
+          <h3>Claude Code native commands</h3>
+          <p>Run these inside Claude Code because its native plugin supplies the complete namespaced catalog.</p>
+          <div class="docs-code"><code>/plugin marketplace add waybarrios/opencode-power-pack
+/plugin install opencode-power-pack@opencode-power-pack</code></div>
+
+          <p class="note">
+            Agent-assisted installation still follows the current host's approval and sandbox rules. The
+            prompt authorizes only the scoped installation described above, not forced replacement or other
+            project changes.
+          </p>
+        </section>
+
+        <section class="docs-section" id="cli">
+          <h2>CLI command reference</h2>
+          <section class="docs-table-wrap" aria-label="npm installer commands" tabindex="0">
+            <table class="docs-table command-reference-table">
+              <thead><tr><th>Command or option</th><th>Behavior</th></tr></thead>
+              <tbody>
+                <tr><td><code>list</code></td><td>Print all profiles and skill IDs from the installed package.</td></tr>
+                <tr><td><code>install &lt;skill...&gt;</code></td><td>Install one or more explicit skill IDs.</td></tr>
+                <tr><td><code>--profile &lt;name&gt;</code></td><td>Add a curated profile. Repeat the option to combine profiles.</td></tr>
+                <tr><td><code>--all</code></td><td>Select the complete 54-skill catalog.</td></tr>
+                <tr><td><code>--global</code></td><td>Write to <code>~/.agents/skills</code>. This is the default.</td></tr>
+                <tr><td><code>--project</code></td><td>Find the current Git root and write to <code>.agents/skills</code> inside it.</td></tr>
+                <tr><td><code>--dry-run</code></td><td>Show the resolved destination and changes without writing files.</td></tr>
+                <tr><td><code>--force</code></td><td>Replace existing copies using locking, staging, and rollback.</td></tr>
+                <tr><td><code>-h</code> or <code>--help</code></td><td>Print installer syntax and options.</td></tr>
+              </tbody>
+            </table>
+          </section>
+          <h3>Run without a global install</h3>
+          <div class="docs-code"><code>npx @waybarrios/opencode-power-pack@latest --help</code></div>
+          <h3>Keep the CLI globally</h3>
+          <div class="docs-code"><code>npm install --global @waybarrios/opencode-power-pack
+opencode-power-pack list
+opencode-power-pack install code-review</code></div>
+        </section>
+
+        <section class="docs-section" id="how-skills-work">
+          <h2>How skills work</h2>
+          <p>
+            A skill is an instruction package centered on a <code>SKILL.md</code> file. It is not a
+            background service and does not add a runtime dependency to your application. Your coding
+            agent reads the skill's trigger description, then follows its workflow when the task matches
+            or when you invoke the skill explicitly.
+          </p>
+          <div class="skill-lifecycle">
+            <article><span>01</span><h3>Discover</h3><p>The host loads installed skill IDs and their trigger descriptions.</p></article>
+            <article><span>02</span><h3>Select</h3><p>You name a skill explicitly, or the host matches one to the current task.</p></article>
+            <article><span>03</span><h3>Execute</h3><p>The agent follows the workflow and uses only tools and permissions available in that host.</p></article>
+            <article><span>04</span><h3>Coordinate</h3><p>Coordinator skills may call companion workflows for exploration, architecture, review, or deployment.</p></article>
+          </div>
+          <p class="note">
+            Installing a skill does not grant extra operating-system or cloud permissions. Authentication,
+            tool access, approvals, and sandbox rules remain controlled by Claude Code, Codex, OpenCode,
+            Pi, and your local environment.
+          </p>
+        </section>
+
+        <section class="docs-section" id="hosts">
+          <h2>Full native host installs</h2>
+          <p>
+            Each method below installs all 54 workflows. Use the npm path above when you want a smaller
+            set for Codex, OpenCode, or Pi.
+          </p>
+
+          <article class="host-doc" id="host-claude">
+            <header><span>01</span><h3>Claude Code</h3><b>FULL CATALOG</b></header>
+            <p>Run both commands inside Claude Code. The first registers the repository marketplace; the second activates its plugin.</p>
+            <div class="docs-code"><code>/plugin marketplace add waybarrios/opencode-power-pack
+/plugin install opencode-power-pack@opencode-power-pack</code></div>
+            <dl>
+              <div><dt>Reload</dt><dd>Run <code>/reload-plugins</code> only if the installation result requests it.</dd></div>
+              <div><dt>Verify</dt><dd>Open <code>/plugin</code> and confirm <code>opencode-power-pack</code> is enabled.</dd></div>
+              <div><dt>Invoke</dt><dd>Use the collision-safe namespace, for example <code>/opencode-power-pack:code-review</code>.</dd></div>
+            </dl>
+          </article>
+
+          <article class="host-doc" id="host-codex">
+            <header><span>02</span><h3>Codex CLI and desktop</h3><b>FULL CATALOG</b></header>
+            <p>Register the marketplace snapshot, install its plugin, then start a new Codex session.</p>
+            <div class="docs-code"><code>codex plugin marketplace add waybarrios/opencode-power-pack --ref main
+codex plugin add opencode-power-pack@opencode-power-pack
+codex plugin list --marketplace opencode-power-pack</code></div>
+            <dl>
+              <div><dt>Verify</dt><dd>The list command and <code>/plugins</code> should show the installed package.</dd></div>
+              <div><dt>Invoke</dt><dd>Mention a skill explicitly with <code>$code-review</code>, <code>$feature-dev</code>, or another ID.</dd></div>
+              <div><dt>Selective alternative</dt><dd>Use npm to copy only chosen skills into <code>.agents/skills</code>.</dd></div>
+            </dl>
+          </article>
+
+          <article class="host-doc" id="host-opencode">
+            <header><span>03</span><h3>OpenCode</h3><b>FULL CATALOG</b></header>
+            <p>OpenCode 1.18.7 or newer is required. Pin v0.4.0 for a reproducible installation.</p>
+            <div class="docs-code"><code>opencode plugin --global "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git#v0.4.0"</code></div>
+            <dl>
+              <div><dt>Restart</dt><dd>Start a new OpenCode session after the command finishes.</dd></div>
+              <div><dt>Verify</dt><dd>Run <code>opencode debug skill</code>; it should list all 54 unprefixed IDs.</dd></div>
+              <div><dt>Invoke</dt><dd>Use the generated slash command, for example <code>/code-review</code>.</dd></div>
+            </dl>
+          </article>
+
+          <article class="host-doc" id="host-pi">
+            <header><span>04</span><h3>Pi</h3><b>FULL CATALOG</b></header>
+            <p>Choose user-level installation or save the package to the current project's Pi settings with <code>-l</code>.</p>
+            <div class="docs-code"><code># User-level package
+pi install git:github.com/waybarrios/opencode-power-pack
+
+# Project-local package
+pi install git:github.com/waybarrios/opencode-power-pack -l</code></div>
+            <dl>
+              <div><dt>Restart</dt><dd>Start a new Pi session so it loads the package's declared <code>skills/</code> directory.</dd></div>
+              <div><dt>Verify</dt><dd>Run <code>pi list</code> and confirm the Git source is present.</dd></div>
+              <div><dt>Invoke</dt><dd>Ask for the task directly; Pi routes to installed skills from their trigger descriptions.</dd></div>
+            </dl>
+          </article>
+        </section>
+
+        <section class="docs-section" id="profiles">
+          <h2>Profiles and contents</h2>
+          <p>
+            Profiles are curated selections, not separate packages. The command resolves the listed
+            workflows and any required companions before it writes files.
+          </p>
+          <div class="profile-doc-list">
+            <details open>
+              <summary><span><code>recommended</code> Balanced development toolkit</span><b>11 resolved skills</b></summary>
+              <div>
+                <p>Use this as the default software-development set without the specialized security and ML catalogs.</p>
+                <div class="docs-code"><code>npx @waybarrios/opencode-power-pack install --profile recommended</code></div>
+                <p><strong>Selected:</strong> <code>agents-md-improver</code>, <code>agents-md-revise</code>, <code>code-quality</code>, <code>code-review</code>, <code>feature-dev</code>, <code>frontend-design</code>, <code>mcp-builder</code>, and <code>skill-creator</code>.</p>
+                <p><strong>Added through feature-dev:</strong> <code>code-architect</code>, <code>code-explorer</code>, and <code>code-reviewer</code>.</p>
+              </div>
+            </details>
+            <details>
+              <summary><span><code>review</code> General and security-aware review</span><b>4 skills</b></summary>
+              <div>
+                <p>Combines broad PR review, focused implementation critique, quality checks, and security differential analysis.</p>
+                <div class="docs-code"><code>npx @waybarrios/opencode-power-pack install --profile review</code></div>
+                <p><code>code-quality</code>, <code>code-review</code>, <code>code-reviewer</code>, and <code>differential-review</code>.</p>
+              </div>
+            </details>
+            <details>
+              <summary><span><code>feature-dev</code> End-to-end feature delivery</span><b>4 resolved skills</b></summary>
+              <div>
+                <p>Installs the seven-phase coordinator and its exploration, architecture, and focused-review specialists.</p>
+                <div class="docs-code"><code>npx @waybarrios/opencode-power-pack install --profile feature-dev</code></div>
+                <p><code>feature-dev</code> plus automatic companions <code>code-explorer</code>, <code>code-architect</code>, and <code>code-reviewer</code>.</p>
+              </div>
+            </details>
+            <details>
+              <summary><span><code>frontend</code> Interface implementation and critique</span><b>2 skills</b></summary>
+              <div>
+                <p>Pairs production frontend implementation with a measurable anti-generic quality rubric.</p>
+                <div class="docs-code"><code>npx @waybarrios/opencode-power-pack install --profile frontend</code></div>
+                <p><code>frontend-design</code> and <code>ai-slop</code>.</p>
+              </div>
+            </details>
+            <details>
+              <summary><span><code>security</code> Application-security toolkit</span><b>15 skills</b></summary>
+              <div>
+                <p>Covers threat modeling, manual and differential review, static analysis, finding validation, variant hunting, secure API design, dependency risk, and reporting.</p>
+                <div class="docs-code"><code>npx @waybarrios/opencode-power-pack install --profile security</code></div>
+                <p><code>agentic-actions-auditor</code>, <code>codeql</code>, <code>differential-review</code>, <code>fp-check</code>, <code>insecure-defaults</code>, <code>sarif-parsing</code>, <code>security-review</code>, <code>security-threat-model</code>, <code>semgrep</code>, <code>semgrep-rule-creator</code>, <code>semgrep-rule-variant-creator</code>, <code>sharp-edges</code>, <code>supply-chain-risk-auditor</code>, <code>variant-analysis</code>, and <code>vuln-report</code>.</p>
+              </div>
+            </details>
+            <details>
+              <summary><span><code>huggingface</code> Model and deployment workflows</span><b>25 skills</b></summary>
+              <div>
+                <p>Covers Hub operations, model and dataset discovery, local inference, training, evaluation, Gradio, Spaces, tracking, ZeroGPU, and production SageMaker deployment.</p>
+                <div class="docs-code"><code>npx @waybarrios/opencode-power-pack install --profile huggingface</code></div>
+                <p><code>hf-cli</code>, <code>hf-cloud-aws-context-discovery</code>, <code>hf-cloud-python-env-setup</code>, <code>hf-cloud-sagemaker-deployment-planner</code>, <code>hf-cloud-sagemaker-iam-preflight</code>, <code>hf-cloud-sagemaker-production-defaults</code>, <code>hf-cloud-serving-image-selection</code>, <code>hf-mem</code>, <code>huggingface-best</code>, <code>huggingface-community-evals</code>, <code>huggingface-datasets</code>, <code>huggingface-gradio</code>, <code>huggingface-llm-trainer</code>, <code>huggingface-local-models</code>, <code>huggingface-lora-space-builder</code>, <code>huggingface-paper-publisher</code>, <code>huggingface-papers</code>, <code>huggingface-spaces</code>, <code>huggingface-tool-builder</code>, <code>huggingface-trackio</code>, <code>huggingface-vision-trainer</code>, <code>huggingface-zerogpu</code>, <code>train-sentence-transformers</code>, <code>transformers-js</code>, and <code>trl-training</code>.</p>
+              </div>
+            </details>
+            <details>
+              <summary><span><code>authoring</code> Reusable workflow creation</span><b>3 skills</b></summary>
+              <div>
+                <p>Create Agent Skills and MCP servers, or turn technical papers into engineering-ready summaries.</p>
+                <div class="docs-code"><code>npx @waybarrios/opencode-power-pack install --profile authoring</code></div>
+                <p><code>mcp-builder</code>, <code>paper-summarizer</code>, and <code>skill-creator</code>.</p>
+              </div>
+            </details>
+            <details>
+              <summary><span><code>project-memory</code> Durable agent guidance</span><b>2 skills</b></summary>
+              <div>
+                <p>Audit existing AGENTS.md and CLAUDE.md files, then capture durable lessons from completed work.</p>
+                <div class="docs-code"><code>npx @waybarrios/opencode-power-pack install --profile project-memory</code></div>
+                <p><code>agents-md-improver</code> and <code>agents-md-revise</code>.</p>
+              </div>
+            </details>
+          </div>
+          <p><a href="skills/">Open the complete 54-skill reference for individual installation commands →</a></p>
+        </section>
+
+        <section class="docs-section" id="reviews">
+          <h2>Which review skill?</h2>
+          <section class="docs-table-wrap" aria-label="Code review skill comparison" tabindex="0">
+            <table class="docs-table">
+              <thead><tr><th>Situation</th><th>Skill</th><th>Reason</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td>Pull request, branch, commit range, or complete pending diff</td>
+                  <td><code>code-review</code></td>
+                  <td>Freezes the scope, runs multiple review lenses, and cross-checks candidates.</td>
+                </tr>
+                <tr>
+                  <td>One file, function, or focused implementation change</td>
+                  <td><code>code-reviewer</code></td>
+                  <td>Uses a lighter two-pass review with caller and full-file context.</td>
+                </tr>
+                <tr>
+                  <td>Feature development quality phase</td>
+                  <td><code>code-reviewer</code></td>
+                  <td>Acts as the focused specialist dispatched by <code>feature-dev</code>.</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </section>
+
+        <section class="docs-section" id="maintenance">
+          <h2>Update and remove</h2>
+          <h3>Skills copied by npm</h3>
+          <p>Run the latest installer with the same selection and <code>--force</code> to replace copied workflows safely.</p>
+          <div class="docs-code"><code># Update a user-level profile
+npx @waybarrios/opencode-power-pack@latest install --profile review --force
+
+# Update one project-local skill
+npx @waybarrios/opencode-power-pack@latest install code-review --project --force</code></div>
+          <p>
+            The selective CLI has no remove command in v0.4.0. To remove a copied workflow, verify the
+            destination printed by the installer and delete only its exact skill directory, such as
+            <code>~/.agents/skills/code-review</code> or <code>&lt;repo&gt;/.agents/skills/code-review</code>.
+          </p>
+
+          <h3>Globally installed npm CLI</h3>
+          <div class="docs-code"><code>npm update --global @waybarrios/opencode-power-pack
+npm uninstall --global @waybarrios/opencode-power-pack</code></div>
+          <p>Removing the global CLI does not remove skill directories that were already copied.</p>
+
+          <h3>Claude Code</h3>
+          <div class="docs-code"><code>/plugin marketplace update opencode-power-pack
+/plugin update opencode-power-pack@opencode-power-pack
+/plugin uninstall opencode-power-pack@opencode-power-pack</code></div>
+
+          <h3>Codex</h3>
+          <div class="docs-code"><code>codex plugin marketplace upgrade opencode-power-pack
+codex plugin add opencode-power-pack@opencode-power-pack
+codex plugin remove opencode-power-pack@opencode-power-pack</code></div>
+
+          <h3>OpenCode</h3>
+          <div class="docs-code"><code>opencode plugin --global --force "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"</code></div>
+          <p>To remove it, delete the matching <code>opencode-power-pack@...</code> entry from the config where it was installed, then restart OpenCode.</p>
+
+          <h3>Pi</h3>
+          <div class="docs-code"><code>pi update git:github.com/waybarrios/opencode-power-pack
+pi remove git:github.com/waybarrios/opencode-power-pack</code></div>
+        </section>
+
+        <section class="docs-section" id="troubleshooting">
+          <h2>Troubleshooting</h2>
+          <h3>Node rejects the package</h3>
+          <p>The selective installer requires Node.js 20 or newer. Check with <code>node --version</code>, upgrade Node, and run the same <code>npx</code> command again.</p>
+
+          <h3>Unknown skill or profile</h3>
+          <p>Run <code>npx @waybarrios/opencode-power-pack list</code> and copy the lowercase hyphenated ID exactly. Profile names and skill IDs are case-sensitive.</p>
+
+          <h3><code>--project</code> cannot find a repository</h3>
+          <p>Run the installer from inside a Git working tree. The option walks upward until it finds the repository's <code>.git</code> entry.</p>
+
+          <h3>A copied skill is not visible</h3>
+          <p>Start a new host session and confirm that the skill exists under the expected user or project <code>.agents/skills</code> directory.</p>
+
+          <h3>A Claude skill name conflicts</h3>
+          <p>Use the namespaced form, such as <code>/opencode-power-pack:code-review</code>.</p>
+
+          <h3>The installer will not overwrite a skill</h3>
+          <p>This is deliberate. Preview the update with <code>--dry-run</code>, then repeat it with <code>--force</code>.</p>
+
+          <h3>An <code>.opp-lock</code> directory remains</h3>
+          <p>
+            First confirm that no installer process is running. The lock prevents concurrent replacement
+            of the same skill. If a terminated process left it behind, remove only the exact lock path
+            reported in the error and repeat the install.
+          </p>
+
+          <h3>The same skill appears from two sources</h3>
+          <p>
+            A full native plugin and an npm-copied skill can overlap. Disable one activation path for that
+            host and scope. In Claude Code, prefer the namespaced plugin form to avoid name collisions.
+          </p>
+
+          <h3>Need more detail?</h3>
+          <p>
+            Read the <a href="https://github.com/waybarrios/opencode-power-pack#installation">complete repository guide</a>
+            or <a href="https://github.com/waybarrios/opencode-power-pack/issues">open an issue</a> with the host,
+            version, command, and error output.
+          </p>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

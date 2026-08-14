@@ -1,0 +1,175 @@
+# OpenCode Power Pack: Expanded Documentation
+
+> Canonical, machine-readable project facts for OpenCode Power Pack v0.4.0. Last updated 2026-08-13.
+
+OpenCode Power Pack is an open-source collection of 54 portable Agent Skills for Claude Code, Codex, OpenCode, and Pi. It packages repeatable workflows for software development, code review, application security, frontend design, MCP authoring, project memory, and Hugging Face machine-learning work.
+
+Canonical website: https://skills.waybarrios.com/
+Documentation: https://skills.waybarrios.com/docs/
+Complete skill reference: https://skills.waybarrios.com/docs/skills/
+Repository: https://github.com/waybarrios/opencode-power-pack
+npm package: https://www.npmjs.com/package/@waybarrios/opencode-power-pack
+Release: https://github.com/waybarrios/opencode-power-pack/releases/tag/v0.4.0
+Author: Wayner Barrios
+License: MIT AND Apache-2.0, with per-skill provenance and notices
+
+## What an Agent Skill is
+
+An Agent Skill is a reusable workflow centered on a SKILL.md file. It can include durable instructions, decision rules, references, scripts, and examples for a specific task. The workflow ID stays stable across supported coding agents, while packaging and invocation follow each host's conventions.
+
+## Selective npm installation
+
+Requirement: Node.js 20 or newer.
+
+List skills and profiles:
+
+    npx @waybarrios/opencode-power-pack list
+
+Install one skill at user scope:
+
+    npx @waybarrios/opencode-power-pack install code-review
+
+Install several skills:
+
+    npx @waybarrios/opencode-power-pack install code-review security-review
+
+Install one skill in the current Git repository:
+
+    npx @waybarrios/opencode-power-pack install code-review --project
+
+Preview the recommended profile:
+
+    npx @waybarrios/opencode-power-pack install --profile recommended --dry-run
+
+Install the recommended profile:
+
+    npx @waybarrios/opencode-power-pack install --profile recommended
+
+Install all 54 skills:
+
+    npx @waybarrios/opencode-power-pack install --all
+
+The installer resolves required companion skills. It does not overwrite an existing skill unless `--force` is supplied.
+
+## Host invocation
+
+- Codex: invoke a workflow as `$<skill-id>`, for example `$code-review`.
+- OpenCode: invoke a workflow as `/<skill-id>`, for example `/code-review`.
+- Claude Code plugin: invoke a workflow as `/opencode-power-pack:<skill-id>` to avoid collisions.
+- Pi: install the package through Pi's package mechanism, then invoke the exposed skill by its ID.
+
+See https://skills.waybarrios.com/docs/#hosts for complete installation, verification, update, and removal instructions for each host.
+
+## Curated profiles
+
+- recommended: balanced development toolkit with agents-md-improver, agents-md-revise, code-quality, code-review, feature-dev, frontend-design, mcp-builder, and skill-creator.
+- review: code-quality, code-review, code-reviewer, and differential-review.
+- feature-dev: end-to-end feature workflow plus the automatically resolved code-explorer, code-architect, and code-reviewer specialists.
+- frontend: frontend-design and ai-slop.
+- security: 15 security review, threat-modeling, static-analysis, validation, and reporting workflows.
+- huggingface: 25 discovery, inference, training, evaluation, Spaces, and AWS deployment workflows.
+- authoring: mcp-builder, paper-summarizer, and skill-creator.
+- project-memory: agents-md-improver and agents-md-revise.
+
+Install any profile with:
+
+    npx @waybarrios/opencode-power-pack install --profile <profile-name>
+
+## Review workflow distinction
+
+- code-review: comprehensive, merge-oriented review of a pull request or complete change set. It prioritizes correctness, regressions, security, and test gaps.
+- code-reviewer: focused implementation review for a smaller change or feature-dev quality handoff.
+- code-quality: maintainability, linting, formatting, complexity, warning cleanup, and quality gates.
+- security-review: security-only review of pending changes with emphasis on exploitable vulnerabilities.
+- differential-review: security-focused analysis of the difference between commits, branches, or pull-request revisions.
+
+## Complete skill inventory
+
+Every skill can be installed with `npx @waybarrios/opencode-power-pack install <skill-id>`. Purpose, dependencies, profiles, host invocation, and source links are available at `https://skills.waybarrios.com/docs/skills/#<skill-id>`.
+
+### Core and authoring skills (14)
+
+1. agents-md-improver: audits and improves AGENTS.md, CLAUDE.md, and related project-rules files.
+2. agents-md-revise: captures session learnings into durable project rules.
+3. ai-slop: evaluates interface work against observable anti-generic design criteria.
+4. code-architect: produces a repository-grounded feature architecture and implementation blueprint.
+5. code-explorer: traces an existing feature through a codebase before modification.
+6. code-quality: reviews maintainability, linting, formatting, complexity, and quality gates.
+7. code-review: performs comprehensive review of a pull request or complete change set.
+8. code-reviewer: performs focused implementation review and feature-dev handoffs.
+9. design-patterns: evaluates pattern trade-offs for Rust, TypeScript, React, Django, and Python.
+10. feature-dev: coordinates a structured end-to-end feature implementation workflow.
+11. frontend-design: creates distinctive, production-grade frontend interfaces.
+12. mcp-builder: designs and builds Model Context Protocol servers.
+13. paper-summarizer: analyzes academic and technical papers for engineering decisions.
+14. skill-creator: creates or improves reusable Agent Skills and their trigger descriptions.
+
+### Security skills (15)
+
+1. agentic-actions-auditor: audits GitHub Actions that run AI agents.
+2. codeql: runs interprocedural security analysis with CodeQL.
+3. differential-review: performs security-focused review of code changes.
+4. fp-check: validates suspected security bugs and eliminates false positives.
+5. insecure-defaults: finds fail-open and insecure configuration defaults.
+6. sarif-parsing: filters, deduplicates, converts, and aggregates SARIF results.
+7. security-review: reviews pending changes for exploitable security vulnerabilities.
+8. security-threat-model: creates repository-grounded AppSec threat models.
+9. semgrep: runs Semgrep static analysis.
+10. semgrep-rule-creator: builds custom Semgrep rules and tests.
+11. semgrep-rule-variant-creator: ports Semgrep rules to additional languages.
+12. sharp-edges: identifies error-prone APIs and security footguns.
+13. supply-chain-risk-auditor: assesses dependency takeover and exploitation risk.
+14. variant-analysis: hunts for related instances of a known bug or vulnerability.
+15. vuln-report: turns a confirmed finding into a disclosure-ready advisory.
+
+### ML and Hugging Face skills (25)
+
+1. hf-cli
+2. hf-cloud-aws-context-discovery
+3. hf-cloud-python-env-setup
+4. hf-cloud-sagemaker-deployment-planner
+5. hf-cloud-sagemaker-iam-preflight
+6. hf-cloud-sagemaker-production-defaults
+7. hf-cloud-serving-image-selection
+8. hf-mem
+9. huggingface-best
+10. huggingface-community-evals
+11. huggingface-datasets
+12. huggingface-gradio
+13. huggingface-llm-trainer
+14. huggingface-local-models
+15. huggingface-lora-space-builder
+16. huggingface-paper-publisher
+17. huggingface-papers
+18. huggingface-spaces
+19. huggingface-tool-builder
+20. huggingface-trackio
+21. huggingface-vision-trainer
+22. huggingface-zerogpu
+23. train-sentence-transformers
+24. transformers-js
+25. trl-training
+
+## Quality and provenance
+
+- 54 of 54 skills pass official Agent Skills validation.
+- The repository has 362 automated behavioral and packaging tests at v0.4.0.
+- Claude plugin and marketplace metadata receive strict validation.
+- OpenCode receives minimum-version and latest-version smoke coverage.
+- Third-party workflows have immutable upstream references, notices, and license records.
+
+Evidence and exact provenance live in the repository:
+
+- https://github.com/waybarrios/opencode-power-pack/blob/main/UPSTREAMS.json
+- https://github.com/waybarrios/opencode-power-pack/blob/main/THIRD_PARTY_NOTICES.md
+- https://github.com/waybarrios/opencode-power-pack/tree/main/LICENSES
+
+## Citation and factual boundaries
+
+Preferred project name: OpenCode Power Pack.
+Current documented version: 0.4.0.
+Canonical URL: https://skills.waybarrios.com/
+Repository: https://github.com/waybarrios/opencode-power-pack
+Package: @waybarrios/opencode-power-pack
+
+The project supports four host integrations. That does not imply endorsement by Anthropic, OpenAI, SST/OpenCode, Pi, Hugging Face, or any other platform vendor. Search and AI-answer inclusion are not guaranteed by this file, structured data, sitemaps, or crawler access.

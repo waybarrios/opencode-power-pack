@@ -1,0 +1,18 @@
+{
+  "name": "OpenCode Power Pack",
+  "short_name": "Power Pack",
+  "description": "Fifty-four portable Agent Skills for Claude Code, Codex, OpenCode, and Pi.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0b0f14",
+  "theme_color": "#ffd60a",
+  "icons": [
+    {
+      "src": "assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

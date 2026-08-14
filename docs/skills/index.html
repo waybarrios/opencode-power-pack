@@ -1,0 +1,2382 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>54 Agent Skills Reference | OpenCode Power Pack</title>
+    <meta
+      name="description"
+      content="What every OpenCode Power Pack skill does, when to use it, its profiles and dependencies, and the exact npm command to install it for Codex, OpenCode, or Pi."
+    >
+    <meta name="robots" content="index, follow, max-snippet:-1">
+    <meta name="theme-color" content="#0b0f14">
+    <link rel="canonical" href="https://skills.waybarrios.com/docs/skills/">
+    <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+    <link rel="sitemap" type="application/xml" href="../../sitemap.xml">
+    <link rel="describedby" type="text/markdown" href="../../llms.txt" title="LLM project summary">
+    <link rel="alternate" type="text/markdown" href="index.md" title="Markdown version">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="OpenCode Power Pack">
+    <meta property="og:title" content="54 Agent Skills: Complete Reference">
+    <meta
+      property="og:description"
+      content="Detailed purpose, selection guidance, profiles, dependencies, invocation, and individual installation commands for every bundled skill."
+    >
+    <meta property="og:url" content="https://skills.waybarrios.com/docs/skills/">
+    <meta property="og:image" content="https://skills.waybarrios.com/assets/social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:alt" content="Complete reference for 54 OpenCode Power Pack Agent Skills">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="54 Agent Skills: Complete Reference">
+    <meta name="twitter:description" content="Purpose, dependencies, invocation, and exact install command for every OpenCode Power Pack skill.">
+    <meta name="twitter:image" content="https://skills.waybarrios.com/assets/social-card.png">
+    <meta name="twitter:image:alt" content="Complete reference for 54 OpenCode Power Pack Agent Skills">
+    <meta name="twitter:image:width" content="1200">
+    <meta name="twitter:image:height" content="630">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&amp;family=IBM+Plex+Mono:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="../../styles.css">
+    <script type="application/ld+json">
+      {
+              "@context": "https://schema.org",
+              "@type": "CollectionPage",
+              "name": "OpenCode Power Pack Skill Reference",
+              "description": "Detailed documentation and individual installation commands for 54 Agent Skills.",
+              "url": "https://skills.waybarrios.com/docs/skills/",
+              "isPartOf": {
+                      "@type": "WebSite",
+                      "name": "OpenCode Power Pack",
+                      "url": "https://skills.waybarrios.com/"
+              },
+              "mainEntity": {
+                      "@type": "ItemList",
+                      "numberOfItems": 54,
+                      "itemListElement": [
+                              {
+                                      "@type": "ListItem",
+                                      "position": 1,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#agentic-actions-auditor",
+                                      "name": "agentic-actions-auditor",
+                                      "description": "Audit GitHub Actions that run AI agents for prompt injection, unsafe interpolation, sandbox gaps, and permissive actor rules. Use for agentic CI workflows, not general application code review."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 2,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#agents-md-improver",
+                                      "name": "agents-md-improver",
+                                      "description": "Audit and improve project-rules files (AGENTS.md, CLAUDE.md, .agents/instructions, local overrides) so the agent keeps accurate project context. Use when the user asks to check, audit, review, update, improve, or fix their AGENTS.md or CLAUDE.md, mentions \"project rules maintenance\" or \"agent context optimization\", or when the codebase has changed enough that the rules file may be stale. Scans the repository for every rules file, grades each against a quality rubric, outputs a quality report, and applies targeted edits only after user approval."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 3,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#agents-md-revise",
+                                      "name": "agents-md-revise",
+                                      "description": "Capture learnings from the current session into the project-rules file (AGENTS.md, CLAUDE.md, or local override) so future sessions benefit. Use when the user says \"revise the rules\", \"update AGENTS.md / CLAUDE.md with what we just learned\", \"save this to project memory\", \"remember this for next time\", or at the end of a productive session when valuable context has emerged that is not yet documented. This complements agents-md-improver; improver audits, while this one captures."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 4,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#ai-slop",
+                                      "name": "ai-slop",
+                                      "description": "Operational rubric that turns \"don't make AI slop\" into observable properties, severity levels, evidence requirements, and repair actions for interface design. Use as the reference rubric when building or reviewing marketing sites, product interfaces, dashboards, portfolios, or e-commerce pages, especially alongside frontend-design."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 5,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#code-architect",
+                                      "name": "code-architect",
+                                      "description": "Design a feature architecture by analyzing existing codebase patterns and conventions, then provide a comprehensive implementation blueprint with specific files to create or modify, component designs, data flows, and a build sequence. Use this skill when the user asks for an architecture design, an implementation plan for a non-trivial feature, or when dispatched as a sub-task during feature-dev architecture phase."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 6,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#code-explorer",
+                                      "name": "code-explorer",
+                                      "description": "Deeply analyze an existing codebase feature by tracing execution paths, mapping architecture layers, understanding patterns and abstractions, and documenting dependencies. Use this skill when you need to understand how a feature works before modifying or extending it, when dispatched as a sub-task during feature-dev exploration, or when the user asks \"how does X work in this codebase\"."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 7,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#code-quality",
+                                      "name": "code-quality",
+                                      "description": "Agents should invoke this skill for code reviews, linting/formatting setup, maintainability checks, complexity concerns, warning cleanup, coding standards, or quality gates in Rust, TypeScript, Python, shell, and mixed repos."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 8,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#code-review",
+                                      "name": "code-review",
+                                      "description": "Review a pull request or a set of code changes for bugs, logic errors, and project-convention violations using a confidence-filtered, multi-agent process. Use this skill when the user asks to review a PR, audit pending changes, or inspect a diff for problems before merging."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 9,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#code-reviewer",
+                                      "name": "code-reviewer",
+                                      "description": "Review code for bugs, logic errors, security vulnerabilities, code quality issues, and adherence to project conventions, using confidence-based filtering to report only high-priority issues that truly matter. Use this skill when reviewing a small set of changes locally (such as unstaged diff), when dispatched as a sub-task during feature-dev quality review, or when the user wants a critique of a specific file or function."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 10,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#codeql",
+                                      "name": "codeql",
+                                      "description": "Run CodeQL database creation and security queries, add data-extension models, or process CodeQL SARIF. Use when CodeQL is explicitly requested; use security-review for a broader manual security review."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 11,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#design-patterns",
+                                      "name": "design-patterns",
+                                      "description": "Agents should invoke this skill when choosing patterns, designing traits/interfaces/components, deciding abstraction boundaries, evaluating dependency injection/callbacks, or comparing implementation approaches in Rust, TypeScript/React, or Django/Python."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 12,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#differential-review",
+                                      "name": "differential-review",
+                                      "description": "Performs security-focused differential review of code changes (PRs, commits, diffs). Adapts analysis depth to codebase size, uses git history for context, calculates blast radius, checks test coverage, and generates comprehensive markdown reports. Automatically detects and prevents security regressions."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 13,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#feature-dev",
+                                      "name": "feature-dev",
+                                      "description": "Guide a feature implementation through a structured seven-phase workflow with deep codebase understanding, clarifying questions, parallel architecture design, and quality review. Use this skill when the user asks to build a new feature, add functionality, or wants a methodical approach to implementation rather than diving straight to code."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 14,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#fp-check",
+                                      "name": "fp-check",
+                                      "description": "Systematically verifies suspected security bugs to eliminate false positives. Produces TRUE POSITIVE or FALSE POSITIVE verdicts with documented evidence for each bug."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 15,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#frontend-design",
+                                      "name": "frontend-design",
+                                      "description": "Create distinctive, production-grade frontend interfaces with high design quality and accessible markup. Use this skill when the user asks to build or beautify web components, pages, applications, landing pages, dashboards, artifacts, or React/HTML/CSS UI. Generates creative, polished code that avoids generic AI aesthetics, then self-checks it against an objective accessibility and quality rubric."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 16,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#hf-cli",
+                                      "name": "hf-cli",
+                                      "description": "Use the `hf` CLI for Hub authentication, downloads, uploads, repositories, cache, jobs, buckets, webhooks, and endpoint administration. Use for CLI operations, not model recommendations, paper analysis, training design, or building a Space."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 17,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#hf-cloud-aws-context-discovery",
+                                      "name": "hf-cloud-aws-context-discovery",
+                                      "description": "Discover the active AWS profile, region, account, and caller identity before SageMaker or AWS work. Use when local AWS context is needed or unspecified; do not use for cloud-agnostic model planning."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 18,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#hf-cloud-python-env-setup",
+                                      "name": "hf-cloud-python-env-setup",
+                                      "description": "Create an isolated Python environment with a compatible Python version and boto3 for SageMaker or AWS automation. Use before executing AWS Python code; do not use for general Python environment setup."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 19,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#hf-cloud-sagemaker-deployment-planner",
+                                      "name": "hf-cloud-sagemaker-deployment-planner",
+                                      "description": "Plan and coordinate a model deployment to Amazon SageMaker, including serving stack and real-time versus async inference. Use as the entry point for SageMaker hosting requests, before image, IAM, and endpoint implementation skills."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 20,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#hf-cloud-sagemaker-iam-preflight",
+                                      "name": "hf-cloud-sagemaker-iam-preflight",
+                                      "description": "Verify or select a SageMaker execution role before creating models, endpoints, or training jobs. Use when a role ARN is missing or IAM access fails; inspect existing roles before proposing role creation."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 21,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#hf-cloud-sagemaker-production-defaults",
+                                      "name": "hf-cloud-sagemaker-production-defaults",
+                                      "description": "Implement a production SageMaker endpoint with autoscaling, CloudWatch alarms, and tags. Use after the serving image and IAM role are known; use the deployment planner first when architecture is undecided."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 22,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#hf-cloud-serving-image-selection",
+                                      "name": "hf-cloud-serving-image-selection",
+                                      "description": "Select and verify the current region-specific serving container URI for a SageMaker model deployment. Use after the deployment pathway is chosen and before endpoint code; never infer an image URI from memory."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 23,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#hf-mem",
+                                      "name": "hf-mem",
+                                      "description": "Hugging Face CLI to estimate the required memory to load Safetensors or GGUF model weights for inference from the Hugging Face Hub."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 24,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-best",
+                                      "name": "huggingface-best",
+                                      "description": "Find and compare recommended Hugging Face models for a task using benchmarks, model size, and device constraints. Use for model selection questions; use huggingface-local-models for GGUF setup and hf-cli for Hub operations."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 25,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-community-evals",
+                                      "name": "huggingface-community-evals",
+                                      "description": "Run evaluations for Hugging Face Hub models using inspect-ai and lighteval on local hardware. Use for backend selection, local GPU evals, and choosing between vLLM / Transformers / accelerate. Not for HF Jobs orchestration, model-card PRs, .eval_results publication, or community-evals automation."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 26,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-datasets",
+                                      "name": "huggingface-datasets",
+                                      "description": "Use this skill for Hugging Face Dataset Viewer API workflows that fetch subset/split metadata, paginate rows, search text, apply filters, download parquet URLs, and read size or statistics."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 27,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-gradio",
+                                      "name": "huggingface-gradio",
+                                      "description": "Build Gradio web UIs and demos in Python. Use when creating or editing Gradio apps, components, event listeners, layouts, or chatbots."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 28,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-llm-trainer",
+                                      "name": "huggingface-llm-trainer",
+                                      "description": "Train or fine-tune language models with TRL or Unsloth on Hugging Face Jobs, including SFT, DPO, GRPO, reward models, and GGUF conversion. Use for cloud LLM training; use huggingface-vision-trainer for vision tasks."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 29,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-local-models",
+                                      "name": "huggingface-local-models",
+                                      "description": "Use to select models to run locally with llama.cpp and GGUF on CPU, Mac Metal, CUDA, or ROCm. Covers finding GGUFs, quant selection, running servers, exact GGUF file lookup, conversion, and OpenAI-compatible local serving."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 30,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-lora-space-builder",
+                                      "name": "huggingface-lora-space-builder",
+                                      "description": "Build and publish a Gradio Hugging Face Space for a user-provided image or video LoRA, including pipeline selection and model-card settings. Use for LoRA demos; use huggingface-spaces for general Space work."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 31,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-paper-publisher",
+                                      "name": "huggingface-paper-publisher",
+                                      "description": "Publish and manage research papers on Hugging Face Hub. Supports creating paper pages, linking papers to models/datasets, claiming authorship, and generating professional markdown-based research articles."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 32,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-papers",
+                                      "name": "huggingface-papers",
+                                      "description": "Look up and read Hugging Face paper pages in markdown, and use the papers API for structured metadata such as authors, linked models/datasets/spaces, Github repo and project page. Use when the user shares a Hugging Face paper page URL, an arXiv URL or ID, or asks to summarize, explain, or analyze an AI research paper."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 33,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-spaces",
+                                      "name": "huggingface-spaces",
+                                      "description": "Build, deploy, debug, or maintain a Hugging Face Space using Gradio, Docker, or Static SDKs. Use for general Space hosting and configuration; use huggingface-zerogpu for ZeroGPU runtime constraints and lora-space-builder for LoRA demos."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 34,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-tool-builder",
+                                      "name": "huggingface-tool-builder",
+                                      "description": "Use this skill when the user wants to build tool/scripts or achieve a task where using data from the Hugging Face API would help. This is especially useful when chaining or combining API calls or the task will be repeated/automated. This Skill creates a reusable script to fetch, enrich or process data."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 35,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-trackio",
+                                      "name": "huggingface-trackio",
+                                      "description": "Track and visualize ML training experiments with Trackio. Use when logging metrics during training (Python API), firing alerts for training diagnostics, or retrieving/analyzing logged metrics (CLI). Supports real-time dashboard visualization, alerts with webhooks, HF Space syncing, and JSON output for automation."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 36,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-vision-trainer",
+                                      "name": "huggingface-vision-trainer",
+                                      "description": "Train object-detection, image-classification, or SAM segmentation models on Hugging Face Jobs. Use for vision fine-tuning and evaluation; use huggingface-llm-trainer for language models."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 37,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-zerogpu",
+                                      "name": "huggingface-zerogpu",
+                                      "description": "Implement or debug Hugging Face Spaces ZeroGPU code using `@spaces.GPU`, including isolation, state, duration, sizing, and CUDA-wheel constraints. Use for ZeroGPU-specific behavior; use huggingface-spaces for general hosting."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 38,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#insecure-defaults",
+                                      "name": "insecure-defaults",
+                                      "description": "Detects fail-open insecure defaults (hardcoded secrets, weak auth, permissive security) that allow apps to run insecurely in production. Use when auditing security, reviewing config management, or analyzing environment variable handling."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 39,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#mcp-builder",
+                                      "name": "mcp-builder",
+                                      "description": "Guide the creation of high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when the user wants to build an MCP server to integrate an external API or service, whether in Python (FastMCP) or Node/TypeScript (MCP SDK)."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 40,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#paper-summarizer",
+                                      "name": "paper-summarizer",
+                                      "description": "Agents should invoke this skill for academic or technical papers, arXiv/PubMed/IEEE/ACM links, PDFs, methodology review, limitations, practical implications, or extracting findings for engineering decisions."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 41,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#sarif-parsing",
+                                      "name": "sarif-parsing",
+                                      "description": "Parses and processes SARIF files from static analysis tools like CodeQL, Semgrep, or other scanners. Triggers on \\\"parse sarif\\\", \\\"read scan results\\\", \\\"aggregate findings\\\", \\\"deduplicate alerts\\\", or \\\"process sarif output\\\". Handles filtering, deduplication, format conversion, and CI/CD integration of SARIF data. Does NOT run scans; use the Semgrep or CodeQL skills for that."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 42,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#security-review",
+                                      "name": "security-review",
+                                      "description": "Perform a focused security review of pending git changes to identify high-confidence security vulnerabilities with real exploitation potential. Use this skill when the user asks for a security review, security audit, vulnerability scan, or wants to check pending changes on a branch for security issues before merging. This is NOT a general code review."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 43,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#security-threat-model",
+                                      "name": "security-threat-model",
+                                      "description": "Create a repository-grounded AppSec threat model covering assets, trust boundaries, attackers, abuse paths, and mitigations. Use only for explicit threat-modeling requests, not general architecture or code review."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 44,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#semgrep",
+                                      "name": "semgrep",
+                                      "description": "Run Semgrep static analysis across a codebase, optionally using Semgrep Pro for cross-file taint analysis. Use when Semgrep or a static-analysis scan is requested; use security-review for a manual audit."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 45,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#semgrep-rule-creator",
+                                      "name": "semgrep-rule-creator",
+                                      "description": "Creates custom Semgrep rules for detecting security vulnerabilities, bug patterns, and code patterns. Use when writing Semgrep rules or building custom static analysis detections."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 46,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#semgrep-rule-variant-creator",
+                                      "name": "semgrep-rule-variant-creator",
+                                      "description": "Creates language variants of existing Semgrep rules. Use when porting a Semgrep rule to specified target languages. Takes an existing rule and target languages as input, produces independent rule+test directories for each language."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 47,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#sharp-edges",
+                                      "name": "sharp-edges",
+                                      "description": "Identify error-prone APIs, dangerous configuration, and footgun designs that enable security mistakes. Use for API ergonomics, misuse resistance, secure defaults, or pit-of-success reviews; use code-review for general defects."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 48,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#skill-creator",
+                                      "name": "skill-creator",
+                                      "description": "Create new skills (SKILL.md files), modify and improve existing skills, and design skill descriptions for accurate triggering. Use when the user wants to create a new skill from scratch, edit an existing skill, optimize a skill's description, or convert a workflow they just demonstrated into a reusable skill."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 49,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#supply-chain-risk-auditor",
+                                      "name": "supply-chain-risk-auditor",
+                                      "description": "Identifies dependencies at heightened risk of exploitation or takeover. Use when assessing supply chain attack surface, evaluating dependency health, or scoping security engagements."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 50,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#train-sentence-transformers",
+                                      "name": "train-sentence-transformers",
+                                      "description": "Train or fine-tune SentenceTransformer bi-encoders, CrossEncoder rerankers, or SparseEncoder models, including losses, negatives, evaluation, distillation, LoRA, and Matryoshka. Use for sentence-transformers training tasks."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 51,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#transformers-js",
+                                      "name": "transformers-js",
+                                      "description": "Run Hugging Face models in JavaScript or TypeScript with Transformers.js, WebGPU, or WASM across browser, Node.js, Bun, and Deno. Use for client-side or JS-runtime inference, not Python training."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 52,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#trl-training",
+                                      "name": "trl-training",
+                                      "description": "Train and fine-tune transformer language models using TRL (Transformers Reinforcement Learning). Supports SFT, DPO, GRPO, KTO, RLOO and Reward Model training via CLI commands."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 53,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#variant-analysis",
+                                      "name": "variant-analysis",
+                                      "description": "Find similar vulnerabilities and bugs across codebases using pattern-based analysis. Use when hunting bug variants, building CodeQL/Semgrep queries, analyzing security vulnerabilities, or performing systematic code audits after finding an initial issue."
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 54,
+                                      "url": "https://skills.waybarrios.com/docs/skills/#vuln-report",
+                                      "name": "vuln-report",
+                                      "description": "Turn one confirmed security finding into a disclosure-ready GitHub advisory with root cause, proof of concept, impact, and source evidence. Use for reporting an established vulnerability, not discovering or validating one."
+                              }
+                      ]
+              },
+              "breadcrumb": {
+                      "@type": "BreadcrumbList",
+                      "itemListElement": [
+                              {
+                                      "@type": "ListItem",
+                                      "position": 1,
+                                      "name": "OpenCode Power Pack",
+                                      "item": "https://skills.waybarrios.com/"
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 2,
+                                      "name": "Documentation",
+                                      "item": "https://skills.waybarrios.com/docs/"
+                              },
+                              {
+                                      "@type": "ListItem",
+                                      "position": 3,
+                                      "name": "Skill reference",
+                                      "item": "https://skills.waybarrios.com/docs/skills/"
+                              }
+                      ]
+              }
+      }
+    </script>
+  </head>
+  <body class="docs-body">
+    <a class="skip-link" href="#skills-main">Skip to skill reference</a>
+    <div class="status-rail" aria-hidden="true">
+      <span>SKILL REFERENCE // v0.4.0</span>
+      <span>54 DOCUMENTED</span>
+      <span>INDIVIDUAL INSTALLS</span>
+    </div>
+
+    <div class="docs-shell skills-docs-shell">
+      <aside class="docs-sidebar">
+        <a class="brand" href="../../" aria-label="OpenCode Power Pack home">
+          <svg class="brand-bolt" viewBox="0 0 38 48" aria-hidden="true">
+            <path d="M22 1 3 27h14l-3 20 21-29H21z" />
+          </svg>
+          <span><b>POWER PACK</b> DOCS</span>
+        </a>
+        <nav aria-label="Skill reference sections">
+          <a href="#install-one">Install one skill</a>
+          <a href="#invoke">Invoke by host</a>
+          <a href="#core">Core skills (14)</a>
+          <a href="#security">Security skills (15)</a>
+          <a href="#ml">ML + Hugging Face (25)</a>
+        </nav>
+        <a class="back-link" href="../">← Installation guide</a>
+      </aside>
+
+      <main class="docs-content skills-reference" id="skills-main">
+        <header>
+          <nav class="breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../">OpenCode Power Pack</a>
+            <span aria-hidden="true">/</span>
+            <a href="../">Documentation</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Skills</span>
+          </nav>
+          <p class="eyebrow">[ COMPLETE CATALOG + INSTALL COMMANDS ]</p>
+          <h1>Skill reference</h1>
+          <p>
+            Every bundled workflow is documented below with its purpose, trigger guidance, profile
+            membership, automatic companions, invocation syntax, and exact selective-install command.
+          </p>
+        </header>
+
+        <section class="docs-section skill-install-guide" id="install-one">
+          <h2>Install one skill</h2>
+          <p>
+            Use npm when you want a selective set for Codex, OpenCode, or Pi. Node.js 20 or newer is
+            required. The default user destination is <code>~/.agents/skills</code>.
+          </p>
+          <div class="docs-code"><code>npx @waybarrios/opencode-power-pack install &lt;skill-id&gt;
+
+# Example
+npx @waybarrios/opencode-power-pack install code-review</code></div>
+          <div class="reference-notes">
+            <article>
+              <span>USER INSTALL</span>
+              <p>Omit a scope flag. The installer copies the workflow into <code>~/.agents/skills</code>.</p>
+            </article>
+            <article>
+              <span>PROJECT INSTALL</span>
+              <p>Add <code>--project</code>. The installer finds the Git root and uses <code>.agents/skills</code>.</p>
+            </article>
+            <article>
+              <span>DEPENDENCIES</span>
+              <p>Required companion skills shown below are selected automatically by the installer.</p>
+            </article>
+          </div>
+          <p class="note">
+            Native Claude Code, Codex, OpenCode, and Pi plugin/package commands install the full catalog.
+            See the <a href="../#hosts">host installation guide</a> when you want all 54 skills.
+          </p>
+        </section>
+
+        <section class="docs-section" id="invoke">
+          <h2>Invoke by host</h2>
+          <div class="host-invocation-grid">
+            <article><span>Claude Code</span><code>/opencode-power-pack:&lt;skill-id&gt;</code></article>
+            <article><span>Codex</span><code>$&lt;skill-id&gt;</code></article>
+            <article><span>OpenCode</span><code>/&lt;skill-id&gt;</code></article>
+            <article><span>Pi</span><p>Ask Pi for the task directly; it selects installed skills from their trigger descriptions.</p></article>
+          </div>
+        </section>
+
+        <section class="skill-reference-filter" aria-labelledby="filter-title">
+          <div>
+            <p class="kicker">Search all details</p>
+            <h2 id="filter-title">Find the right workflow.</h2>
+          </div>
+          <div class="skill-search">
+            <label for="skill-filter">Filter by name, task, profile, or companion</label>
+            <input id="skill-filter" type="search" placeholder="Try: PR review, AWS, dataset, frontend">
+            <p id="filter-status" aria-live="polite">Showing all 54 skills</p>
+          </div>
+        </section>
+        <p class="skill-filter-empty" id="skill-filter-empty" hidden>
+          No skills match that search. Try a task such as <code>review</code>, <code>AWS</code>,
+          <code>frontend</code>, or <code>training</code>.
+        </p>
+
+        <section class="docs-section skill-reference-group" id="core" aria-labelledby="core-title">
+          <div class="skill-reference-group-heading">
+            <span>CORE</span>
+            <h2 id="core-title">Build, review, and author</h2>
+            <b>14</b>
+          </div>
+          <div class="skill-reference-list">
+          <article class="skill-reference-card" id="agents-md-improver" data-skill="agents-md-improver audit and improve project-rules files (agents.md, claude.md, .agents/instructions, local overrides) so the agent keeps accurate project context. use when the user asks to check, audit, review, update, improve, or fix their agents.md or claude.md, mentions &quot;project rules maintenance&quot; or &quot;agent context optimization&quot;, or when the codebase has changed enough that the rules file may be stale. scans the repository for every rules file, grades each against a quality rubric, outputs a quality report, and applies targeted edits only after user approval. core recommended project-memory">
+            <header>
+              <span>CORE / 01</span>
+              <h3><a href="#agents-md-improver">agents-md-improver</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Audit and improve project-rules files (AGENTS.md, CLAUDE.md, .agents/instructions, local overrides) so the agent keeps accurate project context. Use when the user asks to check, audit, review, update, improve, or fix their AGENTS.md or CLAUDE.md, mentions &quot;project rules maintenance&quot; or &quot;agent context optimization&quot;, or when the codebase has changed enough that the rules file may be stale. Scans the repository for every rules file, grades each against a quality rubric, outputs a quality report, and applies targeted edits only after user approval.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install agents-md-improver</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install agents-md-improver">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>recommended</code> <code>project-memory</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$agents-md-improver</code> in Codex, <code>/agents-md-improver</code> in OpenCode, or <code>/opencode-power-pack:agents-md-improver</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/agents-md-improver">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="agents-md-revise" data-skill="agents-md-revise capture learnings from the current session into the project-rules file (agents.md, claude.md, or local override) so future sessions benefit. use when the user says &quot;revise the rules&quot;, &quot;update agents.md / claude.md with what we just learned&quot;, &quot;save this to project memory&quot;, &quot;remember this for next time&quot;, or at the end of a productive session when valuable context has emerged that is not yet documented. this complements agents-md-improver; improver audits, while this one captures. core recommended project-memory agents-md-improver">
+            <header>
+              <span>CORE / 02</span>
+              <h3><a href="#agents-md-revise">agents-md-revise</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Capture learnings from the current session into the project-rules file (AGENTS.md, CLAUDE.md, or local override) so future sessions benefit. Use when the user says &quot;revise the rules&quot;, &quot;update AGENTS.md / CLAUDE.md with what we just learned&quot;, &quot;save this to project memory&quot;, &quot;remember this for next time&quot;, or at the end of a productive session when valuable context has emerged that is not yet documented. This complements agents-md-improver; improver audits, while this one captures.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install agents-md-revise</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install agents-md-revise">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>recommended</code> <code>project-memory</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd><a href="#agents-md-improver"><code>agents-md-improver</code></a></dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$agents-md-revise</code> in Codex, <code>/agents-md-revise</code> in OpenCode, or <code>/opencode-power-pack:agents-md-revise</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/agents-md-revise">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="ai-slop" data-skill="ai-slop operational rubric that turns &quot;don&#39;t make ai slop&quot; into observable properties, severity levels, evidence requirements, and repair actions for interface design. use as the reference rubric when building or reviewing marketing sites, product interfaces, dashboards, portfolios, or e-commerce pages, especially alongside frontend-design. core frontend">
+            <header>
+              <span>CORE / 03</span>
+              <h3><a href="#ai-slop">ai-slop</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Operational rubric that turns &quot;don&#39;t make AI slop&quot; into observable properties, severity levels, evidence requirements, and repair actions for interface design. Use as the reference rubric when building or reviewing marketing sites, product interfaces, dashboards, portfolios, or e-commerce pages, especially alongside frontend-design.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install ai-slop</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install ai-slop">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>frontend</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$ai-slop</code> in Codex, <code>/ai-slop</code> in OpenCode, or <code>/opencode-power-pack:ai-slop</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/ai-slop">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="code-architect" data-skill="code-architect design a feature architecture by analyzing existing codebase patterns and conventions, then provide a comprehensive implementation blueprint with specific files to create or modify, component designs, data flows, and a build sequence. use this skill when the user asks for an architecture design, an implementation plan for a non-trivial feature, or when dispatched as a sub-task during feature-dev architecture phase. core recommended feature-dev">
+            <header>
+              <span>CORE / 04</span>
+              <h3><a href="#code-architect">code-architect</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Design a feature architecture by analyzing existing codebase patterns and conventions, then provide a comprehensive implementation blueprint with specific files to create or modify, component designs, data flows, and a build sequence. Use this skill when the user asks for an architecture design, an implementation plan for a non-trivial feature, or when dispatched as a sub-task during feature-dev architecture phase.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install code-architect</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install code-architect">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>recommended</code> <code>feature-dev</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$code-architect</code> in Codex, <code>/code-architect</code> in OpenCode, or <code>/opencode-power-pack:code-architect</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/code-architect">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="code-explorer" data-skill="code-explorer deeply analyze an existing codebase feature by tracing execution paths, mapping architecture layers, understanding patterns and abstractions, and documenting dependencies. use this skill when you need to understand how a feature works before modifying or extending it, when dispatched as a sub-task during feature-dev exploration, or when the user asks &quot;how does x work in this codebase&quot;. core recommended feature-dev">
+            <header>
+              <span>CORE / 05</span>
+              <h3><a href="#code-explorer">code-explorer</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Deeply analyze an existing codebase feature by tracing execution paths, mapping architecture layers, understanding patterns and abstractions, and documenting dependencies. Use this skill when you need to understand how a feature works before modifying or extending it, when dispatched as a sub-task during feature-dev exploration, or when the user asks &quot;how does X work in this codebase&quot;.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install code-explorer</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install code-explorer">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>recommended</code> <code>feature-dev</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$code-explorer</code> in Codex, <code>/code-explorer</code> in OpenCode, or <code>/opencode-power-pack:code-explorer</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/code-explorer">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="code-quality" data-skill="code-quality agents should invoke this skill for code reviews, linting/formatting setup, maintainability checks, complexity concerns, warning cleanup, coding standards, or quality gates in rust, typescript, python, shell, and mixed repos. core recommended review">
+            <header>
+              <span>CORE / 06</span>
+              <h3><a href="#code-quality">code-quality</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Agents should invoke this skill for code reviews, linting/formatting setup, maintainability checks, complexity concerns, warning cleanup, coding standards, or quality gates in Rust, TypeScript, Python, shell, and mixed repos.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install code-quality</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install code-quality">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>recommended</code> <code>review</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$code-quality</code> in Codex, <code>/code-quality</code> in OpenCode, or <code>/opencode-power-pack:code-quality</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/code-quality">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="code-review" data-skill="code-review review a pull request or a set of code changes for bugs, logic errors, and project-convention violations using a confidence-filtered, multi-agent process. use this skill when the user asks to review a pr, audit pending changes, or inspect a diff for problems before merging. core recommended review">
+            <header>
+              <span>CORE / 07</span>
+              <h3><a href="#code-review">code-review</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Review a pull request or a set of code changes for bugs, logic errors, and project-convention violations using a confidence-filtered, multi-agent process. Use this skill when the user asks to review a PR, audit pending changes, or inspect a diff for problems before merging.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install code-review</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install code-review">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>recommended</code> <code>review</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$code-review</code> in Codex, <code>/code-review</code> in OpenCode, or <code>/opencode-power-pack:code-review</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/code-review">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="code-reviewer" data-skill="code-reviewer review code for bugs, logic errors, security vulnerabilities, code quality issues, and adherence to project conventions, using confidence-based filtering to report only high-priority issues that truly matter. use this skill when reviewing a small set of changes locally (such as unstaged diff), when dispatched as a sub-task during feature-dev quality review, or when the user wants a critique of a specific file or function. core recommended review feature-dev">
+            <header>
+              <span>CORE / 08</span>
+              <h3><a href="#code-reviewer">code-reviewer</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Review code for bugs, logic errors, security vulnerabilities, code quality issues, and adherence to project conventions, using confidence-based filtering to report only high-priority issues that truly matter. Use this skill when reviewing a small set of changes locally (such as unstaged diff), when dispatched as a sub-task during feature-dev quality review, or when the user wants a critique of a specific file or function.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install code-reviewer</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install code-reviewer">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>recommended</code> <code>review</code> <code>feature-dev</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$code-reviewer</code> in Codex, <code>/code-reviewer</code> in OpenCode, or <code>/opencode-power-pack:code-reviewer</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/code-reviewer">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="design-patterns" data-skill="design-patterns agents should invoke this skill when choosing patterns, designing traits/interfaces/components, deciding abstraction boundaries, evaluating dependency injection/callbacks, or comparing implementation approaches in rust, typescript/react, or django/python. core">
+            <header>
+              <span>CORE / 09</span>
+              <h3><a href="#design-patterns">design-patterns</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Agents should invoke this skill when choosing patterns, designing traits/interfaces/components, deciding abstraction boundaries, evaluating dependency injection/callbacks, or comparing implementation approaches in Rust, TypeScript/React, or Django/Python.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install design-patterns</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install design-patterns">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd>Individual selection or full catalog</dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$design-patterns</code> in Codex, <code>/design-patterns</code> in OpenCode, or <code>/opencode-power-pack:design-patterns</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/design-patterns">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="feature-dev" data-skill="feature-dev guide a feature implementation through a structured seven-phase workflow with deep codebase understanding, clarifying questions, parallel architecture design, and quality review. use this skill when the user asks to build a new feature, add functionality, or wants a methodical approach to implementation rather than diving straight to code. core recommended feature-dev code-architect code-explorer code-reviewer">
+            <header>
+              <span>CORE / 10</span>
+              <h3><a href="#feature-dev">feature-dev</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Guide a feature implementation through a structured seven-phase workflow with deep codebase understanding, clarifying questions, parallel architecture design, and quality review. Use this skill when the user asks to build a new feature, add functionality, or wants a methodical approach to implementation rather than diving straight to code.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install feature-dev</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install feature-dev">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>recommended</code> <code>feature-dev</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd><a href="#code-architect"><code>code-architect</code></a> <a href="#code-explorer"><code>code-explorer</code></a> <a href="#code-reviewer"><code>code-reviewer</code></a></dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$feature-dev</code> in Codex, <code>/feature-dev</code> in OpenCode, or <code>/opencode-power-pack:feature-dev</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/feature-dev">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="frontend-design" data-skill="frontend-design create distinctive, production-grade frontend interfaces with high design quality and accessible markup. use this skill when the user asks to build or beautify web components, pages, applications, landing pages, dashboards, artifacts, or react/html/css ui. generates creative, polished code that avoids generic ai aesthetics, then self-checks it against an objective accessibility and quality rubric. core recommended frontend">
+            <header>
+              <span>CORE / 11</span>
+              <h3><a href="#frontend-design">frontend-design</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Create distinctive, production-grade frontend interfaces with high design quality and accessible markup. Use this skill when the user asks to build or beautify web components, pages, applications, landing pages, dashboards, artifacts, or React/HTML/CSS UI. Generates creative, polished code that avoids generic AI aesthetics, then self-checks it against an objective accessibility and quality rubric.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install frontend-design</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install frontend-design">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>recommended</code> <code>frontend</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$frontend-design</code> in Codex, <code>/frontend-design</code> in OpenCode, or <code>/opencode-power-pack:frontend-design</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/frontend-design">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="mcp-builder" data-skill="mcp-builder guide the creation of high-quality mcp (model context protocol) servers that enable llms to interact with external services through well-designed tools. use when the user wants to build an mcp server to integrate an external api or service, whether in python (fastmcp) or node/typescript (mcp sdk). core recommended authoring">
+            <header>
+              <span>CORE / 12</span>
+              <h3><a href="#mcp-builder">mcp-builder</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Guide the creation of high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when the user wants to build an MCP server to integrate an external API or service, whether in Python (FastMCP) or Node/TypeScript (MCP SDK).</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install mcp-builder</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install mcp-builder">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>recommended</code> <code>authoring</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$mcp-builder</code> in Codex, <code>/mcp-builder</code> in OpenCode, or <code>/opencode-power-pack:mcp-builder</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/mcp-builder">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="paper-summarizer" data-skill="paper-summarizer agents should invoke this skill for academic or technical papers, arxiv/pubmed/ieee/acm links, pdfs, methodology review, limitations, practical implications, or extracting findings for engineering decisions. core authoring">
+            <header>
+              <span>CORE / 13</span>
+              <h3><a href="#paper-summarizer">paper-summarizer</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Agents should invoke this skill for academic or technical papers, arXiv/PubMed/IEEE/ACM links, PDFs, methodology review, limitations, practical implications, or extracting findings for engineering decisions.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install paper-summarizer</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install paper-summarizer">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>authoring</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$paper-summarizer</code> in Codex, <code>/paper-summarizer</code> in OpenCode, or <code>/opencode-power-pack:paper-summarizer</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/paper-summarizer">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="skill-creator" data-skill="skill-creator create new skills (skill.md files), modify and improve existing skills, and design skill descriptions for accurate triggering. use when the user wants to create a new skill from scratch, edit an existing skill, optimize a skill&#39;s description, or convert a workflow they just demonstrated into a reusable skill. core recommended authoring">
+            <header>
+              <span>CORE / 14</span>
+              <h3><a href="#skill-creator">skill-creator</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Create new skills (SKILL.md files), modify and improve existing skills, and design skill descriptions for accurate triggering. Use when the user wants to create a new skill from scratch, edit an existing skill, optimize a skill&#39;s description, or convert a workflow they just demonstrated into a reusable skill.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install skill-creator</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install skill-creator">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>recommended</code> <code>authoring</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$skill-creator</code> in Codex, <code>/skill-creator</code> in OpenCode, or <code>/opencode-power-pack:skill-creator</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/skill-creator">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          </div>
+        </section>
+
+        <section class="docs-section skill-reference-group" id="security" aria-labelledby="security-title">
+          <div class="skill-reference-group-heading">
+            <span>SECURITY</span>
+            <h2 id="security-title">Find, verify, and report</h2>
+            <b>15</b>
+          </div>
+          <div class="skill-reference-list">
+          <article class="skill-reference-card" id="agentic-actions-auditor" data-skill="agentic-actions-auditor audit github actions that run ai agents for prompt injection, unsafe interpolation, sandbox gaps, and permissive actor rules. use for agentic ci workflows, not general application code review. security security">
+            <header>
+              <span>SECURITY / 01</span>
+              <h3><a href="#agentic-actions-auditor">agentic-actions-auditor</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Audit GitHub Actions that run AI agents for prompt injection, unsafe interpolation, sandbox gaps, and permissive actor rules. Use for agentic CI workflows, not general application code review.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install agentic-actions-auditor</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install agentic-actions-auditor">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>security</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$agentic-actions-auditor</code> in Codex, <code>/agentic-actions-auditor</code> in OpenCode, or <code>/opencode-power-pack:agentic-actions-auditor</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/agentic-actions-auditor">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="codeql" data-skill="codeql run codeql database creation and security queries, add data-extension models, or process codeql sarif. use when codeql is explicitly requested; use security-review for a broader manual security review. security security">
+            <header>
+              <span>SECURITY / 02</span>
+              <h3><a href="#codeql">codeql</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Run CodeQL database creation and security queries, add data-extension models, or process CodeQL SARIF. Use when CodeQL is explicitly requested; use security-review for a broader manual security review.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install codeql</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install codeql">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>security</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$codeql</code> in Codex, <code>/codeql</code> in OpenCode, or <code>/opencode-power-pack:codeql</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/codeql">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="differential-review" data-skill="differential-review performs security-focused differential review of code changes (prs, commits, diffs). adapts analysis depth to codebase size, uses git history for context, calculates blast radius, checks test coverage, and generates comprehensive markdown reports. automatically detects and prevents security regressions. security review security">
+            <header>
+              <span>SECURITY / 03</span>
+              <h3><a href="#differential-review">differential-review</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Performs security-focused differential review of code changes (PRs, commits, diffs). Adapts analysis depth to codebase size, uses git history for context, calculates blast radius, checks test coverage, and generates comprehensive markdown reports. Automatically detects and prevents security regressions.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install differential-review</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install differential-review">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>review</code> <code>security</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$differential-review</code> in Codex, <code>/differential-review</code> in OpenCode, or <code>/opencode-power-pack:differential-review</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/differential-review">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="fp-check" data-skill="fp-check systematically verifies suspected security bugs to eliminate false positives. produces true positive or false positive verdicts with documented evidence for each bug. security security">
+            <header>
+              <span>SECURITY / 04</span>
+              <h3><a href="#fp-check">fp-check</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Systematically verifies suspected security bugs to eliminate false positives. Produces TRUE POSITIVE or FALSE POSITIVE verdicts with documented evidence for each bug.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install fp-check</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install fp-check">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>security</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$fp-check</code> in Codex, <code>/fp-check</code> in OpenCode, or <code>/opencode-power-pack:fp-check</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/fp-check">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="insecure-defaults" data-skill="insecure-defaults detects fail-open insecure defaults (hardcoded secrets, weak auth, permissive security) that allow apps to run insecurely in production. use when auditing security, reviewing config management, or analyzing environment variable handling. security security">
+            <header>
+              <span>SECURITY / 05</span>
+              <h3><a href="#insecure-defaults">insecure-defaults</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Detects fail-open insecure defaults (hardcoded secrets, weak auth, permissive security) that allow apps to run insecurely in production. Use when auditing security, reviewing config management, or analyzing environment variable handling.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install insecure-defaults</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install insecure-defaults">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>security</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$insecure-defaults</code> in Codex, <code>/insecure-defaults</code> in OpenCode, or <code>/opencode-power-pack:insecure-defaults</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/insecure-defaults">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="sarif-parsing" data-skill="sarif-parsing parses and processes sarif files from static analysis tools like codeql, semgrep, or other scanners. triggers on \&quot;parse sarif\&quot;, \&quot;read scan results\&quot;, \&quot;aggregate findings\&quot;, \&quot;deduplicate alerts\&quot;, or \&quot;process sarif output\&quot;. handles filtering, deduplication, format conversion, and ci/cd integration of sarif data. does not run scans; use the semgrep or codeql skills for that. security security">
+            <header>
+              <span>SECURITY / 06</span>
+              <h3><a href="#sarif-parsing">sarif-parsing</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Parses and processes SARIF files from static analysis tools like CodeQL, Semgrep, or other scanners. Triggers on \&quot;parse sarif\&quot;, \&quot;read scan results\&quot;, \&quot;aggregate findings\&quot;, \&quot;deduplicate alerts\&quot;, or \&quot;process sarif output\&quot;. Handles filtering, deduplication, format conversion, and CI/CD integration of SARIF data. Does NOT run scans; use the Semgrep or CodeQL skills for that.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install sarif-parsing</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install sarif-parsing">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>security</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$sarif-parsing</code> in Codex, <code>/sarif-parsing</code> in OpenCode, or <code>/opencode-power-pack:sarif-parsing</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/sarif-parsing">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="security-review" data-skill="security-review perform a focused security review of pending git changes to identify high-confidence security vulnerabilities with real exploitation potential. use this skill when the user asks for a security review, security audit, vulnerability scan, or wants to check pending changes on a branch for security issues before merging. this is not a general code review. security security">
+            <header>
+              <span>SECURITY / 07</span>
+              <h3><a href="#security-review">security-review</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Perform a focused security review of pending git changes to identify high-confidence security vulnerabilities with real exploitation potential. Use this skill when the user asks for a security review, security audit, vulnerability scan, or wants to check pending changes on a branch for security issues before merging. This is NOT a general code review.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install security-review</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install security-review">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>security</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$security-review</code> in Codex, <code>/security-review</code> in OpenCode, or <code>/opencode-power-pack:security-review</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/security-review">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="security-threat-model" data-skill="security-threat-model create a repository-grounded appsec threat model covering assets, trust boundaries, attackers, abuse paths, and mitigations. use only for explicit threat-modeling requests, not general architecture or code review. security security">
+            <header>
+              <span>SECURITY / 08</span>
+              <h3><a href="#security-threat-model">security-threat-model</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Create a repository-grounded AppSec threat model covering assets, trust boundaries, attackers, abuse paths, and mitigations. Use only for explicit threat-modeling requests, not general architecture or code review.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install security-threat-model</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install security-threat-model">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>security</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$security-threat-model</code> in Codex, <code>/security-threat-model</code> in OpenCode, or <code>/opencode-power-pack:security-threat-model</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/security-threat-model">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="semgrep" data-skill="semgrep run semgrep static analysis across a codebase, optionally using semgrep pro for cross-file taint analysis. use when semgrep or a static-analysis scan is requested; use security-review for a manual audit. security security">
+            <header>
+              <span>SECURITY / 09</span>
+              <h3><a href="#semgrep">semgrep</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Run Semgrep static analysis across a codebase, optionally using Semgrep Pro for cross-file taint analysis. Use when Semgrep or a static-analysis scan is requested; use security-review for a manual audit.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install semgrep</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install semgrep">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>security</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$semgrep</code> in Codex, <code>/semgrep</code> in OpenCode, or <code>/opencode-power-pack:semgrep</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/semgrep">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="semgrep-rule-creator" data-skill="semgrep-rule-creator creates custom semgrep rules for detecting security vulnerabilities, bug patterns, and code patterns. use when writing semgrep rules or building custom static analysis detections. security security">
+            <header>
+              <span>SECURITY / 10</span>
+              <h3><a href="#semgrep-rule-creator">semgrep-rule-creator</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Creates custom Semgrep rules for detecting security vulnerabilities, bug patterns, and code patterns. Use when writing Semgrep rules or building custom static analysis detections.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install semgrep-rule-creator</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install semgrep-rule-creator">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>security</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$semgrep-rule-creator</code> in Codex, <code>/semgrep-rule-creator</code> in OpenCode, or <code>/opencode-power-pack:semgrep-rule-creator</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/semgrep-rule-creator">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="semgrep-rule-variant-creator" data-skill="semgrep-rule-variant-creator creates language variants of existing semgrep rules. use when porting a semgrep rule to specified target languages. takes an existing rule and target languages as input, produces independent rule+test directories for each language. security security semgrep-rule-creator">
+            <header>
+              <span>SECURITY / 11</span>
+              <h3><a href="#semgrep-rule-variant-creator">semgrep-rule-variant-creator</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Creates language variants of existing Semgrep rules. Use when porting a Semgrep rule to specified target languages. Takes an existing rule and target languages as input, produces independent rule+test directories for each language.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install semgrep-rule-variant-creator</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install semgrep-rule-variant-creator">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>security</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd><a href="#semgrep-rule-creator"><code>semgrep-rule-creator</code></a></dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$semgrep-rule-variant-creator</code> in Codex, <code>/semgrep-rule-variant-creator</code> in OpenCode, or <code>/opencode-power-pack:semgrep-rule-variant-creator</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/semgrep-rule-variant-creator">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="sharp-edges" data-skill="sharp-edges identify error-prone apis, dangerous configuration, and footgun designs that enable security mistakes. use for api ergonomics, misuse resistance, secure defaults, or pit-of-success reviews; use code-review for general defects. security security">
+            <header>
+              <span>SECURITY / 12</span>
+              <h3><a href="#sharp-edges">sharp-edges</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Identify error-prone APIs, dangerous configuration, and footgun designs that enable security mistakes. Use for API ergonomics, misuse resistance, secure defaults, or pit-of-success reviews; use code-review for general defects.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install sharp-edges</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install sharp-edges">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>security</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$sharp-edges</code> in Codex, <code>/sharp-edges</code> in OpenCode, or <code>/opencode-power-pack:sharp-edges</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/sharp-edges">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="supply-chain-risk-auditor" data-skill="supply-chain-risk-auditor identifies dependencies at heightened risk of exploitation or takeover. use when assessing supply chain attack surface, evaluating dependency health, or scoping security engagements. security security">
+            <header>
+              <span>SECURITY / 13</span>
+              <h3><a href="#supply-chain-risk-auditor">supply-chain-risk-auditor</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Identifies dependencies at heightened risk of exploitation or takeover. Use when assessing supply chain attack surface, evaluating dependency health, or scoping security engagements.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install supply-chain-risk-auditor</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install supply-chain-risk-auditor">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>security</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$supply-chain-risk-auditor</code> in Codex, <code>/supply-chain-risk-auditor</code> in OpenCode, or <code>/opencode-power-pack:supply-chain-risk-auditor</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/supply-chain-risk-auditor">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="variant-analysis" data-skill="variant-analysis find similar vulnerabilities and bugs across codebases using pattern-based analysis. use when hunting bug variants, building codeql/semgrep queries, analyzing security vulnerabilities, or performing systematic code audits after finding an initial issue. security security">
+            <header>
+              <span>SECURITY / 14</span>
+              <h3><a href="#variant-analysis">variant-analysis</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Find similar vulnerabilities and bugs across codebases using pattern-based analysis. Use when hunting bug variants, building CodeQL/Semgrep queries, analyzing security vulnerabilities, or performing systematic code audits after finding an initial issue.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install variant-analysis</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install variant-analysis">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>security</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$variant-analysis</code> in Codex, <code>/variant-analysis</code> in OpenCode, or <code>/opencode-power-pack:variant-analysis</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/variant-analysis">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="vuln-report" data-skill="vuln-report turn one confirmed security finding into a disclosure-ready github advisory with root cause, proof of concept, impact, and source evidence. use for reporting an established vulnerability, not discovering or validating one. security security">
+            <header>
+              <span>SECURITY / 15</span>
+              <h3><a href="#vuln-report">vuln-report</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Turn one confirmed security finding into a disclosure-ready GitHub advisory with root cause, proof of concept, impact, and source evidence. Use for reporting an established vulnerability, not discovering or validating one.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install vuln-report</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install vuln-report">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>security</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$vuln-report</code> in Codex, <code>/vuln-report</code> in OpenCode, or <code>/opencode-power-pack:vuln-report</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/vuln-report">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          </div>
+        </section>
+
+        <section class="docs-section skill-reference-group" id="ml" aria-labelledby="ml-title">
+          <div class="skill-reference-group-heading">
+            <span>ML + HUGGING FACE</span>
+            <h2 id="ml-title">Discover, train, evaluate, and deploy</h2>
+            <b>25</b>
+          </div>
+          <div class="skill-reference-list">
+          <article class="skill-reference-card" id="hf-cli" data-skill="hf-cli use the `hf` cli for hub authentication, downloads, uploads, repositories, cache, jobs, buckets, webhooks, and endpoint administration. use for cli operations, not model recommendations, paper analysis, training design, or building a space. ml + hugging face huggingface">
+            <header>
+              <span>ML + HUGGING FACE / 01</span>
+              <h3><a href="#hf-cli">hf-cli</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Use the `hf` CLI for Hub authentication, downloads, uploads, repositories, cache, jobs, buckets, webhooks, and endpoint administration. Use for CLI operations, not model recommendations, paper analysis, training design, or building a Space.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install hf-cli</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install hf-cli">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>huggingface</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$hf-cli</code> in Codex, <code>/hf-cli</code> in OpenCode, or <code>/opencode-power-pack:hf-cli</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/hf-cli">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="hf-cloud-aws-context-discovery" data-skill="hf-cloud-aws-context-discovery discover the active aws profile, region, account, and caller identity before sagemaker or aws work. use when local aws context is needed or unspecified; do not use for cloud-agnostic model planning. ml + hugging face huggingface">
+            <header>
+              <span>ML + HUGGING FACE / 02</span>
+              <h3><a href="#hf-cloud-aws-context-discovery">hf-cloud-aws-context-discovery</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Discover the active AWS profile, region, account, and caller identity before SageMaker or AWS work. Use when local AWS context is needed or unspecified; do not use for cloud-agnostic model planning.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install hf-cloud-aws-context-discovery</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install hf-cloud-aws-context-discovery">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>huggingface</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$hf-cloud-aws-context-discovery</code> in Codex, <code>/hf-cloud-aws-context-discovery</code> in OpenCode, or <code>/opencode-power-pack:hf-cloud-aws-context-discovery</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/hf-cloud-aws-context-discovery">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="hf-cloud-python-env-setup" data-skill="hf-cloud-python-env-setup create an isolated python environment with a compatible python version and boto3 for sagemaker or aws automation. use before executing aws python code; do not use for general python environment setup. ml + hugging face huggingface">
+            <header>
+              <span>ML + HUGGING FACE / 03</span>
+              <h3><a href="#hf-cloud-python-env-setup">hf-cloud-python-env-setup</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Create an isolated Python environment with a compatible Python version and boto3 for SageMaker or AWS automation. Use before executing AWS Python code; do not use for general Python environment setup.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install hf-cloud-python-env-setup</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install hf-cloud-python-env-setup">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>huggingface</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$hf-cloud-python-env-setup</code> in Codex, <code>/hf-cloud-python-env-setup</code> in OpenCode, or <code>/opencode-power-pack:hf-cloud-python-env-setup</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/hf-cloud-python-env-setup">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="hf-cloud-sagemaker-deployment-planner" data-skill="hf-cloud-sagemaker-deployment-planner plan and coordinate a model deployment to amazon sagemaker, including serving stack and real-time versus async inference. use as the entry point for sagemaker hosting requests, before image, iam, and endpoint implementation skills. ml + hugging face huggingface hf-cloud-aws-context-discovery hf-cloud-python-env-setup hf-cloud-sagemaker-iam-preflight hf-cloud-serving-image-selection hf-cloud-sagemaker-production-defaults">
+            <header>
+              <span>ML + HUGGING FACE / 04</span>
+              <h3><a href="#hf-cloud-sagemaker-deployment-planner">hf-cloud-sagemaker-deployment-planner</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Plan and coordinate a model deployment to Amazon SageMaker, including serving stack and real-time versus async inference. Use as the entry point for SageMaker hosting requests, before image, IAM, and endpoint implementation skills.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install hf-cloud-sagemaker-deployment-planner</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install hf-cloud-sagemaker-deployment-planner">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>huggingface</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd><a href="#hf-cloud-aws-context-discovery"><code>hf-cloud-aws-context-discovery</code></a> <a href="#hf-cloud-python-env-setup"><code>hf-cloud-python-env-setup</code></a> <a href="#hf-cloud-sagemaker-iam-preflight"><code>hf-cloud-sagemaker-iam-preflight</code></a> <a href="#hf-cloud-serving-image-selection"><code>hf-cloud-serving-image-selection</code></a> <a href="#hf-cloud-sagemaker-production-defaults"><code>hf-cloud-sagemaker-production-defaults</code></a></dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$hf-cloud-sagemaker-deployment-planner</code> in Codex, <code>/hf-cloud-sagemaker-deployment-planner</code> in OpenCode, or <code>/opencode-power-pack:hf-cloud-sagemaker-deployment-planner</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/hf-cloud-sagemaker-deployment-planner">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="hf-cloud-sagemaker-iam-preflight" data-skill="hf-cloud-sagemaker-iam-preflight verify or select a sagemaker execution role before creating models, endpoints, or training jobs. use when a role arn is missing or iam access fails; inspect existing roles before proposing role creation. ml + hugging face huggingface">
+            <header>
+              <span>ML + HUGGING FACE / 05</span>
+              <h3><a href="#hf-cloud-sagemaker-iam-preflight">hf-cloud-sagemaker-iam-preflight</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Verify or select a SageMaker execution role before creating models, endpoints, or training jobs. Use when a role ARN is missing or IAM access fails; inspect existing roles before proposing role creation.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install hf-cloud-sagemaker-iam-preflight</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install hf-cloud-sagemaker-iam-preflight">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>huggingface</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$hf-cloud-sagemaker-iam-preflight</code> in Codex, <code>/hf-cloud-sagemaker-iam-preflight</code> in OpenCode, or <code>/opencode-power-pack:hf-cloud-sagemaker-iam-preflight</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/hf-cloud-sagemaker-iam-preflight">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="hf-cloud-sagemaker-production-defaults" data-skill="hf-cloud-sagemaker-production-defaults implement a production sagemaker endpoint with autoscaling, cloudwatch alarms, and tags. use after the serving image and iam role are known; use the deployment planner first when architecture is undecided. ml + hugging face huggingface">
+            <header>
+              <span>ML + HUGGING FACE / 06</span>
+              <h3><a href="#hf-cloud-sagemaker-production-defaults">hf-cloud-sagemaker-production-defaults</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Implement a production SageMaker endpoint with autoscaling, CloudWatch alarms, and tags. Use after the serving image and IAM role are known; use the deployment planner first when architecture is undecided.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install hf-cloud-sagemaker-production-defaults</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install hf-cloud-sagemaker-production-defaults">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>huggingface</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$hf-cloud-sagemaker-production-defaults</code> in Codex, <code>/hf-cloud-sagemaker-production-defaults</code> in OpenCode, or <code>/opencode-power-pack:hf-cloud-sagemaker-production-defaults</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/hf-cloud-sagemaker-production-defaults">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="hf-cloud-serving-image-selection" data-skill="hf-cloud-serving-image-selection select and verify the current region-specific serving container uri for a sagemaker model deployment. use after the deployment pathway is chosen and before endpoint code; never infer an image uri from memory. ml + hugging face huggingface">
+            <header>
+              <span>ML + HUGGING FACE / 07</span>
+              <h3><a href="#hf-cloud-serving-image-selection">hf-cloud-serving-image-selection</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Select and verify the current region-specific serving container URI for a SageMaker model deployment. Use after the deployment pathway is chosen and before endpoint code; never infer an image URI from memory.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install hf-cloud-serving-image-selection</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install hf-cloud-serving-image-selection">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>huggingface</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$hf-cloud-serving-image-selection</code> in Codex, <code>/hf-cloud-serving-image-selection</code> in OpenCode, or <code>/opencode-power-pack:hf-cloud-serving-image-selection</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/hf-cloud-serving-image-selection">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="hf-mem" data-skill="hf-mem hugging face cli to estimate the required memory to load safetensors or gguf model weights for inference from the hugging face hub. ml + hugging face huggingface">
+            <header>
+              <span>ML + HUGGING FACE / 08</span>
+              <h3><a href="#hf-mem">hf-mem</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Hugging Face CLI to estimate the required memory to load Safetensors or GGUF model weights for inference from the Hugging Face Hub.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install hf-mem</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install hf-mem">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>huggingface</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$hf-mem</code> in Codex, <code>/hf-mem</code> in OpenCode, or <code>/opencode-power-pack:hf-mem</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/hf-mem">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="huggingface-best" data-skill="huggingface-best find and compare recommended hugging face models for a task using benchmarks, model size, and device constraints. use for model selection questions; use huggingface-local-models for gguf setup and hf-cli for hub operations. ml + hugging face huggingface">
+            <header>
+              <span>ML + HUGGING FACE / 09</span>
+              <h3><a href="#huggingface-best">huggingface-best</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Find and compare recommended Hugging Face models for a task using benchmarks, model size, and device constraints. Use for model selection questions; use huggingface-local-models for GGUF setup and hf-cli for Hub operations.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install huggingface-best</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install huggingface-best">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>huggingface</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$huggingface-best</code> in Codex, <code>/huggingface-best</code> in OpenCode, or <code>/opencode-power-pack:huggingface-best</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/huggingface-best">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="huggingface-community-evals" data-skill="huggingface-community-evals run evaluations for hugging face hub models using inspect-ai and lighteval on local hardware. use for backend selection, local gpu evals, and choosing between vllm / transformers / accelerate. not for hf jobs orchestration, model-card prs, .eval_results publication, or community-evals automation. ml + hugging face huggingface">
+            <header>
+              <span>ML + HUGGING FACE / 10</span>
+              <h3><a href="#huggingface-community-evals">huggingface-community-evals</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Run evaluations for Hugging Face Hub models using inspect-ai and lighteval on local hardware. Use for backend selection, local GPU evals, and choosing between vLLM / Transformers / accelerate. Not for HF Jobs orchestration, model-card PRs, .eval_results publication, or community-evals automation.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install huggingface-community-evals</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install huggingface-community-evals">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>huggingface</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$huggingface-community-evals</code> in Codex, <code>/huggingface-community-evals</code> in OpenCode, or <code>/opencode-power-pack:huggingface-community-evals</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/huggingface-community-evals">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="huggingface-datasets" data-skill="huggingface-datasets use this skill for hugging face dataset viewer api workflows that fetch subset/split metadata, paginate rows, search text, apply filters, download parquet urls, and read size or statistics. ml + hugging face huggingface">
+            <header>
+              <span>ML + HUGGING FACE / 11</span>
+              <h3><a href="#huggingface-datasets">huggingface-datasets</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Use this skill for Hugging Face Dataset Viewer API workflows that fetch subset/split metadata, paginate rows, search text, apply filters, download parquet URLs, and read size or statistics.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install huggingface-datasets</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install huggingface-datasets">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>huggingface</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$huggingface-datasets</code> in Codex, <code>/huggingface-datasets</code> in OpenCode, or <code>/opencode-power-pack:huggingface-datasets</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/huggingface-datasets">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="huggingface-gradio" data-skill="huggingface-gradio build gradio web uis and demos in python. use when creating or editing gradio apps, components, event listeners, layouts, or chatbots. ml + hugging face huggingface">
+            <header>
+              <span>ML + HUGGING FACE / 12</span>
+              <h3><a href="#huggingface-gradio">huggingface-gradio</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Build Gradio web UIs and demos in Python. Use when creating or editing Gradio apps, components, event listeners, layouts, or chatbots.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install huggingface-gradio</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install huggingface-gradio">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>huggingface</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$huggingface-gradio</code> in Codex, <code>/huggingface-gradio</code> in OpenCode, or <code>/opencode-power-pack:huggingface-gradio</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/huggingface-gradio">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="huggingface-llm-trainer" data-skill="huggingface-llm-trainer train or fine-tune language models with trl or unsloth on hugging face jobs, including sft, dpo, grpo, reward models, and gguf conversion. use for cloud llm training; use huggingface-vision-trainer for vision tasks. ml + hugging face huggingface">
+            <header>
+              <span>ML + HUGGING FACE / 13</span>
+              <h3><a href="#huggingface-llm-trainer">huggingface-llm-trainer</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Train or fine-tune language models with TRL or Unsloth on Hugging Face Jobs, including SFT, DPO, GRPO, reward models, and GGUF conversion. Use for cloud LLM training; use huggingface-vision-trainer for vision tasks.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install huggingface-llm-trainer</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install huggingface-llm-trainer">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>huggingface</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$huggingface-llm-trainer</code> in Codex, <code>/huggingface-llm-trainer</code> in OpenCode, or <code>/opencode-power-pack:huggingface-llm-trainer</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/huggingface-llm-trainer">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="huggingface-local-models" data-skill="huggingface-local-models use to select models to run locally with llama.cpp and gguf on cpu, mac metal, cuda, or rocm. covers finding ggufs, quant selection, running servers, exact gguf file lookup, conversion, and openai-compatible local serving. ml + hugging face huggingface">
+            <header>
+              <span>ML + HUGGING FACE / 14</span>
+              <h3><a href="#huggingface-local-models">huggingface-local-models</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Use to select models to run locally with llama.cpp and GGUF on CPU, Mac Metal, CUDA, or ROCm. Covers finding GGUFs, quant selection, running servers, exact GGUF file lookup, conversion, and OpenAI-compatible local serving.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install huggingface-local-models</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install huggingface-local-models">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>huggingface</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$huggingface-local-models</code> in Codex, <code>/huggingface-local-models</code> in OpenCode, or <code>/opencode-power-pack:huggingface-local-models</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/huggingface-local-models">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="huggingface-lora-space-builder" data-skill="huggingface-lora-space-builder build and publish a gradio hugging face space for a user-provided image or video lora, including pipeline selection and model-card settings. use for lora demos; use huggingface-spaces for general space work. ml + hugging face huggingface">
+            <header>
+              <span>ML + HUGGING FACE / 15</span>
+              <h3><a href="#huggingface-lora-space-builder">huggingface-lora-space-builder</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Build and publish a Gradio Hugging Face Space for a user-provided image or video LoRA, including pipeline selection and model-card settings. Use for LoRA demos; use huggingface-spaces for general Space work.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install huggingface-lora-space-builder</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install huggingface-lora-space-builder">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>huggingface</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$huggingface-lora-space-builder</code> in Codex, <code>/huggingface-lora-space-builder</code> in OpenCode, or <code>/opencode-power-pack:huggingface-lora-space-builder</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/huggingface-lora-space-builder">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="huggingface-paper-publisher" data-skill="huggingface-paper-publisher publish and manage research papers on hugging face hub. supports creating paper pages, linking papers to models/datasets, claiming authorship, and generating professional markdown-based research articles. ml + hugging face huggingface">
+            <header>
+              <span>ML + HUGGING FACE / 16</span>
+              <h3><a href="#huggingface-paper-publisher">huggingface-paper-publisher</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Publish and manage research papers on Hugging Face Hub. Supports creating paper pages, linking papers to models/datasets, claiming authorship, and generating professional markdown-based research articles.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install huggingface-paper-publisher</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install huggingface-paper-publisher">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>huggingface</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$huggingface-paper-publisher</code> in Codex, <code>/huggingface-paper-publisher</code> in OpenCode, or <code>/opencode-power-pack:huggingface-paper-publisher</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/huggingface-paper-publisher">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="huggingface-papers" data-skill="huggingface-papers look up and read hugging face paper pages in markdown, and use the papers api for structured metadata such as authors, linked models/datasets/spaces, github repo and project page. use when the user shares a hugging face paper page url, an arxiv url or id, or asks to summarize, explain, or analyze an ai research paper. ml + hugging face huggingface">
+            <header>
+              <span>ML + HUGGING FACE / 17</span>
+              <h3><a href="#huggingface-papers">huggingface-papers</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Look up and read Hugging Face paper pages in markdown, and use the papers API for structured metadata such as authors, linked models/datasets/spaces, Github repo and project page. Use when the user shares a Hugging Face paper page URL, an arXiv URL or ID, or asks to summarize, explain, or analyze an AI research paper.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install huggingface-papers</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install huggingface-papers">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>huggingface</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$huggingface-papers</code> in Codex, <code>/huggingface-papers</code> in OpenCode, or <code>/opencode-power-pack:huggingface-papers</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/huggingface-papers">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="huggingface-spaces" data-skill="huggingface-spaces build, deploy, debug, or maintain a hugging face space using gradio, docker, or static sdks. use for general space hosting and configuration; use huggingface-zerogpu for zerogpu runtime constraints and lora-space-builder for lora demos. ml + hugging face huggingface">
+            <header>
+              <span>ML + HUGGING FACE / 18</span>
+              <h3><a href="#huggingface-spaces">huggingface-spaces</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Build, deploy, debug, or maintain a Hugging Face Space using Gradio, Docker, or Static SDKs. Use for general Space hosting and configuration; use huggingface-zerogpu for ZeroGPU runtime constraints and lora-space-builder for LoRA demos.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install huggingface-spaces</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install huggingface-spaces">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>huggingface</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$huggingface-spaces</code> in Codex, <code>/huggingface-spaces</code> in OpenCode, or <code>/opencode-power-pack:huggingface-spaces</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/huggingface-spaces">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="huggingface-tool-builder" data-skill="huggingface-tool-builder use this skill when the user wants to build tool/scripts or achieve a task where using data from the hugging face api would help. this is especially useful when chaining or combining api calls or the task will be repeated/automated. this skill creates a reusable script to fetch, enrich or process data. ml + hugging face huggingface">
+            <header>
+              <span>ML + HUGGING FACE / 19</span>
+              <h3><a href="#huggingface-tool-builder">huggingface-tool-builder</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Use this skill when the user wants to build tool/scripts or achieve a task where using data from the Hugging Face API would help. This is especially useful when chaining or combining API calls or the task will be repeated/automated. This Skill creates a reusable script to fetch, enrich or process data.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install huggingface-tool-builder</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install huggingface-tool-builder">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>huggingface</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$huggingface-tool-builder</code> in Codex, <code>/huggingface-tool-builder</code> in OpenCode, or <code>/opencode-power-pack:huggingface-tool-builder</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/huggingface-tool-builder">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="huggingface-trackio" data-skill="huggingface-trackio track and visualize ml training experiments with trackio. use when logging metrics during training (python api), firing alerts for training diagnostics, or retrieving/analyzing logged metrics (cli). supports real-time dashboard visualization, alerts with webhooks, hf space syncing, and json output for automation. ml + hugging face huggingface">
+            <header>
+              <span>ML + HUGGING FACE / 20</span>
+              <h3><a href="#huggingface-trackio">huggingface-trackio</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Track and visualize ML training experiments with Trackio. Use when logging metrics during training (Python API), firing alerts for training diagnostics, or retrieving/analyzing logged metrics (CLI). Supports real-time dashboard visualization, alerts with webhooks, HF Space syncing, and JSON output for automation.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install huggingface-trackio</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install huggingface-trackio">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>huggingface</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$huggingface-trackio</code> in Codex, <code>/huggingface-trackio</code> in OpenCode, or <code>/opencode-power-pack:huggingface-trackio</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/huggingface-trackio">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="huggingface-vision-trainer" data-skill="huggingface-vision-trainer train object-detection, image-classification, or sam segmentation models on hugging face jobs. use for vision fine-tuning and evaluation; use huggingface-llm-trainer for language models. ml + hugging face huggingface">
+            <header>
+              <span>ML + HUGGING FACE / 21</span>
+              <h3><a href="#huggingface-vision-trainer">huggingface-vision-trainer</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Train object-detection, image-classification, or SAM segmentation models on Hugging Face Jobs. Use for vision fine-tuning and evaluation; use huggingface-llm-trainer for language models.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install huggingface-vision-trainer</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install huggingface-vision-trainer">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>huggingface</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$huggingface-vision-trainer</code> in Codex, <code>/huggingface-vision-trainer</code> in OpenCode, or <code>/opencode-power-pack:huggingface-vision-trainer</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/huggingface-vision-trainer">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="huggingface-zerogpu" data-skill="huggingface-zerogpu implement or debug hugging face spaces zerogpu code using `@spaces.gpu`, including isolation, state, duration, sizing, and cuda-wheel constraints. use for zerogpu-specific behavior; use huggingface-spaces for general hosting. ml + hugging face huggingface">
+            <header>
+              <span>ML + HUGGING FACE / 22</span>
+              <h3><a href="#huggingface-zerogpu">huggingface-zerogpu</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Implement or debug Hugging Face Spaces ZeroGPU code using `@spaces.GPU`, including isolation, state, duration, sizing, and CUDA-wheel constraints. Use for ZeroGPU-specific behavior; use huggingface-spaces for general hosting.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install huggingface-zerogpu</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install huggingface-zerogpu">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>huggingface</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$huggingface-zerogpu</code> in Codex, <code>/huggingface-zerogpu</code> in OpenCode, or <code>/opencode-power-pack:huggingface-zerogpu</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/huggingface-zerogpu">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="train-sentence-transformers" data-skill="train-sentence-transformers train or fine-tune sentencetransformer bi-encoders, crossencoder rerankers, or sparseencoder models, including losses, negatives, evaluation, distillation, lora, and matryoshka. use for sentence-transformers training tasks. ml + hugging face huggingface">
+            <header>
+              <span>ML + HUGGING FACE / 23</span>
+              <h3><a href="#train-sentence-transformers">train-sentence-transformers</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Train or fine-tune SentenceTransformer bi-encoders, CrossEncoder rerankers, or SparseEncoder models, including losses, negatives, evaluation, distillation, LoRA, and Matryoshka. Use for sentence-transformers training tasks.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install train-sentence-transformers</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install train-sentence-transformers">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>huggingface</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$train-sentence-transformers</code> in Codex, <code>/train-sentence-transformers</code> in OpenCode, or <code>/opencode-power-pack:train-sentence-transformers</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/train-sentence-transformers">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="transformers-js" data-skill="transformers-js run hugging face models in javascript or typescript with transformers.js, webgpu, or wasm across browser, node.js, bun, and deno. use for client-side or js-runtime inference, not python training. ml + hugging face huggingface">
+            <header>
+              <span>ML + HUGGING FACE / 24</span>
+              <h3><a href="#transformers-js">transformers-js</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Run Hugging Face models in JavaScript or TypeScript with Transformers.js, WebGPU, or WASM across browser, Node.js, Bun, and Deno. Use for client-side or JS-runtime inference, not Python training.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install transformers-js</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install transformers-js">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>huggingface</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$transformers-js</code> in Codex, <code>/transformers-js</code> in OpenCode, or <code>/opencode-power-pack:transformers-js</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/transformers-js">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          <article class="skill-reference-card" id="trl-training" data-skill="trl-training train and fine-tune transformer language models using trl (transformers reinforcement learning). supports sft, dpo, grpo, kto, rloo and reward model training via cli commands. ml + hugging face huggingface">
+            <header>
+              <span>ML + HUGGING FACE / 25</span>
+              <h3><a href="#trl-training">trl-training</a></h3>
+            </header>
+            <div class="skill-reference-purpose">
+              <span>What it does / when to use</span>
+              <p class="skill-reference-description">Train and fine-tune transformer language models using TRL (Transformers Reinforcement Learning). Supports SFT, DPO, GRPO, KTO, RLOO and Reward Model training via CLI commands.</p>
+            </div>
+            <div class="skill-reference-install">
+              <span>Install only this workflow</span>
+              <code>npx @waybarrios/opencode-power-pack install trl-training</code>
+              <button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install trl-training">Copy command</button>
+            </div>
+            <dl class="skill-reference-meta">
+              <div>
+                <dt>Included by profiles</dt>
+                <dd><code>huggingface</code></dd>
+              </div>
+              <div>
+                <dt>Automatic companions</dt>
+                <dd>None</dd>
+              </div>
+              <div>
+                <dt>Invoke after installation</dt>
+                <dd><code>$trl-training</code> in Codex, <code>/trl-training</code> in OpenCode, or <code>/opencode-power-pack:trl-training</code> in Claude Code.</dd>
+              </div>
+            </dl>
+            <footer>
+              <a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/trl-training">Read the complete workflow <span aria-hidden="true">↗</span></a>
+              <a href="../#hosts">Host setup</a>
+            </footer>
+          </article>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="../../app.js" defer></script>
+  </body>
+</html>
