@@ -212,26 +212,87 @@
           </p>
         </div>
 
-        <section class="terminal-shell" aria-label="Quick npm installation command">
-          <div class="terminal-bar">
-            <span>TERMINAL</span>
-            <span>RECOMMENDED PROFILE</span>
+        <div class="install-switcher">
+          <div class="install-tabs" role="tablist" aria-label="Choose an installation method">
+            <button
+              id="human-install-tab"
+              type="button"
+              role="tab"
+              aria-selected="true"
+              aria-controls="human-install-panel"
+            >
+              <span>01</span> Install it myself
+            </button>
+            <button
+              id="agent-install-tab"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="agent-install-panel"
+              tabindex="-1"
+            >
+              <span>02</span> Let my agent install it
+            </button>
           </div>
-          <button
-            class="copy-command"
-            type="button"
-            data-copy="npx @waybarrios/opencode-power-pack install --profile recommended"
-          >
-            <span class="copy-command-text">
-              <small>Recommended profile</small>
-              <code>npx @waybarrios/opencode-power-pack install --profile recommended</code>
-            </span>
-            <b>Copy</b>
-          </button>
-          <p class="copy-status" aria-live="polite"></p>
-        </section>
 
-        <p class="hero-install-note">Installs a balanced skill pack for Claude Code, Codex, OpenCode, and Pi.</p>
+          <section
+            class="install-mode-panel"
+            id="human-install-panel"
+            role="tabpanel"
+            aria-labelledby="human-install-tab"
+          >
+            <div class="terminal-shell" role="group" aria-label="Quick npm installation command">
+              <div class="terminal-bar">
+                <span>HUMAN INSTALL</span>
+                <span>RECOMMENDED PROFILE</span>
+              </div>
+              <button
+                class="copy-command"
+                type="button"
+                data-copy="npx @waybarrios/opencode-power-pack install --profile recommended"
+              >
+                <span class="copy-command-text">
+                  <small>Run this in your terminal</small>
+                  <code>npx @waybarrios/opencode-power-pack install --profile recommended</code>
+                </span>
+                <b>Copy</b>
+              </button>
+              <p class="copy-status" aria-live="polite"></p>
+            </div>
+            <p class="hero-install-note">You choose the profile, scope, and command.</p>
+          </section>
+
+          <section
+            class="install-mode-panel"
+            id="agent-install-panel"
+            role="tabpanel"
+            aria-labelledby="agent-install-tab"
+            hidden
+          >
+            <div class="terminal-shell" role="group" aria-label="Prompt for agent-assisted installation">
+              <div class="terminal-bar">
+                <span>AGENT INSTALL</span>
+                <span>DRY RUN → INSTALL → VERIFY</span>
+              </div>
+              <button
+                class="copy-command"
+                type="button"
+                data-copy-label="Agent prompt"
+                data-copy="Install OpenCode Power Pack's recommended profile in this Git repository. Require Node.js 20 or newer. First run npx @waybarrios/opencode-power-pack install --profile recommended --project --dry-run and report the destination, selected skills, companions, and conflicts. If the preview is safe, run the same command without --dry-run. Do not use --force or modify package.json. Then verify the installed skills for the current host. If this is Claude Code, show me the two native plugin commands instead."
+              >
+                <span class="copy-command-text">
+                  <small>Paste this into your coding agent</small>
+                  <code>Preview the destination. Install the recommended pack. Verify every skill.</code>
+                </span>
+                <b>Copy prompt</b>
+              </button>
+              <p class="copy-status" aria-live="polite"></p>
+            </div>
+            <p class="hero-install-note">
+              The agent follows a safe, project-local checklist. <a href="agent-install.md">Read its instructions.</a>
+            </p>
+          </section>
+        </div>
 
         <nav class="hero-routes" aria-label="Explore OpenCode Power Pack">
           <a href="docs/skills/">Browse all 54 skills <span aria-hidden="true">→</span></a>

@@ -3,11 +3,12 @@ const copyButtons = document.querySelectorAll("[data-copy]");
 for (const button of copyButtons) {
   button.addEventListener("click", async () => {
     const value = button.dataset.copy;
+    const copyLabel = button.dataset.copyLabel ?? "Command";
     const status = button.closest(".terminal-shell")?.querySelector(".copy-status");
 
     try {
       await navigator.clipboard.writeText(value);
-      if (status) status.textContent = "Command copied to clipboard.";
+      if (status) status.textContent = `${copyLabel} copied to clipboard.`;
       const label = button.querySelector("b") ?? button;
       const original = label.textContent;
       label.textContent = "Copied";
@@ -18,6 +19,34 @@ for (const button of copyButtons) {
     } catch {
       if (status) status.textContent = "Copy failed. Select the command manually.";
     }
+  });
+}
+
+const installTabs = [...document.querySelectorAll('[role="tab"][aria-controls]')];
+
+function selectInstallTab(selectedTab, moveFocus = false) {
+  for (const tab of installTabs) {
+    const selected = tab === selectedTab;
+    tab.setAttribute("aria-selected", String(selected));
+    tab.tabIndex = selected ? 0 : -1;
+    const panel = document.getElementById(tab.getAttribute("aria-controls"));
+    if (panel) panel.hidden = !selected;
+  }
+
+  if (moveFocus) selectedTab.focus();
+}
+
+for (const [index, tab] of installTabs.entries()) {
+  tab.addEventListener("click", () => selectInstallTab(tab));
+  tab.addEventListener("keydown", (event) => {
+    let targetIndex;
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") targetIndex = (index + 1) % installTabs.length;
+    if (event.key === "ArrowLeft" || event.key === "ArrowUp") targetIndex = (index - 1 + installTabs.length) % installTabs.length;
+    if (event.key === "Home") targetIndex = 0;
+    if (event.key === "End") targetIndex = installTabs.length - 1;
+    if (targetIndex === undefined) return;
+    event.preventDefault();
+    selectInstallTab(installTabs[targetIndex], true);
   });
 }
 

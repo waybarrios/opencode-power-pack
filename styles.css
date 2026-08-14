@@ -264,6 +264,63 @@ code {
   text-align: left;
 }
 
+.install-switcher {
+  width: min(100%, 48rem);
+}
+
+.install-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  margin-bottom: var(--space-3);
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.install-tabs button {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: center;
+  min-height: 3.25rem;
+  padding: var(--space-3) var(--space-4);
+  border: 0;
+  color: var(--muted);
+  background: var(--ink-raised);
+  font: inherit;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.install-tabs button span {
+  color: var(--dim);
+}
+
+.install-tabs button[aria-selected="true"] {
+  color: var(--ink);
+  background: var(--power);
+}
+
+.install-tabs button[aria-selected="true"] span {
+  color: #4a3d00;
+}
+
+.install-tabs button:focus-visible {
+  outline: 2px solid var(--paper);
+  outline-offset: -4px;
+}
+
+.install-mode-panel[hidden] {
+  display: none;
+}
+
+.install-mode-panel .terminal-shell {
+  width: 100%;
+}
+
 .terminal-bar {
   display: flex;
   justify-content: space-between;
@@ -367,11 +424,15 @@ code {
 }
 
 .hero-install-note {
-  margin: -0.5rem 0 0;
+  margin: var(--space-3) 0 0;
   color: var(--muted);
   font-size: 0.72rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+.hero-install-note a {
+  color: var(--power);
 }
 
 .hero-routes {
@@ -972,6 +1033,14 @@ code {
   .hero-routes {
     flex-direction: column;
     gap: var(--space-3);
+  }
+
+  .install-tabs {
+    grid-template-columns: 1fr;
+  }
+
+  .install-tabs button {
+    justify-content: flex-start;
   }
 
   .proof-strip {
