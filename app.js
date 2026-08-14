@@ -2,11 +2,15 @@ const copyButtons = document.querySelectorAll("[data-copy]");
 
 for (const button of copyButtons) {
   button.addEventListener("click", async () => {
-    const value = button.dataset.copy;
+    const source = button.dataset.copyTarget
+      ? document.getElementById(button.dataset.copyTarget)
+      : null;
+    const value = source?.textContent.trim() || button.dataset.copy;
     const copyLabel = button.dataset.copyLabel ?? "Command";
     const status = button.closest(".terminal-shell")?.querySelector(".copy-status");
 
     try {
+      if (!value) throw new Error("No copyable content was found.");
       await navigator.clipboard.writeText(value);
       if (status) status.textContent = `${copyLabel} copied to clipboard.`;
       const label = button.querySelector("b") ?? button;
