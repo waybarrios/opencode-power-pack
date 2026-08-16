@@ -155,6 +155,7 @@ The package assigns every bundled skill a default least-capability profile and a
 opencode-power-pack sandbox doctor
 opencode-power-pack sandbox resolve --skill code-review
 opencode-power-pack sandbox resolve --sandbox-profile publish --json
+opencode-power-pack sandbox exec --skill code-review -- rg TODO .
 ```
 
 | Sandbox profile | Workspace | Network and credentials | External side effects |
@@ -164,7 +165,13 @@ opencode-power-pack sandbox resolve --sandbox-profile publish --json
 | `network-read` | Write | Explicitly approved | Denied |
 | `publish` | Write | Explicitly approved | Explicit confirmation required |
 
-This first contract version reports `advisory` enforcement. It describes the capability boundary that host adapters must enforce, but it does not isolate commands or replace the permissions configured by Codex, Claude Code, OpenCode, or Pi. `sandbox doctor` therefore reports `Backend: not-configured` and `Strict ready: no` instead of implying a stronger guarantee.
+The contract continues to report `advisory` because skill metadata does not enforce itself. The npm package also provides an opt-in `sandbox exec` runner backed by a pinned native runtime. When its operational preflight succeeds, `sandbox doctor` reports `shell-contained`; `Strict ready` remains `no` until a host adapter blocks ordinary tool bypasses.
+
+For `network-read`, the runner enforces conventional HTTP read methods (GET, HEAD, and OPTIONS). This is a best-effort side-effect boundary because an approved endpoint can still implement unsafe GET behavior. Use narrow destination grants and expose only credentials required for the retrieval.
+
+The runner is lightweight and on demand: it contains one command tree with native OS primitives, starts no persistent container or daemon, denies unrelated host reads, and deletes its private temporary directory after execution. `sandbox doctor` exits nonzero when the native boundary is unavailable.
+
+See [Sandbox Compatibility Across Coding Agents](docs/sandbox-compatibility.md) for the current Codex, Claude Code, OpenCode, and Pi matrix, platform requirements, activation design, fail-closed behavior, and adapter roadmap.
 
 Selective installations include a generated `SANDBOX_POLICY.json` beside each copied `SKILL.md`. The file is self-describing and preserves the skill's default profile even when the central package is not present. It remains advisory until an enforcement backend and host adapter are active.
 
@@ -252,7 +259,7 @@ They are complementary rather than duplicate workflows. Codex shows distinct use
 ### Prerequisites
 
 - Git
-- Node.js 20 or newer, including npm/npx, for [selective installation](#selective-install-with-npm)
+- Node.js 20.11.0 or newer, including npm/npx, for [selective installation](#selective-install-with-npm) and the sandbox runner
 - One supported host:
   - A current Claude Code installation with plugin support: <https://code.claude.com/docs/en/plugins>
   - OpenCode 1.18.7 or newer: <https://opencode.ai>
@@ -482,6 +489,9 @@ opencode-power-pack
 +-- bin/sandbox/policy.mjs
 |   +-- validates, resolves, and reports the shared capability contract
 |
++-- bin/sandbox/runtime.mjs
+|   +-- runs opt-in commands in the pinned native sandbox backend
+|
 +-- .opencode/plugins/opencode-power-pack.js
 |   +-- registers skills/ in config.skills.paths
 |   +-- registers code-explorer as a read-only subagent
@@ -505,11 +515,11 @@ The packaged agents deny edits, external network access, and nested tasks. `code
 
 | In scope | Out of scope |
 |---|---|
-| Claude Code, Codex, OpenCode, and Pi skills and invocation | Claude Code hook contracts |
+| Claude Code, Codex, OpenCode, and Pi skills and invocation | Whole-agent, browser, connector, or desktop isolation |
 | Portable and host-native subagent orchestration | Proprietary or non-redistributable plugins |
 | Licensed adaptations with immutable provenance | Automatic trust of third-party skill catalogs |
 | Explicit permission boundaries and regression tests | Supporting OpenCode versions older than 1.18.7 or obsolete Codex plugin formats |
-| Versioned sandbox capability contracts and honest enforcement reporting | Treating advisory metadata as an OS security boundary |
+| Versioned sandbox contracts and an opt-in shell-contained runner | Claiming whole-agent containment before host adapters block bypass tools |
 
 ## Contributing
 

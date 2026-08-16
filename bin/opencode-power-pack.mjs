@@ -19,9 +19,14 @@ import { fileURLToPath } from "node:url";
 import {
   loadSandboxContract,
   portableSkillPolicy,
+  resolveSandboxExecutionProfile,
   resolveSandboxProfile,
   sandboxDoctorReport,
 } from "./sandbox/policy.mjs";
+import {
+  probeSandboxRuntime,
+  runSandboxedCommand,
+} from "./sandbox/runtime.mjs";
 
 const PACKAGE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const USAGE = `OpenCode Power Pack selective skill installer
@@ -34,6 +39,7 @@ Usage:
   npx @waybarrios/opencode-power-pack sandbox doctor [--json]
   npx @waybarrios/opencode-power-pack sandbox resolve --skill <name> [--json]
   npx @waybarrios/opencode-power-pack sandbox resolve --sandbox-profile <name> [--json]
+  npx @waybarrios/opencode-power-pack sandbox exec --skill <name> [options] -- <command> [args...]
 
 Options:
   --profile <name>  Install a curated profile. Repeatable.
@@ -42,6 +48,11 @@ Options:
   --global          Install into ~/.agents/skills. This is the default.
   --force           Replace an existing skill directory with rollback on failure.
   --dry-run         Show what would change without writing files.
+  --sandbox-profile Select an allowed profile escalation for sandbox exec.
+  --allow-domain    Allow one network destination. Repeatable.
+  --allow-env       Expose one existing environment variable. Repeatable.
+  --confirm-external-side-effects
+                    Confirm a publish profile before sandbox exec.
   -h, --help        Show this help.
 
 The .agents/skills location is shared by Codex, OpenCode, and Pi.`;
@@ -340,7 +351,8 @@ function printCatalog(catalog, skills, write) {
 
 export function parseSandboxArgs(args) {
   const [command, ...rest] = args;
-  if (!command) throw new Error("Choose a sandbox command: doctor or resolve.");
+  if (!command) throw new Error("Choose a sandbox command: doctor, resolve, or exec.");
+  if (command === "exec") return parseSandboxExecArgs(rest);
   if (!["doctor", "resolve"].includes(command)) {
     throw new Error(`Unknown sandbox command: ${command}`);
   }
@@ -371,6 +383,50 @@ export function parseSandboxArgs(args) {
   return options;
 }
 
+export function parseSandboxExecArgs(args) {
+  const separator = args.indexOf("--");
+  if (separator === -1) throw new Error("sandbox exec requires -- before the command.");
+  const optionArgs = args.slice(0, separator);
+  const command = args.slice(separator + 1);
+  if (command.length === 0 || command[0] === "") {
+    throw new Error("sandbox exec requires a non-empty command after --.");
+  }
+  const options = {
+    command: "exec",
+    allowedDomains: [],
+    allowedEnvironment: [],
+    confirmExternalSideEffects: false,
+    childCommand: command,
+  };
+
+  for (let index = 0; index < optionArgs.length; index += 1) {
+    const value = optionArgs[index];
+    if (["--skill", "--sandbox-profile", "--allow-domain", "--allow-env"].includes(value)) {
+      const target = optionArgs[index + 1];
+      if (!target || target.startsWith("-")) throw new Error(`${value} requires a value.`);
+      if (value === "--skill" || value === "--sandbox-profile") {
+        const key = value === "--skill" ? "skillName" : "profileName";
+        if (options[key]) throw new Error(`${value} may be provided only once.`);
+        options[key] = target;
+      } else if (value === "--allow-domain") {
+        options.allowedDomains.push(target);
+      } else {
+        options.allowedEnvironment.push(target);
+      }
+      index += 1;
+    } else if (value === "--confirm-external-side-effects") {
+      if (options.confirmExternalSideEffects) {
+        throw new Error("--confirm-external-side-effects may be provided only once.");
+      }
+      options.confirmExternalSideEffects = true;
+    } else {
+      throw new Error(`Unknown sandbox exec option: ${value}`);
+    }
+  }
+  if (!options.skillName) throw new Error("sandbox exec requires --skill.");
+  return options;
+}
+
 function printSandboxResolution(resolution, write) {
   if (resolution.skill) write(`Skill: ${resolution.skill}\n`);
   write(`Profile: ${resolution.profile.name}\n`);
@@ -395,6 +451,8 @@ function printSandboxDoctor(report, write) {
   write(`Assigned skills: ${report.assignedSkills}/${report.packagedSkills}\n`);
   write(`Enforcement: ${report.enforcementLevel}\n`);
   write(`Backend: ${report.backend}\n`);
+  write(`Runner ready: ${report.runnerReady ? "yes" : "no"}\n`);
+  write(`Execution level: ${report.executionLevel}\n`);
   write(`Strict ready: ${report.strictReady ? "yes" : "no"}\n`);
   for (const warning of report.warnings) write(`Warning: ${warning}\n`);
 }
@@ -404,18 +462,38 @@ export async function runSandboxCommand(args, context) {
   const skills = await discoverSkills(context.packageRoot);
   const availableSkillNames = skills.map((skill) => skill.name);
   const contract = await loadSandboxContract(context.packageRoot, availableSkillNames);
+  if (options.command === "exec") {
+    const profile = resolveSandboxExecutionProfile(contract, options);
+    return runSandboxedCommand({
+      profile,
+      allowedDomains: options.allowedDomains,
+      allowedEnvironment: options.allowedEnvironment,
+      confirmExternalSideEffects: options.confirmExternalSideEffects,
+      command: options.childCommand,
+    }, context);
+  }
+
   const result = options.command === "doctor"
-    ? sandboxDoctorReport(contract, availableSkillNames)
+    ? sandboxDoctorReport(
+      contract,
+      availableSkillNames,
+      await probeSandboxRuntime({
+        cwd: context.cwd,
+        env: context.env || process.env,
+        ...context.runtimeProbeContext,
+      }),
+    )
     : resolveSandboxProfile(contract, options);
 
   if (options.json) context.write(`${JSON.stringify(result, null, 2)}\n`);
   else if (options.command === "doctor") printSandboxDoctor(result, context.write);
   else printSandboxResolution(result, context.write);
-  return 0;
+  return options.command === "doctor" && !result.runnerReady ? 1 : 0;
 }
 
 export async function main(args = process.argv.slice(2), context = {}) {
   const write = context.write || ((text) => process.stdout.write(text));
+  const writeError = context.writeError || ((text) => process.stderr.write(text));
   const cwd = context.cwd || process.cwd();
   const home = context.home || os.homedir();
   const packageRoot = context.packageRoot || PACKAGE_ROOT;
@@ -427,7 +505,14 @@ export async function main(args = process.argv.slice(2), context = {}) {
   }
 
   if (command === "sandbox") {
-    return runSandboxCommand(rest, { packageRoot, write });
+    return runSandboxCommand(rest, {
+      ...context,
+      cwd,
+      home,
+      packageRoot,
+      write,
+      writeError,
+    });
   }
 
   const catalog = await loadCatalog(packageRoot);

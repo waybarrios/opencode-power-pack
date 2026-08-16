@@ -13,6 +13,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "lts/*"
+      - run: npm ci
       - run: node --test
       - uses: actions/setup-python@v5
         with:
@@ -23,3 +24,30 @@ jobs:
           for skill in skills/*; do
             agentskills validate "$skill"
           done
+
+  sandbox-runtime:
+    name: sandbox-runtime-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.11.1"
+      - name: Install Linux sandbox dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bubblewrap socat ripgrep curl
+          if sysctl -n kernel.apparmor_restrict_unprivileged_userns >/dev/null 2>&1; then
+            sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          fi
+      - run: npm ci
+      - name: Run sandbox contract and real containment tests
+        run: npm run test:sandbox
+        env:
+          OPP_SANDBOX_INTEGRATION: "1"

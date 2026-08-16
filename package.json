@@ -12,7 +12,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "engines": {
-    "node": ">=20",
+    "node": ">=20.11.0",
     "opencode": ">=1.18.7"
   },
   "files": [
@@ -22,6 +22,7 @@
     ".opencode",
     "bin",
     "sandbox",
+    "docs/sandbox-compatibility.md",
     "assets",
     "skillsets.json",
     "UPSTREAMS.json",
@@ -30,7 +31,7 @@
   ],
   "scripts": {
     "test": "node --test",
-    "test:sandbox": "node --test tests/sandbox-policy.test.mjs",
+    "test:sandbox": "node --test tests/sandbox-policy.test.mjs tests/sandbox-runtime.test.mjs tests/sandbox-runtime.integration.test.mjs",
     "prepublishOnly": "npm test",
     "eval:behavioral": "node scripts/behavioral-evals.mjs run",
     "eval:behavioral:accept": "node scripts/behavioral-evals.mjs accept",
@@ -65,5 +66,8 @@
     "mcp-builder",
     "multi-agent",
     "plugin"
-  ]
+  ],
+  "dependencies": {
+    "@anthropic-ai/sandbox-runtime": "0.0.73"
+  }
 }
