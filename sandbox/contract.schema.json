@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/waybarrios/opencode-power-pack/sandbox/contract.schema.json",
+  "title": "OpenCode Power Pack sandbox capability contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "enforcementLevel",
+    "profiles",
+    "skills"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "./contract.schema.json"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "enforcementLevel": {
+      "const": "advisory"
+    },
+    "profiles": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/profile"
+      }
+    },
+    "skills": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/skillAssignment"
+      }
+    }
+  },
+  "$defs": {
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["description", "riskLevel", "capabilities"],
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "riskLevel": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "capabilities": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "workspace",
+            "temporaryFiles",
+            "network",
+            "credentials",
+            "externalSideEffects"
+          ],
+          "properties": {
+            "workspace": {
+              "enum": ["read", "write"]
+            },
+            "temporaryFiles": {
+              "enum": ["deny", "write"]
+            },
+            "network": {
+              "enum": ["deny", "explicit"]
+            },
+            "credentials": {
+              "enum": ["deny", "explicit"]
+            },
+            "externalSideEffects": {
+              "enum": ["deny", "confirm"]
+            }
+          }
+        }
+      }
+    },
+    "skillAssignment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["defaultProfile", "allowedEscalations"],
+      "properties": {
+        "defaultProfile": {
+          "type": "string",
+          "minLength": 1
+        },
+        "allowedEscalations": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

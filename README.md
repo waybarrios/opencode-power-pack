@@ -28,6 +28,7 @@
   <a href="#codex-quick-install"><b>Codex Quick Install</b></a> ·
   <a href="#pi-quick-install"><b>Pi Quick Install</b></a> ·
   <a href="#whats-inside"><b>Skills</b></a> ·
+  <a href="#sandbox-capability-contract"><b>Sandbox Contract</b></a> ·
   <a href="#invocation"><b>Invocation</b></a> ·
   <a href="#how-it-works"><b>Architecture</b></a> ·
   <a href="#acknowledgments"><b>Credits</b></a>
@@ -145,6 +146,27 @@ Maintainers publish the mirror with the `Publish GitHub Package` workflow. Relea
 Profiles automatically include required companion skills and can be combined with individual skill names. The default destination is `~/.agents/skills`; `--project` finds the current Git root and installs into its `.agents/skills` directory. Existing directories are skipped unless `--force` is provided, and replacements are staged with rollback plus per-skill locking. Every copied skill retains its provenance, third-party notices, and license texts. Use `--dry-run` to preview or `--all` to install the complete catalog.
 
 The npm installer and the full Claude Code/Codex/OpenCode plugins are alternative activation paths. Claude Code users should prefer the namespaced plugin because the selective installer currently targets the portable `.agents/skills` location used by Codex, OpenCode, and Pi. If a full plugin is already active, selectively copying the same skills does not reduce that plugin's loaded catalog.
+
+## Sandbox Capability Contract
+
+The package assigns every bundled skill a default least-capability profile and an explicit set of allowed escalations. Inspect the complete contract or resolve one skill from the CLI:
+
+```bash
+opencode-power-pack sandbox doctor
+opencode-power-pack sandbox resolve --skill code-review
+opencode-power-pack sandbox resolve --sandbox-profile publish --json
+```
+
+| Sandbox profile | Workspace | Network and credentials | External side effects |
+|---|---|---|---|
+| `observe` | Read | Denied | Denied |
+| `develop` | Write | Denied | Denied |
+| `network-read` | Write | Explicitly approved | Denied |
+| `publish` | Write | Explicitly approved | Explicit confirmation required |
+
+This first contract version reports `advisory` enforcement. It describes the capability boundary that host adapters must enforce, but it does not isolate commands or replace the permissions configured by Codex, Claude Code, OpenCode, or Pi. `sandbox doctor` therefore reports `Backend: not-configured` and `Strict ready: no` instead of implying a stronger guarantee.
+
+Selective installations include a generated `SANDBOX_POLICY.json` beside each copied `SKILL.md`. The file is self-describing and preserves the skill's default profile even when the central package is not present. It remains advisory until an enforcement backend and host adapter are active.
 
 ## Why This Exists
 
@@ -453,6 +475,13 @@ opencode-power-pack
 +-- package.json
 |   +-- declares skills/ as a Pi package for pi install
 |
++-- sandbox/contract.json
+|   +-- maps all fifty-four skills to versioned capability profiles
+|   +-- records allowed escalation paths without claiming enforcement
+|
++-- bin/sandbox/policy.mjs
+|   +-- validates, resolves, and reports the shared capability contract
+|
 +-- .opencode/plugins/opencode-power-pack.js
 |   +-- registers skills/ in config.skills.paths
 |   +-- registers code-explorer as a read-only subagent
@@ -480,6 +509,7 @@ The packaged agents deny edits, external network access, and nested tasks. `code
 | Portable and host-native subagent orchestration | Proprietary or non-redistributable plugins |
 | Licensed adaptations with immutable provenance | Automatic trust of third-party skill catalogs |
 | Explicit permission boundaries and regression tests | Supporting OpenCode versions older than 1.18.7 or obsolete Codex plugin formats |
+| Versioned sandbox capability contracts and honest enforcement reporting | Treating advisory metadata as an OS security boundary |
 
 ## Contributing
 
@@ -494,6 +524,7 @@ Before opening a PR:
 
 ```bash
 npm test
+npm run test:sandbox
 npm run smoke:opencode
 npm pack --dry-run
 ```

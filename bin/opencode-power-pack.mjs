@@ -11,10 +11,17 @@ import {
   readdir,
   rename,
   rm,
+  writeFile,
 } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  loadSandboxContract,
+  portableSkillPolicy,
+  resolveSandboxProfile,
+  sandboxDoctorReport,
+} from "./sandbox/policy.mjs";
 
 const PACKAGE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const USAGE = `OpenCode Power Pack selective skill installer
@@ -24,6 +31,9 @@ Usage:
   npx @waybarrios/opencode-power-pack install <skill...> [options]
   npx @waybarrios/opencode-power-pack install --profile <name> [options]
   npx @waybarrios/opencode-power-pack install --all [options]
+  npx @waybarrios/opencode-power-pack sandbox doctor [--json]
+  npx @waybarrios/opencode-power-pack sandbox resolve --skill <name> [--json]
+  npx @waybarrios/opencode-power-pack sandbox resolve --sandbox-profile <name> [--json]
 
 Options:
   --profile <name>  Install a curated profile. Repeatable.
@@ -119,7 +129,13 @@ export function resolveSelection({ skillNames = [], profileNames = [], all = fal
   return [...selected].sort((left, right) => left.localeCompare(right));
 }
 
-async function replaceDirectoryWithRollback(source, destination, force, packageRoot) {
+async function replaceDirectoryWithRollback(
+  source,
+  destination,
+  force,
+  packageRoot,
+  sandboxContract,
+) {
   const parent = path.dirname(destination);
   const name = path.basename(destination);
   const lock = `${destination}.opp-lock`;
@@ -150,6 +166,11 @@ async function replaceDirectoryWithRollback(source, destination, force, packageR
       path.join(staged, "THIRD_PARTY_NOTICES.md"),
     );
     await cp(path.join(packageRoot, "LICENSES"), path.join(staged, "LICENSES"), { recursive: true });
+    await writeFile(
+      path.join(staged, "SANDBOX_POLICY.json"),
+      `${JSON.stringify(portableSkillPolicy(sandboxContract, name), null, 2)}\n`,
+      "utf8",
+    );
     if (force && await pathExists(destination)) {
       backup = path.join(parent, `.opp-backup-${name}-${randomUUID()}`);
       await rename(destination, backup);
@@ -227,6 +248,7 @@ export async function installSkills({
   packageRoot = PACKAGE_ROOT,
 }) {
   if (!dryRun) await mkdir(destination, { recursive: true });
+  const sandboxContract = await loadSandboxContract(packageRoot);
   const results = [];
 
   for (const skillName of skillNames) {
@@ -243,7 +265,13 @@ export async function installSkills({
       continue;
     }
 
-    const warnings = await replaceDirectoryWithRollback(source, target, force, packageRoot);
+    const warnings = await replaceDirectoryWithRollback(
+      source,
+      target,
+      force,
+      packageRoot,
+      sandboxContract,
+    );
     results.push({
       name: skillName,
       status: exists ? "updated" : "installed",
@@ -310,6 +338,82 @@ function printCatalog(catalog, skills, write) {
   }
 }
 
+export function parseSandboxArgs(args) {
+  const [command, ...rest] = args;
+  if (!command) throw new Error("Choose a sandbox command: doctor or resolve.");
+  if (!["doctor", "resolve"].includes(command)) {
+    throw new Error(`Unknown sandbox command: ${command}`);
+  }
+
+  const options = { command, json: false };
+  for (let index = 0; index < rest.length; index += 1) {
+    const value = rest[index];
+    if (value === "--json") {
+      options.json = true;
+    } else if (value === "--skill" || value === "--sandbox-profile") {
+      if (command !== "resolve") throw new Error(`${value} is only valid with sandbox resolve.`);
+      const target = rest[index + 1];
+      if (!target || target.startsWith("-")) throw new Error(`${value} requires a value.`);
+      const key = value === "--skill" ? "skillName" : "profileName";
+      if (options[key]) throw new Error(`${value} may be provided only once.`);
+      options[key] = target;
+      index += 1;
+    } else {
+      throw new Error(`Unknown sandbox option: ${value}`);
+    }
+  }
+  if (command === "resolve" && !options.skillName && !options.profileName) {
+    throw new Error("sandbox resolve requires --skill or --sandbox-profile.");
+  }
+  if (command === "resolve" && options.skillName && options.profileName) {
+    throw new Error("Choose exactly one of --skill or --sandbox-profile.");
+  }
+  return options;
+}
+
+function printSandboxResolution(resolution, write) {
+  if (resolution.skill) write(`Skill: ${resolution.skill}\n`);
+  write(`Profile: ${resolution.profile.name}\n`);
+  write(`Description: ${resolution.profile.description}\n`);
+  write(`Risk level: ${resolution.profile.riskLevel}\n`);
+  write(`Enforcement: ${resolution.profile.enforcementLevel}\n`);
+  write("Capabilities:\n");
+  for (const [name, value] of Object.entries(resolution.profile.capabilities)) {
+    write(`  ${name.padEnd(20)} ${value}\n`);
+  }
+  if (resolution.allowedEscalations) {
+    const names = resolution.allowedEscalations.map((profile) => profile.name);
+    write(`Allowed escalations: ${names.length > 0 ? names.join(", ") : "none"}\n`);
+  }
+  write("Warning: advisory metadata does not isolate commands or tools.\n");
+}
+
+function printSandboxDoctor(report, write) {
+  write(`Sandbox contract: ${report.ok ? "valid" : "invalid"}\n`);
+  write(`Schema version: ${report.schemaVersion}\n`);
+  write(`Profiles: ${report.profiles}\n`);
+  write(`Assigned skills: ${report.assignedSkills}/${report.packagedSkills}\n`);
+  write(`Enforcement: ${report.enforcementLevel}\n`);
+  write(`Backend: ${report.backend}\n`);
+  write(`Strict ready: ${report.strictReady ? "yes" : "no"}\n`);
+  for (const warning of report.warnings) write(`Warning: ${warning}\n`);
+}
+
+export async function runSandboxCommand(args, context) {
+  const options = parseSandboxArgs(args);
+  const skills = await discoverSkills(context.packageRoot);
+  const availableSkillNames = skills.map((skill) => skill.name);
+  const contract = await loadSandboxContract(context.packageRoot, availableSkillNames);
+  const result = options.command === "doctor"
+    ? sandboxDoctorReport(contract, availableSkillNames)
+    : resolveSandboxProfile(contract, options);
+
+  if (options.json) context.write(`${JSON.stringify(result, null, 2)}\n`);
+  else if (options.command === "doctor") printSandboxDoctor(result, context.write);
+  else printSandboxResolution(result, context.write);
+  return 0;
+}
+
 export async function main(args = process.argv.slice(2), context = {}) {
   const write = context.write || ((text) => process.stdout.write(text));
   const cwd = context.cwd || process.cwd();
@@ -320,6 +424,10 @@ export async function main(args = process.argv.slice(2), context = {}) {
   if (command === "help" || command === "--help" || command === "-h") {
     write(`${USAGE}\n`);
     return 0;
+  }
+
+  if (command === "sandbox") {
+    return runSandboxCommand(rest, { packageRoot, write });
   }
 
   const catalog = await loadCatalog(packageRoot);
@@ -372,8 +480,10 @@ export function isDirectInvocation(argvEntry, moduleUrl = import.meta.url) {
 const invokedDirectly = isDirectInvocation(process.argv[1]);
 
 if (invokedDirectly) {
-  main().catch((error) => {
-    process.stderr.write(`Error: ${error.message}\n`);
-    process.exitCode = 1;
-  });
+  main()
+    .then((exitCode) => { process.exitCode = exitCode; })
+    .catch((error) => {
+      process.stderr.write(`Error: ${error.message}\n`);
+      process.exitCode = 1;
+    });
 }
