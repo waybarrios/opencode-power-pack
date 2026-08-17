@@ -1,0 +1,269 @@
+{
+  "$schema": "./contract.schema.json",
+  "schemaVersion": 1,
+  "enforcementLevel": "advisory",
+  "profiles": {
+    "observe": {
+      "description": "Inspect and analyze the workspace without modifying it or using the network.",
+      "riskLevel": 0,
+      "capabilities": {
+        "workspace": "read",
+        "temporaryFiles": "write",
+        "network": "deny",
+        "credentials": "deny",
+        "externalSideEffects": "deny"
+      }
+    },
+    "develop": {
+      "description": "Modify the workspace and temporary files without network access or external side effects.",
+      "riskLevel": 1,
+      "capabilities": {
+        "workspace": "write",
+        "temporaryFiles": "write",
+        "network": "deny",
+        "credentials": "deny",
+        "externalSideEffects": "deny"
+      }
+    },
+    "network-read": {
+      "description": "Use explicitly approved network destinations and credentials for retrieval without external mutations.",
+      "riskLevel": 2,
+      "capabilities": {
+        "workspace": "write",
+        "temporaryFiles": "write",
+        "network": "explicit",
+        "credentials": "explicit",
+        "externalSideEffects": "deny"
+      }
+    },
+    "publish": {
+      "description": "Perform explicitly confirmed external mutations using narrowly scoped network and credential access.",
+      "riskLevel": 3,
+      "capabilities": {
+        "workspace": "write",
+        "temporaryFiles": "write",
+        "network": "explicit",
+        "credentials": "explicit",
+        "externalSideEffects": "confirm"
+      }
+    }
+  },
+  "skills": {
+    "agentic-actions-auditor": {
+      "defaultProfile": "observe",
+      "allowedEscalations": ["network-read"]
+    },
+    "agents-md-improver": {
+      "defaultProfile": "develop",
+      "allowedEscalations": []
+    },
+    "agents-md-revise": {
+      "defaultProfile": "develop",
+      "allowedEscalations": []
+    },
+    "ai-slop": {
+      "defaultProfile": "observe",
+      "allowedEscalations": []
+    },
+    "code-architect": {
+      "defaultProfile": "observe",
+      "allowedEscalations": []
+    },
+    "code-explorer": {
+      "defaultProfile": "observe",
+      "allowedEscalations": []
+    },
+    "code-quality": {
+      "defaultProfile": "develop",
+      "allowedEscalations": ["network-read"]
+    },
+    "code-review": {
+      "defaultProfile": "observe",
+      "allowedEscalations": ["network-read", "publish"]
+    },
+    "code-reviewer": {
+      "defaultProfile": "observe",
+      "allowedEscalations": []
+    },
+    "codeql": {
+      "defaultProfile": "develop",
+      "allowedEscalations": ["network-read"]
+    },
+    "design-patterns": {
+      "defaultProfile": "observe",
+      "allowedEscalations": []
+    },
+    "differential-review": {
+      "defaultProfile": "develop",
+      "allowedEscalations": ["network-read"]
+    },
+    "feature-dev": {
+      "defaultProfile": "develop",
+      "allowedEscalations": ["network-read"]
+    },
+    "fp-check": {
+      "defaultProfile": "observe",
+      "allowedEscalations": []
+    },
+    "frontend-design": {
+      "defaultProfile": "develop",
+      "allowedEscalations": ["network-read"]
+    },
+    "hf-cli": {
+      "defaultProfile": "network-read",
+      "allowedEscalations": ["publish"]
+    },
+    "hf-cloud-aws-context-discovery": {
+      "defaultProfile": "network-read",
+      "allowedEscalations": []
+    },
+    "hf-cloud-python-env-setup": {
+      "defaultProfile": "develop",
+      "allowedEscalations": ["network-read"]
+    },
+    "hf-cloud-sagemaker-deployment-planner": {
+      "defaultProfile": "network-read",
+      "allowedEscalations": ["publish"]
+    },
+    "hf-cloud-sagemaker-iam-preflight": {
+      "defaultProfile": "network-read",
+      "allowedEscalations": ["publish"]
+    },
+    "hf-cloud-sagemaker-production-defaults": {
+      "defaultProfile": "publish",
+      "allowedEscalations": []
+    },
+    "hf-cloud-serving-image-selection": {
+      "defaultProfile": "network-read",
+      "allowedEscalations": ["publish"]
+    },
+    "hf-mem": {
+      "defaultProfile": "observe",
+      "allowedEscalations": ["network-read"]
+    },
+    "huggingface-best": {
+      "defaultProfile": "network-read",
+      "allowedEscalations": []
+    },
+    "huggingface-community-evals": {
+      "defaultProfile": "network-read",
+      "allowedEscalations": ["publish"]
+    },
+    "huggingface-datasets": {
+      "defaultProfile": "network-read",
+      "allowedEscalations": ["publish"]
+    },
+    "huggingface-gradio": {
+      "defaultProfile": "develop",
+      "allowedEscalations": ["network-read", "publish"]
+    },
+    "huggingface-llm-trainer": {
+      "defaultProfile": "publish",
+      "allowedEscalations": []
+    },
+    "huggingface-local-models": {
+      "defaultProfile": "network-read",
+      "allowedEscalations": []
+    },
+    "huggingface-lora-space-builder": {
+      "defaultProfile": "publish",
+      "allowedEscalations": []
+    },
+    "huggingface-paper-publisher": {
+      "defaultProfile": "publish",
+      "allowedEscalations": []
+    },
+    "huggingface-papers": {
+      "defaultProfile": "network-read",
+      "allowedEscalations": ["publish"]
+    },
+    "huggingface-spaces": {
+      "defaultProfile": "publish",
+      "allowedEscalations": []
+    },
+    "huggingface-tool-builder": {
+      "defaultProfile": "develop",
+      "allowedEscalations": ["network-read", "publish"]
+    },
+    "huggingface-trackio": {
+      "defaultProfile": "publish",
+      "allowedEscalations": []
+    },
+    "huggingface-vision-trainer": {
+      "defaultProfile": "publish",
+      "allowedEscalations": []
+    },
+    "huggingface-zerogpu": {
+      "defaultProfile": "publish",
+      "allowedEscalations": []
+    },
+    "insecure-defaults": {
+      "defaultProfile": "observe",
+      "allowedEscalations": []
+    },
+    "mcp-builder": {
+      "defaultProfile": "develop",
+      "allowedEscalations": ["network-read"]
+    },
+    "paper-summarizer": {
+      "defaultProfile": "observe",
+      "allowedEscalations": ["network-read"]
+    },
+    "sarif-parsing": {
+      "defaultProfile": "develop",
+      "allowedEscalations": []
+    },
+    "security-review": {
+      "defaultProfile": "observe",
+      "allowedEscalations": ["network-read", "publish"]
+    },
+    "security-threat-model": {
+      "defaultProfile": "develop",
+      "allowedEscalations": []
+    },
+    "semgrep": {
+      "defaultProfile": "develop",
+      "allowedEscalations": ["network-read"]
+    },
+    "semgrep-rule-creator": {
+      "defaultProfile": "develop",
+      "allowedEscalations": []
+    },
+    "semgrep-rule-variant-creator": {
+      "defaultProfile": "develop",
+      "allowedEscalations": []
+    },
+    "sharp-edges": {
+      "defaultProfile": "observe",
+      "allowedEscalations": []
+    },
+    "skill-creator": {
+      "defaultProfile": "develop",
+      "allowedEscalations": ["network-read"]
+    },
+    "supply-chain-risk-auditor": {
+      "defaultProfile": "develop",
+      "allowedEscalations": ["network-read"]
+    },
+    "train-sentence-transformers": {
+      "defaultProfile": "publish",
+      "allowedEscalations": []
+    },
+    "transformers-js": {
+      "defaultProfile": "develop",
+      "allowedEscalations": ["network-read"]
+    },
+    "trl-training": {
+      "defaultProfile": "publish",
+      "allowedEscalations": []
+    },
+    "variant-analysis": {
+      "defaultProfile": "observe",
+      "allowedEscalations": []
+    },
+    "vuln-report": {
+      "defaultProfile": "observe",
+      "allowedEscalations": ["develop"]
+    }
+  }
+}

@@ -118,6 +118,13 @@ test("installer copies only selected skills, skips existing skills, and replaces
       /Third-Party Notices/,
     );
     assert.ok((await readdir(path.join(destination, "code-review", "LICENSES"))).length > 0);
+    const sandboxPolicy = JSON.parse(
+      await readFile(path.join(destination, "code-review", "SANDBOX_POLICY.json"), "utf8"),
+    );
+    assert.equal(sandboxPolicy.skill, "code-review");
+    assert.equal(sandboxPolicy.profile.name, "observe");
+    assert.equal(sandboxPolicy.enforcementLevel, "advisory");
+    assert.match(sandboxPolicy.warning, /advisory/i);
 
     const sentinel = path.join(destination, "code-review", "stale.txt");
     await writeFile(sentinel, "stale", "utf8");

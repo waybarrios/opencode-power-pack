@@ -6,6 +6,7 @@ import {
   existsSync,
   mkdirSync,
   mkdtempSync,
+  readFileSync,
   readdirSync,
   rmSync,
   writeFileSync,
@@ -52,6 +53,9 @@ test("published package relies on native commands and ships every skill", () => 
     "focused review metadata is published",
   );
   assert.ok(packaged.has("bin/opencode-power-pack.mjs"), "selective installer is published");
+  assert.ok(packaged.has("bin/sandbox/policy.mjs"), "sandbox policy resolver is published");
+  assert.ok(packaged.has("sandbox/contract.json"), "sandbox contract is published");
+  assert.ok(packaged.has("sandbox/contract.schema.json"), "sandbox schema is published");
   assert.ok(packaged.has("skillsets.json"), "selective profiles are published");
   for (const prefix of ["evals/", "scripts/", "tests/", "docs/superpowers/"]) {
     assert.equal(
@@ -121,6 +125,27 @@ test("packed npm artifact exposes a working selective-installer executable", () 
     assert.match(output, /Profiles:/);
     assert.match(output, /recommended/);
     assert.match(output, /code-review/);
+    const sandboxOutput = execFileSync(executable, ["sandbox", "doctor"], {
+      cwd: installRoot,
+      encoding: "utf8",
+    });
+    assert.match(sandboxOutput, /Sandbox contract: valid/);
+    assert.match(sandboxOutput, /Assigned skills: 54\/54/);
+    assert.match(sandboxOutput, /Strict ready: no/);
+    mkdirSync(join(installRoot, ".git"));
+    execFileSync(executable, ["install", "code-review", "--project"], {
+      cwd: installRoot,
+      encoding: "utf8",
+    });
+    const installedPolicy = JSON.parse(
+      readFileSync(
+        join(installRoot, ".agents", "skills", "code-review", "SANDBOX_POLICY.json"),
+        "utf8",
+      ),
+    );
+    assert.equal(installedPolicy.skill, "code-review");
+    assert.equal(installedPolicy.profile.name, "observe");
+    assert.equal(installedPolicy.enforcementLevel, "advisory");
   } finally {
     rmSync(packedRoot, { recursive: true, force: true });
   }

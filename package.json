@@ -21,6 +21,7 @@
     ".codex-plugin",
     ".opencode",
     "bin",
+    "sandbox",
     "assets",
     "skillsets.json",
     "UPSTREAMS.json",
@@ -29,6 +30,7 @@
   ],
   "scripts": {
     "test": "node --test",
+    "test:sandbox": "node --test tests/sandbox-policy.test.mjs",
     "prepublishOnly": "npm test",
     "eval:behavioral": "node scripts/behavioral-evals.mjs run",
     "eval:behavioral:accept": "node scripts/behavioral-evals.mjs accept",
