@@ -57,7 +57,7 @@ test("Codex manifest does not declare absent plugin components", () => {
   assert.equal("hooks" in manifest, false);
 });
 
-test("repository marketplace installs the root plugin from main", () => {
+test("repository marketplace installs the root plugin from its checkout", () => {
   assert.equal(marketplace.name, "opencode-power-pack");
   assert.equal(
     marketplace.interface.displayName,
@@ -68,9 +68,8 @@ test("repository marketplace installs the root plugin from main", () => {
   const [entry] = marketplace.plugins;
   assert.equal(entry.name, manifest.name);
   assert.deepEqual(entry.source, {
-    source: "url",
-    url: "https://github.com/waybarrios/opencode-power-pack.git",
-    ref: "main",
+    source: "local",
+    path: "./",
   });
   assert.deepEqual(entry.policy, {
     installation: "AVAILABLE",

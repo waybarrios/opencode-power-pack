@@ -1,0 +1,25 @@
+[scanner]
+profile = "public-marketplace"
+# Tests and behavioral-evaluation fixtures are contributor-only and excluded
+# from the published npm package. The two reference files intentionally contain
+# insecure examples that their skills teach reviewers to detect.
+ignore_paths = [
+  "tests/*",
+  "evals/*",
+  "skills/insecure-defaults/references/examples.md",
+  "skills/sharp-edges/references/config-patterns.md",
+  "skills/agentic-actions-auditor/SKILL.md",
+  "skills/agentic-actions-auditor/references/*",
+  # Cisco's generic YARA rules treat these reviewed examples as command or
+  # prompt injection: a Ruby anti-pattern, a shell-free argv list, and HTML
+  # guidance that mentions a hidden input.
+  "skills/sharp-edges/references/lang-ruby.md",
+  "skills/hf-cloud-python-env-setup/scripts/setup_env.py",
+  "skills/huggingface-lora-space-builder/references/creative-mode.md",
+]
+
+[rules]
+# Network-capable Hugging Face skills intentionally document explicit remote
+# reads. Keep the findings visible without classifying those expected examples
+# as high-severity vulnerabilities.
+severity_overrides = { RISKY_SKILL_INSTRUCTION = "medium" }

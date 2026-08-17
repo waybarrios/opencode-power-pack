@@ -7,9 +7,8 @@
     {
       "name": "opencode-power-pack",
       "source": {
-        "source": "url",
-        "url": "https://github.com/waybarrios/opencode-power-pack.git",
-        "ref": "main"
+        "source": "local",
+        "path": "./"
       },
       "policy": {
         "installation": "AVAILABLE",
