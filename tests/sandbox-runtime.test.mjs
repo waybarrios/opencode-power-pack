@@ -402,6 +402,55 @@ test("runner initializes before spawn, uses shell false, propagates exit codes, 
   assert.doesNotMatch(diagnostics, /GH_TOKEN|secret|literal/);
 });
 
+test("macOS runner enables correlated violation diagnostics for failed commands", async () => {
+  const fixture = await mkdtemp(path.join(os.tmpdir(), "opp-macos-diagnostic-"));
+  const workspace = path.join(fixture, "workspace");
+  await mkdir(workspace);
+  let monitorEnabled;
+  let commandId;
+  let diagnostics = "";
+  const manager = {
+    isSupportedPlatform: () => true,
+    initialize: async (_config, _callback, enabled) => { monitorEnabled = enabled; },
+    wrapWithSandboxArgv: async (_command, _shell, _a, _b, _cwd, options) => {
+      commandId = options.commandId;
+      return fakeMacSandboxDescriptor();
+    },
+    getSandboxViolationStore: () => ({
+      getViolationsForCommand: (id) => id === commandId
+        ? [{ line: "deny process-exec-interpreter /bin/sh" }]
+        : [],
+    }),
+    reset: async () => {},
+  };
+  try {
+    assert.equal(await runSandboxedCommand({
+      profile: profile("observe"),
+      allowedDomains: [],
+      allowedEnvironment: [],
+      confirmExternalSideEffects: false,
+      command: ["true"],
+    }, {
+      cwd: workspace,
+      home: os.homedir(),
+      temporaryRoot: fixture,
+      env: { PATH: "/usr/bin:/bin" },
+      platform: "darwin",
+      loadRuntime: async () => ({
+        SandboxManager: manager,
+        SandboxRuntimeConfigSchema: { parse: (config) => config },
+      }),
+      spawn: fakeSpawn(126),
+      writeError: (message) => { diagnostics += message; },
+    }), 126);
+    assert.equal(monitorEnabled, true);
+    assert.match(commandId, /^[0-9a-f-]{36}$/);
+    assert.match(diagnostics, /Sandbox violation: deny process-exec-interpreter \/bin\/sh/);
+  } finally {
+    await rm(fixture, { recursive: true, force: true });
+  }
+});
+
 test("runner canonicalizes a symlinked temporary root before compiling private paths", async () => {
   const fixture = await mkdtemp(path.join(os.tmpdir(), "opp-canonical-temp-"));
   const actualTemporaryRoot = path.join(fixture, "actual-temp");

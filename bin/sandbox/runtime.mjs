@@ -1278,13 +1278,14 @@ async function runSandboxedCommandOnce(options, context = {}) {
     const runtimeSignalSource = context.runtimeSignalSource || process;
     const cleanupListenerSnapshot = snapshotRuntimeCleanupListeners(runtimeSignalSource);
     try {
-      await manager.initialize(runtimeConfig);
+      await manager.initialize(runtimeConfig, undefined, platform === "darwin");
     } finally {
       removeAddedRuntimeCleanupListeners(runtimeSignalSource, cleanupListenerSnapshot);
     }
 
     const previousTemp = process.env.CLAUDE_CODE_TMPDIR;
     process.env.CLAUDE_CODE_TMPDIR = path.join(runRoot, "tmp");
+    const commandId = randomUUID();
     let descriptor;
     try {
       descriptor = await manager.wrapWithSandboxArgv(
@@ -1293,7 +1294,7 @@ async function runSandboxedCommandOnce(options, context = {}) {
         undefined,
         undefined,
         executionCwd,
-        { commandId: randomUUID(), commandText: options.command[0] },
+        { commandId, commandText: options.command[0] },
       );
       descriptor = enableMacOSInterpreterExecution(descriptor, platform);
     } finally {
@@ -1312,6 +1313,13 @@ async function runSandboxedCommandOnce(options, context = {}) {
       killProcess: context.killProcess,
       signalGraceMs: context.signalGraceMs,
     });
+    if (platform === "darwin" && childResult.code !== 0 && manager.getSandboxViolationStore) {
+      await new Promise((resolve) => setTimeout(resolve, 200));
+      const violations = manager.getSandboxViolationStore().getViolationsForCommand(commandId);
+      for (const violation of violations) {
+        context.writeError?.(`Sandbox violation: ${violation.line}\n`);
+      }
+    }
   } catch (error) {
     operationError = error;
   }

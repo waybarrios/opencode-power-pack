@@ -61,6 +61,7 @@ async function run(profileValue, workspace, command, overrides = {}) {
       ...contextEnvironment,
       OPP_INTEGRATION_SECRET: "must-not-leak",
     },
+    writeError: process.platform === "darwin" ? (message) => process.stderr.write(message) : undefined,
   });
 }
 
@@ -323,11 +324,13 @@ test("real runtime enforces filesystem, environment, network, argv, and exit bou
     assert.equal(networkDenied, 7);
 
     const sharedTemporaryProbe = `/tmp/claude/opp-${process.pid}-probe`;
-    assert.notEqual(await run(OBSERVE, workspace, [
+    const sharedTemporaryExit = await run(OBSERVE, workspace, [
       process.execPath,
       "-e",
       `require('fs').mkdirSync('/tmp/claude',{recursive:true});require('fs').writeFileSync(${JSON.stringify(sharedTemporaryProbe)},'bad')`,
-    ]), 0);
+    ]);
+    if (process.platform === "linux") assert.equal(sharedTemporaryExit, 0);
+    else assert.notEqual(sharedTemporaryExit, 0);
     await assert.rejects(stat(sharedTemporaryProbe), /ENOENT/);
 
     let requests = [];
