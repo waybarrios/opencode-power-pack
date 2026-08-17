@@ -46,6 +46,6 @@ jobs:
             }
           '
       - name: Publish release to GitHub Packages
-        run: npm publish --registry=https://npm.pkg.github.com --access public
+        run: npm publish --ignore-scripts --registry=https://npm.pkg.github.com --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
