@@ -42,6 +42,7 @@ const READ_ONLY_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
 const PROTECTED_ENVIRONMENT = new Set([
   "BASH_ENV",
   "ENV",
+  "GIT_CONFIG_NOSYSTEM",
   "HOME",
   "NODE_OPTIONS",
   "PATH",
@@ -94,7 +95,10 @@ function assertEnvironmentName(name) {
   if (!isEnvironmentName(name)) {
     throw new Error(`Invalid environment variable name: ${name}`);
   }
-  if (PROTECTED_ENVIRONMENT.has(name) || /^(?:DYLD_|LD_)/.test(name)) {
+  if (
+    PROTECTED_ENVIRONMENT.has(name)
+    || /^(?:DYLD_|GIT_CONFIG_|LD_)/.test(name)
+  ) {
     throw new Error(`Sandbox control variable cannot be granted: ${name}`);
   }
 }
@@ -141,6 +145,7 @@ export function applyMacOSCompatibilityProfile(descriptor, platform) {
 
 export function buildChildEnvironment({ sourceEnvironment, allowedEnvironment, workspace, runRoot }) {
   const childEnvironment = {
+    GIT_CONFIG_NOSYSTEM: "1",
     HOME: path.join(runRoot, "home"),
     PATH: unique(
       (sourceEnvironment.PATH || "")
@@ -1056,6 +1061,19 @@ function signalExitCode(signal) {
   return Number.isInteger(number) ? 128 + number : 1;
 }
 
+async function withProcessEnvironment(overrides, operation) {
+  const previous = new Map(Object.keys(overrides).map((name) => [name, process.env[name]]));
+  for (const [name, value] of Object.entries(overrides)) process.env[name] = value;
+  try {
+    return await operation();
+  } finally {
+    for (const [name, value] of previous) {
+      if (value === undefined) delete process.env[name];
+      else process.env[name] = value;
+    }
+  }
+}
+
 const RUNTIME_CLEANUP_EVENTS = ["exit", "SIGINT", "SIGTERM"];
 
 function snapshotRuntimeCleanupListeners(source) {
@@ -1288,18 +1306,22 @@ async function runSandboxedCommandOnce(options, context = {}) {
     if (!manager.isSupportedPlatform()) throw new Error("Sandbox runtime does not support this host.");
     const runtimeConfig = runtime.SandboxRuntimeConfigSchema.parse(compiled.runtimeConfig);
     const runtimeSignalSource = context.runtimeSignalSource || process;
-    const cleanupListenerSnapshot = snapshotRuntimeCleanupListeners(runtimeSignalSource);
-    try {
-      await manager.initialize(runtimeConfig, undefined, platform === "darwin");
-    } finally {
-      removeAddedRuntimeCleanupListeners(runtimeSignalSource, cleanupListenerSnapshot);
-    }
-
-    const previousTemp = process.env.CLAUDE_CODE_TMPDIR;
-    process.env.CLAUDE_CODE_TMPDIR = path.join(runRoot, "tmp");
+    const privateTemporaryDirectory = path.join(runRoot, "tmp");
     const commandId = randomUUID();
     let descriptor;
-    try {
+    await withProcessEnvironment({
+      CLAUDE_CODE_TMPDIR: privateTemporaryDirectory,
+      TEMP: privateTemporaryDirectory,
+      TMP: privateTemporaryDirectory,
+      TMPDIR: privateTemporaryDirectory,
+    }, async () => {
+      const cleanupListenerSnapshot = snapshotRuntimeCleanupListeners(runtimeSignalSource);
+      try {
+        await manager.initialize(runtimeConfig, undefined, platform === "darwin");
+      } finally {
+        removeAddedRuntimeCleanupListeners(runtimeSignalSource, cleanupListenerSnapshot);
+      }
+
       descriptor = await manager.wrapWithSandboxArgv(
         commandToShellString(options.command),
         "/bin/sh",
@@ -1309,10 +1331,7 @@ async function runSandboxedCommandOnce(options, context = {}) {
         { commandId, commandText: options.command[0] },
       );
       descriptor = applyMacOSCompatibilityProfile(descriptor, platform);
-    } finally {
-      if (previousTemp === undefined) delete process.env.CLAUDE_CODE_TMPDIR;
-      else process.env.CLAUDE_CODE_TMPDIR = previousTemp;
-    }
+    });
 
     childResult = await spawnResult(context.spawn || nodeSpawn, descriptor.argv, {
       cwd: executionCwd,

@@ -77,6 +77,7 @@ test("observe compiles to read-only workspace, private temporary writes, and a s
   assert.equal(result.runtimeConfig.allowAppleEvents, false);
   assert.equal(result.childEnvironment.GH_TOKEN, undefined);
   assert.equal(result.childEnvironment.SSH_AUTH_SOCK, undefined);
+  assert.equal(result.childEnvironment.GIT_CONFIG_NOSYSTEM, "1");
   assert.equal(result.childEnvironment.HOME, "/tmp/opp-sandbox-unit/home");
   assert.equal(result.childEnvironment.TMPDIR, "/tmp/opp-sandbox-unit/tmp");
   assert.ok(
@@ -173,6 +174,10 @@ test("network-read blocks raw protocols and mutation-oriented HTTP methods", asy
 test("capability grants and publish confirmation fail closed", () => {
   assert.throws(() => compile({ allowedDomains: ["example.com"] }), /does not permit network/);
   assert.throws(() => compile({ allowedEnvironment: ["GH_TOKEN"] }), /does not permit credential/);
+  assert.throws(() => compile({
+    profile: profile("network-read", { network: "explicit", credentials: "explicit" }),
+    allowedEnvironment: ["GIT_CONFIG_SYSTEM"],
+  }), /Sandbox control variable cannot be granted/);
   assert.throws(
     () => compile({ confirmExternalSideEffects: true }),
     /does not permit external side-effect confirmation/,
@@ -364,14 +369,27 @@ test("macOS descriptor shim enables scripts and raw temp paths, then fails close
 
 test("runner initializes before spawn, uses shell false, propagates exit codes, and resets once", async () => {
   let initialized;
+  let initializationTemporaryEnvironment;
   let resetCount = 0;
   let spawnOptions;
+  let wrappingTemporaryEnvironment;
   let wrappedCommand;
+  const temporaryNames = ["CLAUDE_CODE_TMPDIR", "TEMP", "TMP", "TMPDIR"];
+  const originalTemporaryEnvironment = Object.fromEntries(
+    temporaryNames.map((name) => [name, process.env[name]]),
+  );
+  const captureTemporaryEnvironment = () => Object.fromEntries(
+    temporaryNames.map((name) => [name, process.env[name]]),
+  );
   const manager = {
     isSupportedPlatform: () => true,
-    initialize: async (config) => { initialized = config; },
+    initialize: async (config) => {
+      initialized = config;
+      initializationTemporaryEnvironment = captureTemporaryEnvironment();
+    },
     wrapWithSandboxArgv: async (command) => {
       wrappedCommand = command;
+      wrappingTemporaryEnvironment = captureTemporaryEnvironment();
       return { argv: ["/fake/sandbox", "wrapped"], env: { SHOULD_NOT_LEAK: "yes" } };
     },
     reset: async () => { resetCount += 1; },
@@ -407,6 +425,12 @@ test("runner initializes before spawn, uses shell false, propagates exit codes, 
   assert.equal(spawnOptions.env.GH_TOKEN, undefined);
   assert.equal(spawnOptions.env["JAVA_HOME_17.0.16_x64"], undefined);
   assert.equal(spawnOptions.env.SHOULD_NOT_LEAK, undefined);
+  assert.equal(spawnOptions.env.GIT_CONFIG_NOSYSTEM, "1");
+  assert.deepEqual(initializationTemporaryEnvironment, wrappingTemporaryEnvironment);
+  assert.ok(Object.values(initializationTemporaryEnvironment).every(
+    (value) => value.endsWith(`${path.sep}tmp`) && value.includes("opp-sandbox-"),
+  ));
+  assert.deepEqual(captureTemporaryEnvironment(), originalTemporaryEnvironment);
   assert.equal(initialized.enableWeakerNestedSandbox, false);
   assert.ok(initialized.seccomp.applyPath.endsWith(path.join(
     "vendor",
