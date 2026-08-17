@@ -23,6 +23,22 @@ function clone(value) {
   return structuredClone(value);
 }
 
+test("README announces the sandbox and documents every supported host", async () => {
+  const readme = await readFile(path.join(REPO, "README.md"), "utf8");
+
+  assert.match(readme, /New in v0\.5\.0: Lightweight Native Sandboxes/);
+  assert.match(readme, /sandbox doctor --json/);
+  assert.match(readme, /sandbox exec --skill code-review -- git status --short/);
+  assert.match(readme, /Run the sandbox from each agent/);
+  for (const host of ["Codex", "OpenCode", "Claude Code", "Pi"]) {
+    assert.match(readme, new RegExp(`\\| ${host} \\|`));
+  }
+  assert.match(readme, /shell-contained/);
+  assert.match(readme, /Automatic host routing and whole-agent isolation are not claimed yet/);
+  assert.match(readme, /bubblewrap.*socat.*rg/);
+  assert.match(readme, /Windows native.*Fails closed/);
+});
+
 test("sandbox contract covers every packaged skill with four ordered profiles", async () => {
   const skills = await discoverSkills(REPO);
   const names = skills.map((skill) => skill.name);

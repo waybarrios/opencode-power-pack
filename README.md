@@ -14,6 +14,7 @@
   <a href="https://github.com/waybarrios/opencode-power-pack/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/waybarrios/opencode-power-pack?style=flat-square&color=FFD60A"></a>
   <a href="https://github.com/waybarrios/opencode-power-pack/commits/main"><img alt="Last commit" src="https://img.shields.io/github/last-commit/waybarrios/opencode-power-pack?style=flat-square"></a>
   <a href="https://github.com/waybarrios/opencode-power-pack/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/waybarrios/opencode-power-pack?style=flat-square"></a>
+  <a href="https://github.com/hashgraph-online/hol-guard"><img alt="HOL Guard scanner" src="https://img.shields.io/badge/HOL%20Guard-scanned-00a67e?style=flat-square"></a>
   <img alt="Skills: 54" src="https://img.shields.io/badge/skills-54-FFD60A?style=flat-square&labelColor=0B0F14">
   <img alt="Claude Code plugin" src="https://img.shields.io/badge/Claude_Code-plugin-0B0F14?style=flat-square&labelColor=FFD60A">
   <img alt="OpenCode 1.18.7+" src="https://img.shields.io/badge/opencode-1.18.7%2B-0B0F14?style=flat-square&labelColor=FFD60A">
@@ -33,6 +34,25 @@
   <a href="#how-it-works"><b>Architecture</b></a> ·
   <a href="#acknowledgments"><b>Credits</b></a>
 </p>
+
+## New in v0.5.0: Lightweight Native Sandboxes
+
+OpenCode Power Pack now includes an opt-in, fail-closed sandbox runner for safer command execution from **Codex, OpenCode, Claude Code, and Pi**. It gives all four agents one portable capability contract with four least-privilege profiles, while using native Seatbelt isolation on macOS and Bubblewrap on Linux.
+
+- **Lightweight:** one contained command tree, with no container image, daemon, or persistent sandbox to manage.
+- **Portable:** the same CLI and skill policy work from all four supported coding agents.
+- **Least privilege:** skills default to `observe`, `develop`, `network-read`, or `publish`, with explicit escalation checks.
+- **Fail closed:** unavailable isolation, undeclared escalation, missing confirmation, or backend failure stops execution instead of retrying outside the sandbox.
+
+Install the CLI, verify the boundary from the active agent session, and run a command with the skill's trusted profile:
+
+```bash
+npm install --global @waybarrios/opencode-power-pack@0.5.0
+opencode-power-pack sandbox doctor --json
+opencode-power-pack sandbox exec --skill code-review -- git status --short
+```
+
+The current guarantee is intentionally precise: the command and its descendants are `shell-contained`. Automatic host routing and whole-agent isolation are not claimed yet. See [run the sandbox from each agent](#run-the-sandbox-from-each-agent) and the [complete compatibility specification](docs/sandbox-compatibility.md).
 
 ## Claude Code Quick Install
 
@@ -130,7 +150,7 @@ Run the installer directly from the mirror after authentication:
 npx --registry=https://npm.pkg.github.com @waybarrios/opencode-power-pack list
 ```
 
-Maintainers publish the mirror with the `Publish GitHub Package` workflow. Release events publish automatically, while a manual run requires an existing release tag such as `v0.5.0`. The workflow verifies that the tag matches `package.json`, runs the complete `prepublishOnly` test suite, and authenticates with the repository-scoped `GITHUB_TOKEN`; no package token is stored in the repository.
+Maintainers publish the mirror with the `Publish GitHub Package` workflow. Release events publish automatically, while a manual run requires an existing release tag such as `v0.5.0`. The workflow verifies that the tag matches `package.json`, uploads the artifact already verified by required release CI without rerunning lifecycle scripts, and authenticates with the repository-scoped `GITHUB_TOKEN`; no package token is stored in the repository.
 
 | Profile | Intended use |
 |---|---|
@@ -149,9 +169,10 @@ The npm installer and the full Claude Code/Codex/OpenCode plugins are alternativ
 
 ## Sandbox Capability Contract
 
-The package assigns every bundled skill a default least-capability profile and an explicit set of allowed escalations. Inspect the complete contract or resolve one skill from the CLI:
+The package assigns every bundled skill a default least-capability profile and an explicit set of allowed escalations. Native plugin and package installations expose the skills but do not install the sandbox executable, so install the npm CLI in the same operating-system environment as the agent:
 
 ```bash
+npm install --global @waybarrios/opencode-power-pack@0.5.0
 opencode-power-pack sandbox doctor
 opencode-power-pack sandbox resolve --skill code-review
 opencode-power-pack sandbox resolve --sandbox-profile publish --json
@@ -164,6 +185,51 @@ opencode-power-pack sandbox exec --skill code-review -- rg TODO .
 | `develop` | Write | Denied | Denied |
 | `network-read` | Write | Explicitly approved | Denied |
 | `publish` | Write | Explicitly approved | Explicit confirmation required |
+
+Run an allowed network escalation by naming the destination explicitly:
+
+```bash
+opencode-power-pack sandbox exec \
+  --skill code-review \
+  --sandbox-profile network-read \
+  --allow-domain api.github.com \
+  -- curl https://api.github.com/repos/owner/repository
+```
+
+The literal `--` is required. Everything after it is the contained child command and its arguments. The runner preserves the child exit code and never falls back to an unsandboxed execution.
+
+### Run the sandbox from each agent
+
+Run `sandbox doctor` inside the same agent session that will execute the command. Success in a separate terminal does not prove the active agent can start the native backend.
+
+| Host | How to invoke the runner |
+|---|---|
+| Codex | Ask Codex to use its shell tool for `opencode-power-pack sandbox doctor`, then for the complete `sandbox exec` command. |
+| OpenCode | Ask OpenCode to use its shell tool for `opencode-power-pack sandbox doctor`, then for the complete `sandbox exec` command. |
+| Claude Code | Ask Claude Code to use Bash for `opencode-power-pack sandbox doctor`, then for the complete `sandbox exec` command. |
+| Pi | Ask Pi to use its shell tool for `opencode-power-pack sandbox doctor`, then for the complete `sandbox exec` command. |
+
+Use this prompt in Codex, OpenCode, or Pi:
+
+```text
+Use the shell tool to run `opencode-power-pack sandbox doctor`.
+If it succeeds, run `opencode-power-pack sandbox exec --skill code-review -- git status --short`.
+Do not run the child command separately and do not retry without the sandbox.
+```
+
+For Claude Code, use the same prompt with `Use Bash` in the first sentence. Keep the entire `sandbox exec` invocation in one host shell call.
+
+### Platform requirements
+
+The runner requires Node.js 20.11.0 or newer.
+
+| Platform | Status | Additional requirements |
+|---|---|---|
+| macOS | Supported | Native Seatbelt; `sandbox doctor` performs an operational preflight. |
+| Linux | Supported | Trusted system installations of `bubblewrap`, `socat`, and `rg`, plus working unprivileged user and network namespaces. |
+| WSL2 | Expected, dedicated CI pending | The same Linux dependencies and namespace support. |
+| WSL1 | Unsupported | Required namespace primitives are unavailable. |
+| Windows native | Fails closed | Platform-specific provisioning and boundary tests are not complete. |
 
 The contract continues to report `advisory` because skill metadata does not enforce itself. The npm package also provides an opt-in `sandbox exec` runner backed by a pinned native runtime. When its operational preflight succeeds, `sandbox doctor` reports `shell-contained`; `Strict ready` remains `no` until a host adapter blocks ordinary tool bypasses.
 
