@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
     inputs:
       ref:
-        description: Release tag to publish, for example v0.4.0
+        description: Release tag to publish, for example v0.5.0
         required: true
-        default: v0.4.0
+        default: v0.5.0
 
 concurrency:
   group: github-package-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.event.release.tag_name }}
