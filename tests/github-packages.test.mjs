@@ -21,7 +21,7 @@ test("GitHub Packages workflow publishes an exact release tag with least privile
   assert.match(WORKFLOW, /scope: "@waybarrios"/);
   assert.match(
     WORKFLOW,
-    /npm publish --registry=https:\/\/npm\.pkg\.github\.com --access public/,
+    /npm publish --ignore-scripts --registry=https:\/\/npm\.pkg\.github\.com --access public/,
   );
   assert.match(WORKFLOW, /NODE_AUTH_TOKEN: \$\{\{ secrets\.GITHUB_TOKEN \}\}/);
 });
