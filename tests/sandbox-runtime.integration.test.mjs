@@ -346,13 +346,25 @@ test("real runtime enforces filesystem, environment, network, argv, and exit bou
     assert.ok(address && typeof address !== "string");
     const destination = `127.0.0.1:${address.port}`;
     try {
+      // The upstream proxy excludes loopback by default. Remove that client-side
+      // bypass so this host-side fixture exercises the filtered proxy path.
       assert.equal(await run(NETWORK_READ, workspace, [
+        "env",
+        "-u",
+        "NO_PROXY",
+        "-u",
+        "no_proxy",
         "curl",
         "--fail",
         "--silent",
         `http://${destination}/read`,
       ], { allowedDomains: [destination] }), 0);
       assert.notEqual(await run(NETWORK_READ, workspace, [
+        "env",
+        "-u",
+        "NO_PROXY",
+        "-u",
+        "no_proxy",
         "curl",
         "--fail",
         "--silent",

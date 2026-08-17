@@ -27,6 +27,15 @@ const MACOS_INTERPRETER_PROCESS_RULES = [
   "(allow process-exec-interpreter)",
   "(allow process-fork)",
 ].join("\n");
+const MACOS_DIRECTORY_METADATA_RULE = [
+  "(allow file-read-metadata",
+  "  (vnode-type DIRECTORY))",
+].join("\n");
+const MACOS_TEMP_SYMLINK_METADATA_RULE = [
+  MACOS_DIRECTORY_METADATA_RULE,
+  "(allow file-read-metadata",
+  "  (literal \"/var\"))",
+].join("\n");
 
 const SUPPORTED_PLATFORMS = new Set(["linux", "darwin"]);
 const READ_ONLY_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
@@ -102,7 +111,7 @@ export function commandToShellString(command) {
   return command.map(quotePosixArgument).join(" ");
 }
 
-export function enableMacOSInterpreterExecution(descriptor, platform) {
+export function applyMacOSCompatibilityProfile(descriptor, platform) {
   if (platform !== "darwin") return descriptor;
   if (
     !descriptor
@@ -113,16 +122,19 @@ export function enableMacOSInterpreterExecution(descriptor, platform) {
   ) {
     throw new Error("Pinned macOS sandbox runtime returned an unexpected command descriptor.");
   }
-  const occurrences = descriptor.argv[2].split(MACOS_PROCESS_RULES).length - 1;
-  if (occurrences !== 1) {
-    throw new Error("Pinned macOS sandbox runtime process rules no longer match the verified profile.");
+  const profile = descriptor.argv[2];
+  const anchors = [MACOS_PROCESS_RULES, MACOS_DIRECTORY_METADATA_RULE];
+  if (anchors.some((anchor) => profile.split(anchor).length - 1 !== 1)) {
+    throw new Error("Pinned macOS sandbox runtime rules no longer match the verified profile.");
   }
   return {
     ...descriptor,
     argv: [
       descriptor.argv[0],
       descriptor.argv[1],
-      descriptor.argv[2].replace(MACOS_PROCESS_RULES, MACOS_INTERPRETER_PROCESS_RULES),
+      profile
+        .replace(MACOS_PROCESS_RULES, MACOS_INTERPRETER_PROCESS_RULES)
+        .replace(MACOS_DIRECTORY_METADATA_RULE, MACOS_TEMP_SYMLINK_METADATA_RULE),
     ],
   };
 }
@@ -1296,7 +1308,7 @@ async function runSandboxedCommandOnce(options, context = {}) {
         executionCwd,
         { commandId, commandText: options.command[0] },
       );
-      descriptor = enableMacOSInterpreterExecution(descriptor, platform);
+      descriptor = applyMacOSCompatibilityProfile(descriptor, platform);
     } finally {
       if (previousTemp === undefined) delete process.env.CLAUDE_CODE_TMPDIR;
       else process.env.CLAUDE_CODE_TMPDIR = previousTemp;

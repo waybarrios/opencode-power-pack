@@ -20,7 +20,7 @@ import {
   buildChildEnvironment,
   commandToShellString,
   compileSandboxExecution,
-  enableMacOSInterpreterExecution,
+  applyMacOSCompatibilityProfile,
   assertNoExternalHardlinks,
   existingSystemReadRoots,
   probeSandboxRuntime,
@@ -318,25 +318,46 @@ function fakeMacSandboxDescriptor() {
     argv: [
       "/bin/sh",
       "-c",
-      "sandbox-exec -p '(allow process-exec)\n(allow process-fork)' /bin/sh -c true",
+      "sandbox-exec -p '(allow file-read-metadata\n  (vnode-type DIRECTORY))\n(allow process-exec)\n(allow process-fork)' /bin/sh -c true",
     ],
     env: {},
   };
 }
 
-test("macOS descriptor shim enables shebang interpreters and fails closed on upstream drift", () => {
+test("macOS descriptor shim enables scripts and raw temp paths, then fails closed on drift", () => {
   const original = fakeMacSandboxDescriptor();
-  const patched = enableMacOSInterpreterExecution(original, "darwin");
+  const patched = applyMacOSCompatibilityProfile(original, "darwin");
   assert.notEqual(patched, original);
   assert.match(patched.argv[2], /\(allow process-exec-interpreter\)/);
+  assert.match(
+    patched.argv[2],
+    /\(vnode-type DIRECTORY\)\)\n\(allow file-read-metadata\n  \(literal "\/var"\)\)/,
+  );
+  assert.doesNotMatch(patched.argv[2], /\(subpath "\/var"\)/);
   assert.doesNotMatch(original.argv[2], /process-exec-interpreter/);
-  assert.equal(enableMacOSInterpreterExecution(original, "linux"), original);
+  assert.equal(applyMacOSCompatibilityProfile(original, "linux"), original);
   assert.throws(
-    () => enableMacOSInterpreterExecution({ argv: ["/bin/sh", "-c", "changed"] }, "darwin"),
-    /process rules no longer match/,
+    () => applyMacOSCompatibilityProfile({
+      argv: [
+        "/bin/sh",
+        "-c",
+        "(allow file-read-metadata\n  (vnode-type DIRECTORY))\nchanged",
+      ],
+    }, "darwin"),
+    /rules no longer match/,
   );
   assert.throws(
-    () => enableMacOSInterpreterExecution({ argv: ["unexpected"] }, "darwin"),
+    () => applyMacOSCompatibilityProfile({
+      argv: [
+        "/bin/sh",
+        "-c",
+        "(allow process-exec)\n(allow process-fork)",
+      ],
+    }, "darwin"),
+    /rules no longer match/,
+  );
+  assert.throws(
+    () => applyMacOSCompatibilityProfile({ argv: ["unexpected"] }, "darwin"),
     /unexpected command descriptor/,
   );
 });
