@@ -210,11 +210,15 @@ test("real runtime enforces filesystem, environment, network, argv, and exit bou
       "require('fs').writeFileSync('../sibling/.npmrc','changed')",
     ]), 0);
     assert.equal(await readFile(path.join(credentialSibling, ".npmrc"), "utf8"), "sibling-token");
-    assert.equal(await run(DEVELOP, nestedWorkspace, [
+    const siblingSshWriteExit = await run(DEVELOP, nestedWorkspace, [
       process.execPath,
       "-e",
       "require('fs').writeFileSync('../sibling/.ssh/id_test','changed')",
-    ]), 0);
+    ]);
+    // Bubblewrap shadows denied directories with disposable mounts, while
+    // Seatbelt rejects the write directly. Neither backend may alter the host.
+    if (process.platform === "linux") assert.equal(siblingSshWriteExit, 0);
+    else assert.notEqual(siblingSshWriteExit, 0);
     assert.equal(
       await readFile(path.join(credentialSibling, ".ssh", "id_test"), "utf8"),
       "sibling-key",
