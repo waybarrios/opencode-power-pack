@@ -174,6 +174,17 @@ export function resolveSandboxProfile(contract, { skillName, profileName }) {
   };
 }
 
+export function resolveSandboxExecutionProfile(contract, { skillName, profileName }) {
+  if (!skillName) throw new Error("sandbox exec requires --skill.");
+  const resolution = resolveSandboxProfile(contract, { skillName });
+  if (!profileName || profileName === resolution.profile.name) return resolution.profile;
+  const escalation = resolution.allowedEscalations.find((profile) => profile.name === profileName);
+  if (!escalation) {
+    throw new Error(`Skill ${skillName} does not permit sandbox profile: ${profileName}`);
+  }
+  return escalation;
+}
+
 export function portableSkillPolicy(contract, skillName) {
   const resolution = resolveSandboxProfile(contract, { skillName });
   return {
@@ -187,19 +198,30 @@ export function portableSkillPolicy(contract, skillName) {
   };
 }
 
-export function sandboxDoctorReport(contract, availableSkillNames) {
+export function sandboxDoctorReport(contract, availableSkillNames, runtimeStatus) {
   validateSandboxContract(contract, availableSkillNames);
+  const status = runtimeStatus || {
+    backend: "not-configured",
+    runnerReady: false,
+    executionLevel: "advisory",
+    errors: [],
+    warnings: [],
+  };
   return {
     ok: true,
     schemaVersion: contract.schemaVersion,
     enforcementLevel: contract.enforcementLevel,
-    backend: "not-configured",
+    backend: status.backend,
+    runnerReady: status.runnerReady,
+    executionLevel: status.executionLevel,
     strictReady: false,
     profiles: Object.keys(contract.profiles).length,
     assignedSkills: Object.keys(contract.skills).length,
     packagedSkills: availableSkillNames.length,
     warnings: [
-      "Capability profiles are advisory until an enforcement backend and host adapter are active.",
+      ...status.errors.map((error) => `Runtime unavailable: ${error}`),
+      ...status.warnings,
+      "Skill metadata remains advisory until a host adapter routes commands through sandbox exec.",
     ],
   };
 }

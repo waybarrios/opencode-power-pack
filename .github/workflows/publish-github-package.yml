@@ -33,6 +33,7 @@ jobs:
           node-version: "20"
           registry-url: "https://npm.pkg.github.com"
           scope: "@waybarrios"
+      - run: npm ci
       - name: Verify tag matches package version
         run: |
           node --input-type=module -e '

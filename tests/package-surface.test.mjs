@@ -16,7 +16,7 @@ import { join } from "node:path";
 
 const REPO = process.env.REPO || process.cwd();
 
-test("published package relies on native commands and ships every skill", () => {
+test("published package ships every skill and the sandbox runtime entrypoint", () => {
   const output = execFileSync("npm", ["pack", "--dry-run", "--json"], {
     cwd: REPO,
     encoding: "utf8",
@@ -54,8 +54,13 @@ test("published package relies on native commands and ships every skill", () => 
   );
   assert.ok(packaged.has("bin/opencode-power-pack.mjs"), "selective installer is published");
   assert.ok(packaged.has("bin/sandbox/policy.mjs"), "sandbox policy resolver is published");
+  assert.ok(packaged.has("bin/sandbox/runtime.mjs"), "sandbox runtime adapter is published");
   assert.ok(packaged.has("sandbox/contract.json"), "sandbox contract is published");
   assert.ok(packaged.has("sandbox/contract.schema.json"), "sandbox schema is published");
+  assert.ok(
+    packaged.has("docs/sandbox-compatibility.md"),
+    "cross-agent sandbox compatibility documentation is published",
+  );
   assert.ok(packaged.has("skillsets.json"), "selective profiles are published");
   for (const prefix of ["evals/", "scripts/", "tests/", "docs/superpowers/"]) {
     assert.equal(
@@ -125,13 +130,32 @@ test("packed npm artifact exposes a working selective-installer executable", () 
     assert.match(output, /Profiles:/);
     assert.match(output, /recommended/);
     assert.match(output, /code-review/);
-    const sandboxOutput = execFileSync(executable, ["sandbox", "doctor"], {
+    const sandboxDoctor = spawnSync(executable, ["sandbox", "doctor"], {
       cwd: installRoot,
       encoding: "utf8",
     });
+    const sandboxOutput = sandboxDoctor.stdout;
     assert.match(sandboxOutput, /Sandbox contract: valid/);
     assert.match(sandboxOutput, /Assigned skills: 54\/54/);
+    assert.match(sandboxOutput, /Backend: @anthropic-ai\/sandbox-runtime@0\.0\.73/);
     assert.match(sandboxOutput, /Strict ready: no/);
+    assert.equal(
+      sandboxDoctor.status,
+      /Runner ready: yes/.test(sandboxOutput) ? 0 : 1,
+      sandboxDoctor.stderr,
+    );
+    const installedManifest = JSON.parse(
+      readFileSync(
+        join(installRoot, "node_modules", "@waybarrios", "opencode-power-pack", "package.json"),
+        "utf8",
+      ),
+    );
+    assert.equal(installedManifest.dependencies["@anthropic-ai/sandbox-runtime"], "0.0.73");
+    execFileSync(process.execPath, [
+      "--input-type=module",
+      "--eval",
+      "const r=await import('@anthropic-ai/sandbox-runtime');if(typeof r.SandboxManager?.initialize!=='function')process.exit(2)",
+    ], { cwd: installRoot, encoding: "utf8" });
     mkdirSync(join(installRoot, ".git"));
     execFileSync(executable, ["install", "code-review", "--project"], {
       cwd: installRoot,

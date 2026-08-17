@@ -6,10 +6,12 @@ import {
   discoverSkills,
   main,
   parseSandboxArgs,
+  parseSandboxExecArgs,
 } from "../bin/opencode-power-pack.mjs";
 import {
   loadSandboxContract,
   portableSkillPolicy,
+  resolveSandboxExecutionProfile,
   resolveSandboxProfile,
   sandboxDoctorReport,
   validateSandboxContract,
@@ -129,6 +131,33 @@ test("skill and direct-profile resolution report advisory capabilities explicitl
   );
 });
 
+test("sandbox execution authorizes only a skill default or declared escalation", async () => {
+  const contract = await loadSandboxContract(REPO);
+
+  assert.equal(
+    resolveSandboxExecutionProfile(contract, { skillName: "code-review" }).name,
+    "observe",
+  );
+  assert.equal(
+    resolveSandboxExecutionProfile(contract, {
+      skillName: "code-review",
+      profileName: "network-read",
+    }).name,
+    "network-read",
+  );
+  assert.throws(
+    () => resolveSandboxExecutionProfile(contract, {
+      skillName: "frontend-design",
+      profileName: "publish",
+    }),
+    /does not permit sandbox profile/,
+  );
+  assert.throws(
+    () => resolveSandboxExecutionProfile(contract, { profileName: "publish" }),
+    /requires --skill/,
+  );
+});
+
 test("portable policies remain self-describing and never claim enforcement", async () => {
   const contract = await loadSandboxContract(REPO);
   const policy = portableSkillPolicy(contract, "huggingface-spaces");
@@ -140,23 +169,31 @@ test("portable policies remain self-describing and never claim enforcement", asy
   assert.match(policy.warning, /advisory/i);
 });
 
-test("sandbox doctor reports complete coverage and no configured backend", async () => {
+test("sandbox doctor reports complete coverage and the opt-in runner separately", async () => {
   const skills = await discoverSkills(REPO);
   const names = skills.map((skill) => skill.name);
   const contract = await loadSandboxContract(REPO, names);
-  const report = sandboxDoctorReport(contract, names);
+  const report = sandboxDoctorReport(contract, names, {
+    backend: "@anthropic-ai/sandbox-runtime@0.0.73",
+    runnerReady: true,
+    executionLevel: "shell-contained",
+    errors: [],
+    warnings: [],
+  });
 
   assert.deepEqual(report, {
     ok: true,
     schemaVersion: 1,
     enforcementLevel: "advisory",
-    backend: "not-configured",
+    backend: "@anthropic-ai/sandbox-runtime@0.0.73",
+    runnerReady: true,
+    executionLevel: "shell-contained",
     strictReady: false,
     profiles: 4,
     assignedSkills: 54,
     packagedSkills: 54,
     warnings: [
-      "Capability profiles are advisory until an enforcement backend and host adapter are active.",
+      "Skill metadata remains advisory until a host adapter routes commands through sandbox exec.",
     ],
   });
 });
@@ -168,12 +205,34 @@ test("sandbox CLI supports deterministic text and JSON output", async () => {
     home: REPO,
     packageRoot: REPO,
     write: (text) => { output += text; },
+    runtimeProbeContext: {
+      platform: "linux",
+      loadRuntime: async () => ({
+        SandboxManager: {
+          isSupportedPlatform: () => true,
+          checkDependenciesAsync: async () => ({ errors: [], warnings: [] }),
+        },
+      }),
+      hostProbe: async () => ({ errors: [], warnings: [] }),
+    },
   };
 
   assert.equal(await main(["sandbox", "doctor"], context), 0);
   assert.match(output, /Assigned skills: 54\/54/);
   assert.match(output, /Enforcement: advisory/);
+  assert.match(output, /Runner ready: yes/);
+  assert.match(output, /Execution level: shell-contained/);
   assert.match(output, /Strict ready: no/);
+
+  output = "";
+  assert.equal(await main(["sandbox", "doctor", "--json"], {
+    ...context,
+    runtimeProbeContext: {
+      platform: "linux",
+      loadRuntime: async () => { throw new Error("runtime unavailable"); },
+    },
+  }), 1);
+  assert.equal(JSON.parse(output).runnerReady, false);
 
   output = "";
   assert.equal(
@@ -191,7 +250,7 @@ test("sandbox CLI parser fails closed on ambiguous and malformed selectors", () 
     command: "doctor",
     json: true,
   });
-  assert.throws(() => parseSandboxArgs([]), /doctor or resolve/);
+  assert.throws(() => parseSandboxArgs([]), /doctor, resolve, or exec/);
   assert.throws(() => parseSandboxArgs(["missing"]), /Unknown sandbox command/);
   assert.throws(() => parseSandboxArgs(["resolve"]), /requires --skill or --sandbox-profile/);
   assert.throws(
@@ -199,4 +258,41 @@ test("sandbox CLI parser fails closed on ambiguous and malformed selectors", () 
     /exactly one/,
   );
   assert.throws(() => parseSandboxArgs(["doctor", "--skill", "code-review"]), /only valid/);
+});
+
+test("sandbox exec parser preserves the argv boundary and rejects incomplete grants", () => {
+  assert.deepEqual(
+    parseSandboxExecArgs([
+      "--skill",
+      "code-review",
+      "--sandbox-profile",
+      "network-read",
+      "--allow-domain",
+      "api.github.com",
+      "--allow-env",
+      "GH_TOKEN",
+      "--",
+      "node",
+      "--skill",
+      "literal child argument",
+    ]),
+    {
+      command: "exec",
+      skillName: "code-review",
+      profileName: "network-read",
+      allowedDomains: ["api.github.com"],
+      allowedEnvironment: ["GH_TOKEN"],
+      confirmExternalSideEffects: false,
+      childCommand: ["node", "--skill", "literal child argument"],
+    },
+  );
+  assert.throws(
+    () => parseSandboxExecArgs(["--skill", "code-review", "node", "script.mjs"]),
+    /requires --/,
+  );
+  assert.throws(() => parseSandboxExecArgs(["--", "node"]), /requires --skill/);
+  assert.throws(
+    () => parseSandboxExecArgs(["--skill", "code-review", "--allow-env", "--", "node"]),
+    /--allow-env requires a value/,
+  );
 });
