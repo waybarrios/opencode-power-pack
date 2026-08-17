@@ -100,6 +100,7 @@ test("packed npm artifact exposes a working selective-installer executable", () 
     npm_config_dry_run: "false",
     npm_config_json: "false",
     npm_config_loglevel: "silent",
+    npm_config_registry: "https://registry.npmjs.org/",
   };
   try {
     mkdirSync(installRoot, { recursive: true });
