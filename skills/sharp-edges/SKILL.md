@@ -147,7 +147,7 @@ public function __construct(
 ) {}
 ```
 
-See [config-patterns.md](references/config-patterns.md#unvalidated-constructor-parameters) for detailed patterns.
+See [config-patterns.md](references/config-patterns.md) for detailed patterns.
 
 ### 5. Silent Failures
 
@@ -286,4 +286,4 @@ Before concluding analysis:
 - [ ] Considered all three adversary types
 - [ ] Verified error paths don't bypass security
 - [ ] Checked configuration validation
-- [ ] Constructor params validated (not just defaulted) - see [config-patterns.md](references/config-patterns.md#unvalidated-constructor-parameters)
+- [ ] Constructor params validated (not just defaulted) - see [config-patterns.md](references/config-patterns.md)

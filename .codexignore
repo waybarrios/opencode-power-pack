@@ -1,0 +1,18 @@
+# Local environment and credential files
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Dependency and generated output
+node_modules/
+coverage/
+dist/
+evals/reports/
+
+# Editor and operating-system state
+.DS_Store
+.idea/
+.vscode/
+*.swp
