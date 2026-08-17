@@ -130,7 +130,7 @@ Run the installer directly from the mirror after authentication:
 npx --registry=https://npm.pkg.github.com @waybarrios/opencode-power-pack list
 ```
 
-Maintainers publish the mirror with the `Publish GitHub Package` workflow. Release events publish automatically, while a manual run requires an existing release tag such as `v0.4.0`. The workflow verifies that the tag matches `package.json`, runs the complete `prepublishOnly` test suite, and authenticates with the repository-scoped `GITHUB_TOKEN`; no package token is stored in the repository.
+Maintainers publish the mirror with the `Publish GitHub Package` workflow. Release events publish automatically, while a manual run requires an existing release tag such as `v0.5.0`. The workflow verifies that the tag matches `package.json`, runs the complete `prepublishOnly` test suite, and authenticates with the repository-scoped `GITHUB_TOKEN`; no package token is stored in the repository.
 
 | Profile | Intended use |
 |---|---|

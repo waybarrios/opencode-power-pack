@@ -2,7 +2,7 @@
 
 This document defines what sandbox compatibility means for Codex, Claude Code, OpenCode, and Pi. It separates portable policy support from automatic host enforcement so installation never implies a security guarantee that is not active.
 
-Last verified: 2026-08-16
+Last verified: 2026-08-17
 
 Locally inspected host versions:
 
