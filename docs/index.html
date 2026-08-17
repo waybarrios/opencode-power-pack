@@ -6,7 +6,7 @@
     <title>Documentation | OpenCode Power Pack</title>
     <meta
       name="description"
-      content="Install and use OpenCode Power Pack Agent Skills with Claude Code, Codex, OpenCode, and Pi. npm profiles, host setup, skill selection, updates, and troubleshooting."
+      content="Install and use OpenCode Power Pack Agent Skills and its opt-in native sandbox runner with Claude Code, Codex, OpenCode, and Pi."
    >
     <meta name="robots" content="index, follow, max-snippet:-1">
     <meta name="theme-color" content="#0b0f14">
@@ -45,15 +45,15 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&amp;family=IBM+Plex+Mono:wght@400;500;600;700&amp;display=swap"
       rel="stylesheet"
    >
-    <link rel="stylesheet" href="../styles.css?v=0.4.0-responsive-prompt-1">
+    <link rel="stylesheet" href="../styles.css?v=0.5.0-sandbox-1">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "TechArticle",
         "headline": "OpenCode Power Pack Documentation",
-        "description": "Installation and usage documentation for OpenCode Power Pack Agent Skills.",
+        "description": "Installation, usage, and native sandbox documentation for OpenCode Power Pack Agent Skills.",
         "url": "https://skills.waybarrios.com/docs/",
-        "dateModified": "2026-08-13",
+        "dateModified": "2026-08-17",
         "author": {
           "@type": "Person",
           "name": "Wayner Barrios",
@@ -87,9 +87,9 @@
   <body class="docs-body">
     <a class="skip-link" href="#docs-main">Skip to documentation</a>
     <div class="status-rail" aria-hidden="true">
-      <span>DOCUMENTATION // v0.4.0</span>
+      <span>DOCUMENTATION // v0.5.0</span>
       <span>54 MODULES</span>
-      <span>LAST UPDATED 2026-08-13</span>
+      <span>LAST UPDATED 2026-08-17</span>
     </div>
 
     <div class="docs-shell">
@@ -105,6 +105,7 @@
           <a href="#npm">Selective npm</a>
           <a href="#agent-install">Agent-assisted install</a>
           <a href="#cli">CLI reference</a>
+          <a href="#sandbox">Sandbox runner</a>
           <a href="#how-skills-work">How skills work</a>
           <a href="#hosts">Full host installs</a>
           <a href="#profiles">Profiles + contents</a>
@@ -127,8 +128,8 @@
           <h1>Documentation</h1>
           <p>
             Start with the installation model, then choose a profile or individual workflow. This guide
-            explains destinations, dependency resolution, host activation, invocation, verification,
-            updates, removal, and the purpose of every bundled skill.
+            explains destinations, dependency resolution, host activation, contained command execution,
+            verification, updates, removal, and the purpose of every bundled skill.
           </p>
         </header>
 
@@ -368,6 +369,161 @@ opencode-power-pack list
 opencode-power-pack install code-review</code></div>
         </section>
 
+        <section class="docs-section" id="sandbox">
+          <h2>Run commands in the native sandbox</h2>
+          <p>
+            Version 0.5.0 adds an opt-in, fail-closed runner for one command and its complete process tree.
+            It uses native Seatbelt isolation on macOS and Bubblewrap on Linux. It starts no persistent
+            container or daemon, and it removes its private temporary directory after the command exits.
+          </p>
+
+          <h3>Install and check readiness</h3>
+          <p>
+            The sandbox runtime is part of the npm package. Node.js 20.11.0 or newer is required. Linux
+            also needs trusted system installations of <code>bubblewrap</code>, <code>socat</code>, and
+            <code>rg</code>. macOS uses the built-in Seatbelt backend.
+          </p>
+          <div class="docs-code"><code># Keep the v0.5.0 CLI available
+npm install --global @waybarrios/opencode-power-pack@0.5.0
+
+# Verify the actual operating-system boundary
+opencode-power-pack sandbox doctor
+
+# Inspect the policy assigned to one skill
+opencode-power-pack sandbox resolve --skill code-review</code></div>
+          <p class="note">
+            Continue only when <code>sandbox doctor</code> exits successfully and reports
+            <code>runnerReady: true</code> in JSON mode. A failed doctor never authorizes an unsandboxed retry.
+          </p>
+
+          <h3>Run a contained command</h3>
+          <div class="docs-code"><code># code-review defaults to the read-only observe profile
+opencode-power-pack sandbox exec --skill code-review -- git status --short
+
+# The literal -- ends runner options and starts the child command
+opencode-power-pack sandbox exec --skill code-review -- rg TODO .</code></div>
+          <p>
+            The runner resolves the trusted profile packaged for the selected skill. It preserves the child
+            exit code, hides unrelated host files and credentials, restricts workspace writes according to
+            the profile, and never falls back to ordinary execution when setup or cleanup fails.
+          </p>
+
+          <h3>Allow a narrow network read</h3>
+          <div class="docs-code"><code>opencode-power-pack sandbox exec \
+  --skill code-review \
+  --sandbox-profile network-read \
+  --allow-domain api.github.com \
+  -- curl https://api.github.com/repos/waybarrios/opencode-power-pack</code></div>
+          <p>
+            <code>network-read</code> permits only GET, HEAD, and OPTIONS through the filtered proxy. It is
+            a method-level best effort, because a poorly designed GET endpoint can still have side effects.
+            Approve the narrowest destination and expose no credential unless the retrieval requires it.
+          </p>
+
+          <h3>Confirm an external write</h3>
+          <div class="docs-code"><code>opencode-power-pack sandbox exec \
+  --skill hf-cli \
+  --sandbox-profile publish \
+  --allow-domain huggingface.co \
+  --allow-env HF_TOKEN \
+  --confirm-external-side-effects \
+  -- hf upload owner/repository ./artifact.bin artifact.bin</code></div>
+          <p>
+            A publish-capable skill still requires the exact domain, each credential environment variable,
+            and <code>--confirm-external-side-effects</code>. The runner rejects undeclared escalations.
+          </p>
+
+          <h3>Profiles</h3>
+          <section class="docs-table-wrap" aria-label="Sandbox profile capabilities" tabindex="0">
+            <table class="docs-table">
+              <thead><tr><th>Profile</th><th>Workspace</th><th>Network and credentials</th><th>External writes</th></tr></thead>
+              <tbody>
+                <tr><td><code>observe</code></td><td>Read only</td><td>Denied</td><td>Denied</td></tr>
+                <tr><td><code>develop</code></td><td>Read and write</td><td>Denied</td><td>Denied</td></tr>
+                <tr><td><code>network-read</code></td><td>Read and write</td><td>Explicit grants</td><td>Denied</td></tr>
+                <tr><td><code>publish</code></td><td>Read and write</td><td>Explicit grants</td><td>Explicit confirmation</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <h3>Codex, OpenCode, Claude Code, and Pi compatibility</h3>
+          <section class="docs-table-wrap" aria-label="Sandbox coding-agent compatibility" tabindex="0">
+            <table class="docs-table">
+              <thead><tr><th>Host</th><th>Manual runner</th><th>Automatic routing</th><th>Current boundary</th></tr></thead>
+              <tbody>
+                <tr><td>Codex</td><td>Supported</td><td>Not yet implemented</td><td>Explicit sandbox CLI command and descendants</td></tr>
+                <tr><td>OpenCode</td><td>Supported</td><td>Not yet implemented</td><td>Explicit sandbox CLI command and descendants</td></tr>
+                <tr><td>Claude Code</td><td>Supported</td><td>Not yet implemented</td><td>Explicit sandbox CLI command and descendants</td></tr>
+                <tr><td>Pi</td><td>Supported</td><td>Not yet implemented</td><td>Explicit sandbox CLI command and descendants</td></tr>
+              </tbody>
+            </table>
+          </section>
+          <h3>Run it from each host</h3>
+          <p>
+            Native skill or plugin installation does not place the sandbox CLI on <code>PATH</code>. Install
+            the npm CLI once in the operating-system environment used by the agent, then run the doctor from
+            that same agent session. A doctor that succeeds in another terminal does not prove that a more
+            restricted agent session can start the backend.
+          </p>
+          <div class="docs-code"><code>npm install --global @waybarrios/opencode-power-pack@0.5.0</code></div>
+
+          <article class="host-doc">
+            <header><span>01</span><h3>Codex</h3><b>MANUAL RUNNER</b></header>
+            <p>Paste this request into Codex while the session is open in the target repository:</p>
+            <div class="docs-code"><code>Use the shell tool to run `opencode-power-pack sandbox doctor`.
+If it succeeds, run `opencode-power-pack sandbox exec --skill code-review -- git status --short`.
+Do not run the child command separately and do not retry without the sandbox.</code></div>
+            <p>Codex invokes the shared CLI through its shell tool. Its other tools are not automatically routed through this runner.</p>
+          </article>
+
+          <article class="host-doc">
+            <header><span>02</span><h3>OpenCode</h3><b>MANUAL RUNNER</b></header>
+            <p>Paste this request into OpenCode while the session is open in the target repository:</p>
+            <div class="docs-code"><code>Use the shell tool to run `opencode-power-pack sandbox doctor`.
+If it succeeds, run `opencode-power-pack sandbox exec --skill code-review -- git status --short`.
+Do not run the child command separately and do not retry without the sandbox.</code></div>
+            <p>OpenCode invokes the same CLI through its shell tool. A future custom-tool adapter is required for automatic enforcement.</p>
+          </article>
+
+          <article class="host-doc">
+            <header><span>03</span><h3>Claude Code</h3><b>MANUAL RUNNER</b></header>
+            <p>Paste this request into Claude Code while the session is open in the target repository:</p>
+            <div class="docs-code"><code>Use Bash to run `opencode-power-pack sandbox doctor`.
+If it succeeds, run `opencode-power-pack sandbox exec --skill code-review -- git status --short`.
+Do not run the child command separately and do not retry without the sandbox.</code></div>
+            <p>Claude Code invokes the shared CLI through Bash. Read, Edit, Write, WebFetch, MCP, and computer-use tools remain separate host surfaces.</p>
+          </article>
+
+          <article class="host-doc">
+            <header><span>04</span><h3>Pi</h3><b>MANUAL RUNNER</b></header>
+            <p>Paste this request into Pi while the session is open in the target repository:</p>
+            <div class="docs-code"><code>Use the shell tool to run `opencode-power-pack sandbox doctor`.
+If it succeeds, run `opencode-power-pack sandbox exec --skill code-review -- git status --short`.
+Do not run the child command separately and do not retry without the sandbox.</code></div>
+            <p>Pi invokes the shared CLI through its shell tool. A future extension must replace or intercept built-in tools for automatic enforcement.</p>
+          </article>
+
+          <p class="note">
+            Yes, it works from Codex and OpenCode when either agent explicitly invokes the CLI. A skill file
+            cannot silently change the host session's sandbox. Ordinary shell, file, browser, MCP, and connector
+            tools remain outside this command boundary until host-specific adapters block those bypass paths.
+            The project therefore claims <code>shell-contained</code>, not whole-agent isolation.
+          </p>
+
+          <h3>Platform status</h3>
+          <ul>
+            <li><strong>macOS:</strong> supported with the built-in Seatbelt backend.</li>
+            <li><strong>Linux:</strong> supported when Bubblewrap namespaces and the required trusted helpers are available.</li>
+            <li><strong>WSL2:</strong> expected to use the Linux backend, but dedicated CI is still pending.</li>
+            <li><strong>Windows native and WSL1:</strong> unsupported and intentionally fail closed.</li>
+          </ul>
+          <p>
+            For the complete threat boundary, Git worktree handling, network limitations, native dependency
+            checks, and adapter roadmap, read the
+            <a href="https://github.com/waybarrios/opencode-power-pack/blob/main/docs/sandbox-compatibility.md">sandbox compatibility specification</a>.
+          </p>
+        </section>
+
         <section class="docs-section" id="how-skills-work">
           <h2>How skills work</h2>
           <p>
@@ -423,8 +579,8 @@ codex plugin list --marketplace opencode-power-pack</code></div>
 
           <article class="host-doc" id="host-opencode">
             <header><span>03</span><h3>OpenCode</h3><b>FULL CATALOG</b></header>
-            <p>OpenCode 1.18.7 or newer is required. Pin v0.4.0 for a reproducible installation.</p>
-            <div class="docs-code"><code>opencode plugin --global "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git#v0.4.0"</code></div>
+            <p>OpenCode 1.18.7 or newer is required. Pin v0.5.0 for a reproducible installation.</p>
+            <div class="docs-code"><code>opencode plugin --global "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git#v0.5.0"</code></div>
             <dl>
               <div><dt>Restart</dt><dd>Start a new OpenCode session after the command finishes.</dd></div>
               <div><dt>Verify</dt><dd>Run <code>opencode debug skill</code>; it should list all 54 unprefixed IDs.</dd></div>
@@ -560,7 +716,7 @@ npx @waybarrios/opencode-power-pack@latest install --profile review --force
 # Update one project-local skill
 npx @waybarrios/opencode-power-pack@latest install code-review --project --force</code></div>
           <p>
-            The selective CLI has no remove command in v0.4.0. To remove a copied workflow, verify the
+            The selective CLI has no remove command in v0.5.0. To remove a copied workflow, verify the
             destination printed by the installer and delete only its exact skill directory, such as
             <code>~/.agents/skills/code-review</code> or <code>&lt;repo&gt;/.agents/skills/code-review</code>.
           </p>
@@ -631,6 +787,6 @@ pi remove git:github.com/waybarrios/opencode-power-pack</code></div>
         </section>
       </main>
     </div>
-    <script src="../app.js?v=0.4.0-responsive-prompt-1" defer></script>
+    <script src="../app.js?v=0.5.0-sandbox-1" defer></script>
   </body>
 </html>

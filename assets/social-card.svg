@@ -12,9 +12,9 @@
     <path d="M145 0 0 190h103L78 335l170-219H138z" fill="#ffd60a"/>
   </g>
   <g font-family="IBM Plex Mono,monospace">
-    <text x="390" y="150" fill="#9aa6b2" font-size="22" font-weight="700" letter-spacing="5">OPEN SOURCE // v0.4.0</text>
-    <text x="390" y="270" fill="#f1f0eb" font-family="Barlow Condensed,sans-serif" font-size="112" font-weight="800" letter-spacing="-2">OPENCODE</text>
-    <text x="390" y="370" fill="#ffd60a" font-family="Barlow Condensed,sans-serif" font-size="112" font-weight="800" letter-spacing="2">POWER PACK</text>
+    <text x="390" y="150" fill="#9aa6b2" font-size="22" font-weight="700" letter-spacing="5">OPEN SOURCE // v0.5.0</text>
+    <text x="390" y="270" fill="#f1f0eb" font-family="Barlow Condensed,sans-serif" font-size="94" font-weight="800" letter-spacing="-2">OPENCODE</text>
+    <text x="390" y="370" fill="#ffd60a" font-family="Barlow Condensed,sans-serif" font-size="86" font-weight="800" letter-spacing="2">POWER PACK</text>
     <text x="390" y="440" fill="#f1f0eb" font-size="28" font-weight="600">54 SKILLS · FOUR CODING AGENTS</text>
     <text x="390" y="492" fill="#9aa6b2" font-size="20">CLAUDE CODE  +  CODEX  +  OPENCODE  +  PI</text>
   </g>

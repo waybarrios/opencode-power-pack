@@ -1,6 +1,6 @@
 # OpenCode Power Pack: Expanded Documentation
 
-> Canonical, machine-readable project facts for OpenCode Power Pack v0.4.0. Last updated 2026-08-13.
+> Canonical, machine-readable project facts for OpenCode Power Pack v0.5.0. Last updated 2026-08-17.
 
 OpenCode Power Pack is an open-source collection of 54 portable Agent Skills for Claude Code, Codex, OpenCode, and Pi. It packages repeatable workflows for software development, code review, application security, frontend design, MCP authoring, project memory, and Hugging Face machine-learning work.
 
@@ -9,7 +9,7 @@ Documentation: https://skills.waybarrios.com/docs/
 Complete skill reference: https://skills.waybarrios.com/docs/skills/
 Repository: https://github.com/waybarrios/opencode-power-pack
 npm package: https://www.npmjs.com/package/@waybarrios/opencode-power-pack
-Release: https://github.com/waybarrios/opencode-power-pack/releases/tag/v0.4.0
+Release: https://github.com/waybarrios/opencode-power-pack/releases/tag/v0.5.0
 Author: Wayner Barrios
 License: MIT AND Apache-2.0, with per-skill provenance and notices
 
@@ -59,6 +59,38 @@ The installer resolves required companion skills. It does not overwrite an exist
 - Pi: install the package through Pi's package mechanism, then invoke the exposed skill by its ID.
 
 See https://skills.waybarrios.com/docs/#hosts for complete installation, verification, update, and removal instructions for each host.
+
+## Native sandbox runner
+
+Version 0.5.0 includes an opt-in, fail-closed runner for one command and its process descendants. It uses native Seatbelt isolation on macOS and Bubblewrap on Linux. It creates no persistent container or daemon.
+
+Install and verify:
+
+    npm install --global @waybarrios/opencode-power-pack@0.5.0
+    opencode-power-pack sandbox doctor
+    opencode-power-pack sandbox resolve --skill code-review
+
+Run a command with the skill's default profile:
+
+    opencode-power-pack sandbox exec --skill code-review -- git status --short
+
+Allow a declared network-read escalation:
+
+    opencode-power-pack sandbox exec --skill code-review --sandbox-profile network-read --allow-domain api.github.com -- curl https://api.github.com/repos/waybarrios/opencode-power-pack
+
+Profiles:
+
+- observe: read-only workspace, private temporary writes, no network, credentials, or external side effects.
+- develop: workspace writes, private temporary writes, no network, credentials, or external side effects.
+- network-read: workspace writes plus explicitly approved destinations and credential environment variables; GET, HEAD, and OPTIONS only.
+- publish: workspace writes plus explicit destinations and credentials; requires `--confirm-external-side-effects`.
+
+Codex, OpenCode, Claude Code, and Pi can explicitly invoke the shared runner. No host currently routes every tool through it automatically. Ordinary shell, file, browser, MCP, and connector tools remain outside the selected command boundary, so the project claims `shell-contained`, not whole-agent isolation.
+
+Requirements: Node.js 20.11.0 or newer. Linux also requires trusted system installations of bubblewrap, socat, and rg. macOS and Linux are supported. WSL2 is expected through the Linux backend but lacks dedicated CI. Windows native and WSL1 intentionally fail closed.
+
+Full guide: https://skills.waybarrios.com/docs/#sandbox
+Compatibility specification: https://github.com/waybarrios/opencode-power-pack/blob/main/docs/sandbox-compatibility.md
 
 ## Curated profiles
 
@@ -153,7 +185,7 @@ Every skill can be installed with `npx @waybarrios/opencode-power-pack install <
 ## Quality and provenance
 
 - 54 of 54 skills pass official Agent Skills validation.
-- The repository has 362 automated behavioral and packaging tests at v0.4.0.
+- The repository defines 400 automated behavioral, packaging, and sandbox tests at v0.5.0.
 - Claude plugin and marketplace metadata receive strict validation.
 - OpenCode receives minimum-version and latest-version smoke coverage.
 - Third-party workflows have immutable upstream references, notices, and license records.
@@ -167,7 +199,7 @@ Evidence and exact provenance live in the repository:
 ## Citation and factual boundaries
 
 Preferred project name: OpenCode Power Pack.
-Current documented version: 0.4.0.
+Current documented version: 0.5.0.
 Canonical URL: https://skills.waybarrios.com/
 Repository: https://github.com/waybarrios/opencode-power-pack
 Package: @waybarrios/opencode-power-pack

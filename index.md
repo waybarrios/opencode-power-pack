@@ -1,6 +1,6 @@
 # OpenCode Power Pack
 
-OpenCode Power Pack is an open-source collection of 54 portable Agent Skills for Claude Code, Codex, OpenCode, and Pi. The current release is v0.4.0.
+OpenCode Power Pack is an open-source collection of 54 portable Agent Skills for Claude Code, Codex, OpenCode, and Pi. The current release is v0.5.0.
 
 ## Start here
 
@@ -64,10 +64,24 @@ npx @waybarrios/opencode-power-pack install --profile <profile-name>
 - `security-review` focuses only on exploitable security issues in pending changes.
 - `differential-review` performs security-focused analysis across revisions.
 
+## Native sandbox runner
+
+Version 0.5.0 includes an opt-in native runner for one contained command tree on macOS and Linux:
+
+```sh
+npm install --global @waybarrios/opencode-power-pack@0.5.0
+opencode-power-pack sandbox doctor
+opencode-power-pack sandbox exec --skill code-review -- git status --short
+```
+
+The runner supports `observe`, `develop`, `network-read`, and `publish` profiles. Network destinations, credential environment variables, and external side effects require explicit command-line grants.
+
+Codex, OpenCode, Claude Code, and Pi can all invoke the manual runner. Automatic host routing is not yet implemented, so the current guarantee covers the selected command and its descendants, not every agent tool. See the [sandbox guide](https://skills.waybarrios.com/docs/#sandbox).
+
 ## Quality signals
 
 - 54 of 54 official Agent Skills validations pass.
-- 362 automated behavioral and packaging tests pass at v0.4.0.
+- 400 automated behavioral, packaging, and sandbox tests are defined at v0.5.0.
 - Claude plugin and marketplace metadata receive strict validation.
 - OpenCode has minimum-version and latest-version smoke coverage.
 - Third-party workflows include immutable provenance, notices, and license records.

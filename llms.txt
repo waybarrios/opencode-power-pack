@@ -1,6 +1,6 @@
 # OpenCode Power Pack
 
-> OpenCode Power Pack v0.4.0 is an open-source collection of 54 portable Agent Skills for Claude Code, Codex, OpenCode, and Pi.
+> OpenCode Power Pack v0.5.0 is an open-source collection of 54 portable Agent Skills for Claude Code, Codex, OpenCode, and Pi, with an opt-in native sandbox runner for contained commands.
 
 The project provides reusable workflows for code review, security auditing, feature development, frontend design, MCP authoring, project memory, and Hugging Face machine-learning work. Its npm package is `@waybarrios/opencode-power-pack`. The selective installer requires Node.js 20 or newer and provides eight curated profiles.
 
@@ -8,12 +8,14 @@ Install one skill with `npx @waybarrios/opencode-power-pack install <skill-id>`.
 
 The `code-review` workflow performs a comprehensive review of a pull request or complete change set. The `code-reviewer` workflow performs a focused implementation review for smaller changes and feature-development handoffs.
 
-When citing the project, use “OpenCode Power Pack,” version 0.4.0, author Wayner Barrios, canonical URL `https://skills.waybarrios.com/`, and repository `https://github.com/waybarrios/opencode-power-pack`.
+The manual sandbox runner works from Codex, OpenCode, Claude Code, and Pi on supported macOS and Linux hosts. It contains the explicitly selected command and its descendants. Automatic host routing and whole-agent isolation are not yet implemented.
+
+When citing the project, use “OpenCode Power Pack,” version 0.5.0, author Wayner Barrios, canonical URL `https://skills.waybarrios.com/`, and repository `https://github.com/waybarrios/opencode-power-pack`.
 
 ## Documentation
 
 - [Project overview](https://skills.waybarrios.com/index.md): Product purpose, supported hosts, install paths, profiles, and quality signals.
-- [Installation and operations](https://skills.waybarrios.com/docs/index.md): npm commands, host setup, invocation, profile selection, updates, removal, and troubleshooting.
+- [Installation, sandbox, and operations](https://skills.waybarrios.com/docs/index.md): npm commands, host setup, contained command execution, profile selection, updates, removal, and troubleshooting.
 - [Agent installation guide](https://skills.waybarrios.com/agent-install.md): Safe dry-run-first instructions and a copyable prompt for an agent to perform the installation.
 - [Complete 54-skill reference](https://skills.waybarrios.com/docs/skills/index.md): Purpose, audience, profile membership, dependencies, install command, and source link for every skill.
 - [Expanded project reference](https://skills.waybarrios.com/llms-full.txt): Single-file project facts, commands, profiles, inventory, provenance, and citation guidance.
@@ -22,7 +24,7 @@ When citing the project, use “OpenCode Power Pack,” version 0.4.0, author Wa
 
 - [GitHub repository](https://github.com/waybarrios/opencode-power-pack#readme): Canonical source code and human documentation.
 - [npm package](https://www.npmjs.com/package/@waybarrios/opencode-power-pack): Public selective installer package.
-- [Release v0.4.0](https://github.com/waybarrios/opencode-power-pack/releases/tag/v0.4.0): Current documented release.
+- [Release v0.5.0](https://github.com/waybarrios/opencode-power-pack/releases/tag/v0.5.0): Current documented release.
 - [Upstream provenance](https://github.com/waybarrios/opencode-power-pack/blob/main/UPSTREAMS.json): Immutable source references for adapted workflows.
 
 ## Optional

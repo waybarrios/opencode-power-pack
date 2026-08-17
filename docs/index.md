@@ -1,6 +1,6 @@
 # OpenCode Power Pack Installation and Operations
 
-This guide covers selective npm installation and native host installation for OpenCode Power Pack v0.4.0.
+This guide covers selective npm installation, native host installation, and contained command execution for OpenCode Power Pack v0.5.0.
 
 ## Choose an installation path
 
@@ -66,7 +66,7 @@ Start a new Codex session and invoke a skill such as `$code-review`.
 ### OpenCode
 
 ```sh
-opencode plugin --global "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git#v0.4.0"
+opencode plugin --global "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git#v0.5.0"
 ```
 
 Start a new OpenCode session and invoke a skill such as `/code-review`.
@@ -78,6 +78,104 @@ pi install git:github.com/waybarrios/opencode-power-pack
 ```
 
 Restart Pi after installation so it reloads the package's declared skills directory.
+
+## Native sandbox runner
+
+Version 0.5.0 adds an opt-in, fail-closed runner for one command and its descendants. It uses native Seatbelt isolation on macOS and Bubblewrap on Linux. It does not start a persistent container or daemon.
+
+Install the CLI and verify the operating-system boundary:
+
+```sh
+npm install --global @waybarrios/opencode-power-pack@0.5.0
+opencode-power-pack sandbox doctor
+opencode-power-pack sandbox resolve --skill code-review
+```
+
+Node.js 20.11.0 or newer is required. Linux also requires trusted system installations of `bubblewrap`, `socat`, and `rg`. Continue only when `sandbox doctor` exits successfully and reports `runnerReady: true` in JSON mode.
+
+Run a command with the skill's default profile:
+
+```sh
+opencode-power-pack sandbox exec --skill code-review -- git status --short
+opencode-power-pack sandbox exec --skill code-review -- rg TODO .
+```
+
+The literal `--` ends runner options and begins the child command. The runner preserves the child exit code and never retries without containment.
+
+Allow one network destination for a declared escalation:
+
+```sh
+opencode-power-pack sandbox exec \
+  --skill code-review \
+  --sandbox-profile network-read \
+  --allow-domain api.github.com \
+  -- curl https://api.github.com/repos/waybarrios/opencode-power-pack
+```
+
+Confirm a publish operation with an explicitly exposed credential:
+
+```sh
+opencode-power-pack sandbox exec \
+  --skill hf-cli \
+  --sandbox-profile publish \
+  --allow-domain huggingface.co \
+  --allow-env HF_TOKEN \
+  --confirm-external-side-effects \
+  -- hf upload owner/repository ./artifact.bin artifact.bin
+```
+
+| Profile | Workspace | Network and credentials | External writes |
+| --- | --- | --- | --- |
+| `observe` | Read only | Denied | Denied |
+| `develop` | Read and write | Denied | Denied |
+| `network-read` | Read and write | Explicit grants | Denied |
+| `publish` | Read and write | Explicit grants | Explicit confirmation |
+
+The manual runner works from Codex, OpenCode, Claude Code, and Pi when the agent explicitly invokes the CLI. Automatic routing is not implemented yet, so ordinary host shell, file, browser, MCP, and connector tools remain outside this process boundary. The current guarantee is `shell-contained`, not whole-agent isolation.
+
+### Run it from Codex
+
+Native Codex plugin installation does not install the sandbox executable. Install the npm CLI in the operating-system environment used by Codex, open the target repository, and paste this request into the Codex session:
+
+```text
+Use the shell tool to run `opencode-power-pack sandbox doctor`.
+If it succeeds, run `opencode-power-pack sandbox exec --skill code-review -- git status --short`.
+Do not run the child command separately and do not retry without the sandbox.
+```
+
+### Run it from OpenCode
+
+Native OpenCode plugin installation does not install the sandbox executable. Install the npm CLI in the operating-system environment used by OpenCode, open the target repository, and paste this request into the OpenCode session:
+
+```text
+Use the shell tool to run `opencode-power-pack sandbox doctor`.
+If it succeeds, run `opencode-power-pack sandbox exec --skill code-review -- git status --short`.
+Do not run the child command separately and do not retry without the sandbox.
+```
+
+### Run it from Claude Code
+
+Native Claude Code plugin installation does not install the sandbox executable. Install the npm CLI in the operating-system environment used by Claude Code, open the target repository, and paste this request into the Claude Code session:
+
+```text
+Use Bash to run `opencode-power-pack sandbox doctor`.
+If it succeeds, run `opencode-power-pack sandbox exec --skill code-review -- git status --short`.
+Do not run the child command separately and do not retry without the sandbox.
+```
+
+### Run it from Pi
+
+Native Pi package installation does not install the sandbox executable. Install the npm CLI in the operating-system environment used by Pi, open the target repository, and paste this request into the Pi session:
+
+```text
+Use the shell tool to run `opencode-power-pack sandbox doctor`.
+If it succeeds, run `opencode-power-pack sandbox exec --skill code-review -- git status --short`.
+Do not run the child command separately and do not retry without the sandbox.
+```
+
+Run `sandbox doctor` inside the same agent session that will execute the command. A successful doctor in a separate, less restricted terminal does not prove that the active agent session can start the native backend.
+
+macOS and Linux are supported. WSL2 is expected through the Linux backend but still lacks dedicated CI. Windows native and WSL1 intentionally fail closed. See the [complete sandbox compatibility specification](https://github.com/waybarrios/opencode-power-pack/blob/main/docs/sandbox-compatibility.md) for the threat boundary and adapter roadmap.
 
 ## Profiles
 

@@ -6,7 +6,7 @@
     <title>OpenCode Power Pack | 54 Skills for AI Coding Agents</title>
     <meta
       name="description"
-      content="Install 54 production-grade Agent Skills for Claude Code, Codex, OpenCode, and Pi. Code review, security, feature development, frontend, MCP, and ML workflows."
+      content="Install 54 production-grade Agent Skills for Claude Code, Codex, OpenCode, and Pi, with an opt-in native sandbox runner for contained commands."
    >
     <meta name="author" content="Wayner Barrios">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
@@ -62,7 +62,7 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&amp;family=IBM+Plex+Mono:wght@400;500;600;700&amp;display=swap"
       rel="stylesheet"
    >
-    <link rel="stylesheet" href="styles.css?v=0.4.0-responsive-prompt-1">
+    <link rel="stylesheet" href="styles.css?v=0.5.0-sandbox-1">
 
     <script type="application/ld+json">
       {
@@ -86,7 +86,7 @@
             "description": "A curated collection of 54 Agent Skills for code review, security auditing, feature development, frontend design, MCP authoring, and machine-learning workflows.",
             "codeRepository": "https://github.com/waybarrios/opencode-power-pack",
             "downloadUrl": "https://www.npmjs.com/package/@waybarrios/opencode-power-pack",
-            "softwareVersion": "0.4.0",
+            "softwareVersion": "0.5.0",
             "runtimePlatform": ["Claude Code", "Codex", "OpenCode", "Pi"],
             "programmingLanguage": ["Markdown", "JavaScript", "Python"],
             "license": [
@@ -145,6 +145,14 @@
                   "@type": "Answer",
                   "text": "Yes. Run npx @waybarrios/opencode-power-pack install followed by the skill name. The installer also includes required companion skills."
                 }
+              },
+              {
+                "@type": "Question",
+                "name": "Does the sandbox work with Codex and OpenCode?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. Codex and OpenCode can explicitly run commands through the shared sandbox CLI on supported Linux and macOS hosts. Automatic routing and whole-agent isolation are not yet implemented."
+                }
               }
             ]
           },
@@ -188,6 +196,7 @@
         <a href="docs/#npm">Install</a>
         <a href="#profiles">Profiles</a>
         <a href="#platforms">Platforms</a>
+        <a href="docs/#sandbox">Sandbox</a>
         <a href="#skills">Skills</a>
         <a href="#quality">Quality</a>
         <a href="docs/">Docs</a>
@@ -200,7 +209,7 @@
     <main id="main">
       <section class="hero" id="top" aria-labelledby="hero-title">
         <div class="hero-copy">
-          <p class="eyebrow">[ OPEN SOURCE · v0.4.0 · MIT + APACHE-2.0 ]</p>
+          <p class="eyebrow">[ OPEN SOURCE · v0.5.0 · MIT + APACHE-2.0 ]</p>
           <h1 id="hero-title">
             One power pack.<br>
             <span>Every coding agent.</span>
@@ -383,6 +392,7 @@ Phase 6: verify and report.
           <a href="docs/#how-skills-work">Learn how Agent Skills work <span aria-hidden="true">→</span></a>
           <a href="docs/#npm">Installation examples <span aria-hidden="true">→</span></a>
           <a href="docs/#agent-install">Let your agent install it <span aria-hidden="true">→</span></a>
+          <a href="docs/#sandbox">Run a contained command <span aria-hidden="true">→</span></a>
           <a href="#profiles">Browse skill packs <span aria-hidden="true">→</span></a>
           <a href="#profiles">Who each pack is for <span aria-hidden="true">→</span></a>
         </nav>
@@ -398,8 +408,8 @@ Phase 6: verify and report.
       <section class="proof-strip" aria-label="Project facts">
         <div><strong>54</strong><span>curated skills</span></div>
         <div><strong>4</strong><span>agent hosts</span></div>
-        <div><strong>362</strong><span>automated tests</span></div>
-        <div><strong>0</strong><span>runtime dependencies</span></div>
+        <div><strong>400</strong><span>automated tests</span></div>
+        <div><strong>4</strong><span>sandbox profiles</span></div>
       </section>
 
       <section class="section install-section" id="profiles" aria-labelledby="install-title">
@@ -642,7 +652,7 @@ Phase 6: verify and report.
           </div>
           <ol class="quality-list">
             <li><b>01</b><span><strong>54 / 54</strong> official Agent Skills validations</span></li>
-            <li><b>02</b><span><strong>362</strong> automated behavioral and packaging tests</span></li>
+            <li><b>02</b><span><strong>400</strong> automated behavioral, packaging, and sandbox tests</span></li>
             <li><b>03</b><span><strong>Strict</strong> Claude plugin and marketplace validation</span></li>
             <li><b>04</b><span><strong>Minimum + latest</strong> OpenCode smoke coverage</span></li>
             <li><b>05</b><span><strong>Immutable</strong> upstream provenance and license records</span></li>
@@ -688,6 +698,15 @@ Phase 6: verify and report.
               The <a href="docs/skills/">complete skill reference</a> provides a copyable command for every ID.
             </p>
           </details>
+          <details>
+            <summary>Does the sandbox work with Codex and OpenCode?</summary>
+            <p>
+              Yes. Codex and OpenCode can explicitly invoke the same lightweight native runner with
+              <code>opencode-power-pack sandbox exec</code> on supported Linux and macOS hosts. It contains
+              that command and its descendants. It does not yet reroute every agent tool automatically or
+              claim whole-agent isolation. <a href="docs/#sandbox">Read the sandbox guide.</a>
+            </p>
+          </details>
         </div>
       </section>
 
@@ -718,9 +737,9 @@ Phase 6: verify and report.
         <a href="llms.txt">AI summary</a>
         <a href="https://github.com/waybarrios/opencode-power-pack/blob/main/LICENSE">License</a>
       </nav>
-      <span>v0.4.0 // 2026</span>
+      <span>v0.5.0 // 2026</span>
     </footer>
 
-    <script src="app.js?v=0.4.0-responsive-prompt-1" defer></script>
+    <script src="app.js?v=0.5.0-sandbox-1" defer></script>
   </body>
 </html>

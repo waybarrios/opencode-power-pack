@@ -1,6 +1,6 @@
 # OpenCode Power Pack: Complete Skill Reference
 
-> Purpose, audience, profile membership, dependencies, install command, invocation, and source link for all 54 skills in v0.4.0.
+> Purpose, audience, profile membership, dependencies, install command, invocation, and source link for all 54 skills in v0.5.0.
 
 Canonical HTML browser: https://skills.waybarrios.com/docs/skills/
 
@@ -715,4 +715,3 @@ Train and fine-tune transformer language models using TRL (Transformers Reinforc
 - Claude Code: `/opencode-power-pack:trl-training`
 - HTML details: https://skills.waybarrios.com/docs/skills/#trl-training
 - Source: https://github.com/waybarrios/opencode-power-pack/tree/main/skills/trl-training
-
