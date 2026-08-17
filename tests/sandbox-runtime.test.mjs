@@ -20,6 +20,7 @@ import {
   buildChildEnvironment,
   commandToShellString,
   compileSandboxExecution,
+  enableMacOSInterpreterExecution,
   assertNoExternalHardlinks,
   existingSystemReadRoots,
   probeSandboxRuntime,
@@ -312,6 +313,34 @@ function fakeSpawn(exitCode, onSpawn) {
   };
 }
 
+function fakeMacSandboxDescriptor() {
+  return {
+    argv: [
+      "/bin/sh",
+      "-c",
+      "sandbox-exec -p '(allow process-exec)\n(allow process-fork)' /bin/sh -c true",
+    ],
+    env: {},
+  };
+}
+
+test("macOS descriptor shim enables shebang interpreters and fails closed on upstream drift", () => {
+  const original = fakeMacSandboxDescriptor();
+  const patched = enableMacOSInterpreterExecution(original, "darwin");
+  assert.notEqual(patched, original);
+  assert.match(patched.argv[2], /\(allow process-exec-interpreter\)/);
+  assert.doesNotMatch(original.argv[2], /process-exec-interpreter/);
+  assert.equal(enableMacOSInterpreterExecution(original, "linux"), original);
+  assert.throws(
+    () => enableMacOSInterpreterExecution({ argv: ["/bin/sh", "-c", "changed"] }, "darwin"),
+    /process rules no longer match/,
+  );
+  assert.throws(
+    () => enableMacOSInterpreterExecution({ argv: ["unexpected"] }, "darwin"),
+    /unexpected command descriptor/,
+  );
+});
+
 test("runner initializes before spawn, uses shell false, propagates exit codes, and resets once", async () => {
   let initialized;
   let resetCount = 0;
@@ -385,7 +414,7 @@ test("runner canonicalizes a symlinked temporary root before compiling private p
   const manager = {
     isSupportedPlatform: () => true,
     initialize: async () => {},
-    wrapWithSandboxArgv: async () => ({ argv: ["/fake/sandbox"], env: {} }),
+    wrapWithSandboxArgv: async () => fakeMacSandboxDescriptor(),
     reset: async () => {},
   };
 
@@ -541,7 +570,7 @@ test("runner exposes an env shebang interpreter and its bounded runtime", async 
   const manager = {
     isSupportedPlatform: () => true,
     initialize: async (config) => { runtimeConfig = config; },
-    wrapWithSandboxArgv: async () => ({ argv: ["/fake/sandbox"], env: {} }),
+    wrapWithSandboxArgv: async () => fakeMacSandboxDescriptor(),
     reset: async () => {},
   };
   try {
@@ -698,7 +727,7 @@ test("runner discovers Git roots from nested directories and validates linked wo
     initialize: async (config) => { runtimeConfig = config; },
     wrapWithSandboxArgv: async (_command, _shell, _a, _b, cwd) => {
       wrappedCwd = cwd;
-      return { argv: ["/fake/sandbox"], env: {} };
+      return fakeMacSandboxDescriptor();
     },
     reset: async () => {},
   };

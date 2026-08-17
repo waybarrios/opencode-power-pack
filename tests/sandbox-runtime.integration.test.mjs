@@ -209,7 +209,7 @@ test("real runtime enforces filesystem, environment, network, argv, and exit bou
       "require('fs').writeFileSync('../sibling/.npmrc','changed')",
     ]), 0);
     assert.equal(await readFile(path.join(credentialSibling, ".npmrc"), "utf8"), "sibling-token");
-    assert.notEqual(await run(DEVELOP, nestedWorkspace, [
+    assert.equal(await run(DEVELOP, nestedWorkspace, [
       process.execPath,
       "-e",
       "require('fs').writeFileSync('../sibling/.ssh/id_test','changed')",

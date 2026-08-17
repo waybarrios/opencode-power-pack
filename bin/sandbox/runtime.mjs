@@ -21,6 +21,13 @@ export const SANDBOX_RUNTIME_PACKAGE = "@anthropic-ai/sandbox-runtime";
 export const SANDBOX_RUNTIME_VERSION = "0.0.73";
 export const SANDBOX_EXECUTION_LEVEL = "shell-contained";
 
+const MACOS_PROCESS_RULES = "(allow process-exec)\n(allow process-fork)";
+const MACOS_INTERPRETER_PROCESS_RULES = [
+  "(allow process-exec)",
+  "(allow process-exec-interpreter)",
+  "(allow process-fork)",
+].join("\n");
+
 const SUPPORTED_PLATFORMS = new Set(["linux", "darwin"]);
 const READ_ONLY_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
 const PROTECTED_ENVIRONMENT = new Set([
@@ -93,6 +100,31 @@ export function commandToShellString(command) {
     throw new Error("sandbox exec requires a non-empty command after --.");
   }
   return command.map(quotePosixArgument).join(" ");
+}
+
+export function enableMacOSInterpreterExecution(descriptor, platform) {
+  if (platform !== "darwin") return descriptor;
+  if (
+    !descriptor
+    || !Array.isArray(descriptor.argv)
+    || descriptor.argv.length !== 3
+    || descriptor.argv[1] !== "-c"
+    || typeof descriptor.argv[2] !== "string"
+  ) {
+    throw new Error("Pinned macOS sandbox runtime returned an unexpected command descriptor.");
+  }
+  const occurrences = descriptor.argv[2].split(MACOS_PROCESS_RULES).length - 1;
+  if (occurrences !== 1) {
+    throw new Error("Pinned macOS sandbox runtime process rules no longer match the verified profile.");
+  }
+  return {
+    ...descriptor,
+    argv: [
+      descriptor.argv[0],
+      descriptor.argv[1],
+      descriptor.argv[2].replace(MACOS_PROCESS_RULES, MACOS_INTERPRETER_PROCESS_RULES),
+    ],
+  };
 }
 
 export function buildChildEnvironment({ sourceEnvironment, allowedEnvironment, workspace, runRoot }) {
@@ -1263,6 +1295,7 @@ async function runSandboxedCommandOnce(options, context = {}) {
         executionCwd,
         { commandId: randomUUID(), commandText: options.command[0] },
       );
+      descriptor = enableMacOSInterpreterExecution(descriptor, platform);
     } finally {
       if (previousTemp === undefined) delete process.env.CLAUDE_CODE_TMPDIR;
       else process.env.CLAUDE_CODE_TMPDIR = previousTemp;
