@@ -94,6 +94,8 @@ test("real runtime enforces filesystem, environment, network, argv, and exit bou
   await writeFile(path.join(workspace, ".env"), "TOP_SECRET=do-not-read", "utf8");
   await mkdir(path.join(workspace, ".ssh"));
   await writeFile(path.join(workspace, ".ssh", "id_test"), "private-key", "utf8");
+  await symlink(process.execPath, path.join(workspace, ".ssh", "run"));
+  await symlink(path.join(workspace, ".ssh"), path.join(workspace, "credential-tools"));
   await writeFile(outsideFile, "outside-unchanged", "utf8");
   await mkdir(path.join(toolBundle, "bin"));
   await mkdir(path.join(toolBundle, "lib"));
@@ -166,6 +168,13 @@ test("real runtime enforces filesystem, environment, network, argv, and exit bou
         PATH: `${interpreterBin}${path.delimiter}${process.env.PATH || ""}`,
       },
     }), 0);
+
+    await assert.rejects(run(OBSERVE, workspace, [
+      path.join(workspace, "credential-tools", "run"),
+      "-e",
+      "require('fs').readFileSync('.ssh/id_test')",
+    ]), /unsafe executable symlink directory/);
+    assert.equal(await readFile(path.join(workspace, ".ssh", "id_test"), "utf8"), "private-key");
 
     assert.equal(await run(OBSERVE, workspace, ["git", "status", "--short"]), 0);
     assert.equal(await run(OBSERVE, nestedWorkspace, ["git", "status", "--short"]), 0);

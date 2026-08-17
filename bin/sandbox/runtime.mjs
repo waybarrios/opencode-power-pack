@@ -56,6 +56,20 @@ function unique(values) {
   return [...new Set(values)];
 }
 
+async function withCanonicalPaths(paths) {
+  const canonical = [];
+  for (const filePath of paths) {
+    const absolute = path.resolve(filePath);
+    canonical.push(absolute);
+    try {
+      canonical.push(await realpath(absolute));
+    } catch {
+      // Missing credential paths still need their declared spelling protected.
+    }
+  }
+  return unique(canonical);
+}
+
 function isEnvironmentName(name) {
   return /^[A-Za-z_][A-Za-z0-9_]*$/.test(name);
 }
@@ -336,6 +350,7 @@ export async function existingSystemReadRoots(platform) {
     ...(platform === "linux" ? ["/proc", "/sys", "/nix/store", "/snap"] : []),
     ...(platform === "darwin" ? [
       "/System",
+      "/private/var/select/sh",
       "/opt/homebrew/bin",
       "/opt/homebrew/sbin",
       "/opt/homebrew/Cellar",
@@ -472,40 +487,65 @@ async function executableReadRoots(executable, environmentPath, cwd, boundaries,
         .filter((directory) => directory && path.isAbsolute(directory))
         .map((directory) => path.join(directory, executable));
   for (const candidate of candidates) {
+    let candidateInfo;
+    let resolved;
+    let info;
     try {
-      const resolved = await realpath(candidate);
-      const info = await stat(resolved);
+      candidateInfo = await lstat(candidate);
+      resolved = await realpath(candidate);
+      info = await stat(resolved);
       await access(resolved, 1);
-      if (info.isFile()) {
-        const roots = [
-          path.resolve(candidate),
-          resolved,
-          ...await discoverRuntimeBundleRoots(resolved, boundaries),
-        ];
-        if (depth < 2) {
-          const firstLine = await readFirstLine(resolved);
-          if (firstLine.startsWith("#!")) {
-            const shebang = splitShebangWords(firstLine.slice(2));
-            const interpreter = shebang.length > 0 && path.basename(shebang[0]) === "env"
-              ? envShebangCommand(shebang.slice(1))
-              : shebang[0];
-            if (interpreter) {
-              const interpreterRoots = await executableReadRoots(
-                interpreter,
-                environmentPath,
-                cwd,
-                boundaries,
-                depth + 1,
-              );
-              roots.push(...interpreterRoots);
-            }
-          }
-        }
-        return unique(roots);
-      }
     } catch {
-      // The child shell reports command-not-found when no candidate resolves.
+      continue;
     }
+    if (!info.isFile()) continue;
+
+    const candidatePath = path.resolve(candidate);
+    const candidateRoot = candidateInfo.isSymbolicLink()
+      ? path.dirname(candidatePath)
+      : candidatePath;
+    if (candidateInfo.isSymbolicLink()) {
+      const canonicalCandidateRoot = await realpath(candidateRoot);
+      const candidateRoots = unique([candidateRoot, canonicalCandidateRoot]);
+      const unsafeRoots = [
+        path.parse(candidateRoot).root,
+        boundaries.originalHome,
+        boundaries.temporaryRoot,
+      ];
+      const overlapsCredential = boundaries.protectedCredentialPaths.some(
+        (protectedPath) => candidateRoots.some(
+          (root) => isWithin(root, protectedPath) || isWithin(protectedPath, root),
+        ),
+      );
+      if (candidateRoots.some((root) => unsafeRoots.includes(root)) || overlapsCredential) {
+        throw new Error(`Refusing to expose an unsafe executable symlink directory: ${candidateRoot}`);
+      }
+    }
+    const roots = [
+      candidateRoot,
+      resolved,
+      ...await discoverRuntimeBundleRoots(resolved, boundaries),
+    ];
+    if (depth < 2) {
+      const firstLine = await readFirstLine(resolved);
+      if (firstLine.startsWith("#!")) {
+        const shebang = splitShebangWords(firstLine.slice(2));
+        const interpreter = shebang.length > 0 && path.basename(shebang[0]) === "env"
+          ? envShebangCommand(shebang.slice(1))
+          : shebang[0];
+        if (interpreter) {
+          const interpreterRoots = await executableReadRoots(
+            interpreter,
+            environmentPath,
+            cwd,
+            boundaries,
+            depth + 1,
+          );
+          roots.push(...interpreterRoots);
+        }
+      }
+    }
+    return unique(roots);
   }
   return [];
 }
@@ -1128,6 +1168,12 @@ async function runSandboxedCommandOnce(options, context = {}) {
     discoverExistingWorkspaceCredentialPaths(workspace),
     discoverExistingGitControlPaths(workspace),
   ]);
+  const protectedCredentialPaths = await withCanonicalPaths([
+    ...credentialFiles(workspace, originalHome)
+      .map((credential) => credential.path)
+      .filter((credentialPath) => !credentialPath.includes("*")),
+    ...existingCredentialPaths,
+  ]);
 
   const sourceEnvironment = context.env || process.env;
   const [containmentHelpers, runtimeResources, systemReadRoots, executableReadRoots] = await Promise.all([
@@ -1142,6 +1188,7 @@ async function runSandboxedCommandOnce(options, context = {}) {
       workspace,
       originalHome,
       temporaryRoot,
+      protectedCredentialPaths,
     }),
   ]);
   const helperPaths = { ...containmentHelpers, ...runtimeResources };

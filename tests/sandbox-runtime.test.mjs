@@ -88,6 +88,10 @@ test("system runtime reads do not expose all of usr or usr-local configuration",
   assert.equal(roots.includes("/usr"), false);
   assert.equal(roots.includes("/usr/local"), false);
   assert.ok(roots.includes(await realpath("/usr/bin")));
+  if (process.platform === "darwin") {
+    assert.ok(roots.includes("/private/var/select/sh"));
+    assert.ok(roots.includes(await realpath("/private/var/select/sh")));
+  }
 });
 
 function isParent(candidate, target) {
@@ -559,11 +563,49 @@ test("runner exposes an env shebang interpreter and its bounded runtime", async 
       }),
       spawn: fakeSpawn(0),
     }), 0);
-    assert.ok(runtimeConfig.filesystem.allowRead.includes(interpreter));
+    assert.ok(runtimeConfig.filesystem.allowRead.includes(interpreterBin));
+    assert.equal(runtimeConfig.filesystem.allowRead.includes(interpreter), false);
     assert.ok(runtimeConfig.filesystem.allowRead.includes(await realpath(process.execPath)));
     for (const broadRoot of ["/usr", "/usr/local", fakeHome, fixture]) {
       assert.equal(runtimeConfig.filesystem.allowRead.includes(broadRoot), false);
     }
+  } finally {
+    await rm(fixture, { recursive: true, force: true });
+  }
+});
+
+test("runner rejects executable symlinks whose directory overlaps protected credentials", async () => {
+  const fixture = await mkdtemp(path.join(os.tmpdir(), "opp-credential-command-"));
+  const workspace = path.join(fixture, "workspace");
+  const credentialDirectory = path.join(workspace, ".ssh");
+  const executable = path.join(credentialDirectory, "run");
+  const credentialAlias = path.join(workspace, "tools");
+  await mkdir(credentialDirectory, { recursive: true });
+  await writeFile(path.join(credentialDirectory, "id_test"), "private-key", "utf8");
+  await symlink(process.execPath, executable);
+  await symlink(credentialDirectory, credentialAlias);
+  let spawned = false;
+  try {
+    await assert.rejects(runSandboxedCommand({
+      profile: profile("observe"),
+      allowedDomains: [],
+      allowedEnvironment: [],
+      confirmExternalSideEffects: false,
+      command: [path.join(credentialAlias, "run"), "-e", "process.exit(0)"],
+    }, {
+      cwd: workspace,
+      home: os.homedir(),
+      temporaryRoot: fixture,
+      env: { PATH: "/usr/bin:/bin" },
+      helperPaths: { bwrap: "/usr/bin/bwrap", rg: "/usr/bin/rg", socat: "/usr/bin/socat" },
+      platform: "linux",
+      spawn: () => {
+        spawned = true;
+        return fakeSpawn(0)();
+      },
+    }), /unsafe executable symlink directory/);
+    assert.equal(spawned, false);
+    assert.equal(await readFile(path.join(credentialDirectory, "id_test"), "utf8"), "private-key");
   } finally {
     await rm(fixture, { recursive: true, force: true });
   }
