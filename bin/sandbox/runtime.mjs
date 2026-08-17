@@ -15,6 +15,7 @@ import {
 import { createServer } from "node:net";
 import os from "node:os";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 export const SANDBOX_RUNTIME_PACKAGE = "@anthropic-ai/sandbox-runtime";
 export const SANDBOX_RUNTIME_VERSION = "0.0.73";
@@ -55,8 +56,12 @@ function unique(values) {
   return [...new Set(values)];
 }
 
+function isEnvironmentName(name) {
+  return /^[A-Za-z_][A-Za-z0-9_]*$/.test(name);
+}
+
 function assertEnvironmentName(name) {
-  if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(name)) {
+  if (!isEnvironmentName(name)) {
     throw new Error(`Invalid environment variable name: ${name}`);
   }
   if (PROTECTED_ENVIRONMENT.has(name) || /^(?:DYLD_|LD_)/.test(name)) {
@@ -226,7 +231,7 @@ export function compileSandboxExecution({
     runRoot,
   });
   const deniedEnvironment = Object.keys(sourceEnvironment)
-    .filter((name) => !Object.hasOwn(childEnvironment, name))
+    .filter((name) => isEnvironmentName(name) && !Object.hasOwn(childEnvironment, name))
     .map((name) => ({ name, mode: "deny" }));
   const workspaceWrites = capabilities.workspace === "write" ? [workspace] : [];
   const network = {
@@ -273,6 +278,9 @@ export function compileSandboxExecution({
     ...(helperPaths.rg ? { ripgrep: { command: helperPaths.rg } } : {}),
     ...(helperPaths.bwrap ? { bwrapPath: helperPaths.bwrap } : {}),
     ...(helperPaths.socat ? { socatPath: helperPaths.socat } : {}),
+    ...(helperPaths.applySeccomp
+      ? { seccomp: { applyPath: helperPaths.applySeccomp } }
+      : {}),
   };
 
   return {
@@ -855,6 +863,43 @@ async function resolveHelperPaths(platform, environmentPath, blockedRoots) {
   return { bwrap, rg, socat };
 }
 
+async function resolveSandboxRuntimeResources(platform, architecture = process.arch) {
+  if (platform !== "linux") return {};
+  const architectureDirectory = { x64: "x64", arm64: "arm64" }[architecture];
+  if (!architectureDirectory) {
+    throw new Error(`Sandbox seccomp helper is unsupported on architecture: ${architecture}`);
+  }
+  let current = path.dirname(fileURLToPath(import.meta.resolve(SANDBOX_RUNTIME_PACKAGE)));
+  for (let depth = 0; depth <= 3; depth += 1) {
+    const manifestPath = path.join(current, "package.json");
+    try {
+      const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+      if (
+        manifest.name === SANDBOX_RUNTIME_PACKAGE
+        && manifest.version === SANDBOX_RUNTIME_VERSION
+      ) {
+        const applySeccomp = await realpath(path.join(
+          current,
+          "vendor",
+          "seccomp",
+          architectureDirectory,
+          "apply-seccomp",
+        ));
+        const info = await stat(applySeccomp);
+        await access(applySeccomp, 1);
+        if (!info.isFile()) throw new Error("Sandbox seccomp helper is not a regular file.");
+        return { applySeccomp };
+      }
+    } catch (error) {
+      if (error?.code !== "ENOENT") throw error;
+    }
+    const parent = path.dirname(current);
+    if (parent === current) break;
+    current = parent;
+  }
+  throw new Error(`Could not locate pinned ${SANDBOX_RUNTIME_PACKAGE} runtime resources.`);
+}
+
 async function createDenyProxy() {
   const server = createServer((socket) => socket.destroy());
   await new Promise((resolve, reject) => {
@@ -1002,7 +1047,9 @@ export async function probeSandboxRuntime({
   platform = process.platform,
   cwd = process.cwd(),
   env = process.env,
+  architecture = process.arch,
   hostProbe = probeHostIsolation,
+  resourceProbe = resolveSandboxRuntimeResources,
 } = {}) {
   const backend = `${SANDBOX_RUNTIME_PACKAGE}@${SANDBOX_RUNTIME_VERSION}`;
   if (!SUPPORTED_PLATFORMS.has(platform)) {
@@ -1026,9 +1073,12 @@ export async function probeSandboxRuntime({
       };
     }
     const dependencies = await SandboxManager.checkDependenciesAsync();
-    const host = dependencies.errors.length === 0
-      ? await hostProbe({ platform, cwd: await realpath(cwd), env })
-      : { errors: [], warnings: [] };
+    const [host] = dependencies.errors.length === 0
+      ? await Promise.all([
+        hostProbe({ platform, cwd: await realpath(cwd), env }),
+        resourceProbe(platform, architecture),
+      ])
+      : [{ errors: [], warnings: [] }];
     const errors = [...dependencies.errors, ...host.errors];
     const warnings = [...dependencies.warnings, ...host.warnings];
     return {
@@ -1080,12 +1130,13 @@ async function runSandboxedCommandOnce(options, context = {}) {
   ]);
 
   const sourceEnvironment = context.env || process.env;
-  const [helperPaths, systemReadRoots, executableReadRoots] = await Promise.all([
+  const [containmentHelpers, runtimeResources, systemReadRoots, executableReadRoots] = await Promise.all([
     context.helperPaths || resolveHelperPaths(
       platform,
       sourceEnvironment.PATH,
       [workspace, originalHome, temporaryRoot],
     ),
+    resolveSandboxRuntimeResources(platform, context.architecture),
     existingSystemReadRoots(platform),
     commandReadRoots(options.command, sourceEnvironment.PATH, executionCwd, {
       workspace,
@@ -1093,7 +1144,12 @@ async function runSandboxedCommandOnce(options, context = {}) {
       temporaryRoot,
     }),
   ]);
-  const allowedReadRoots = unique([...systemReadRoots, ...executableReadRoots]);
+  const helperPaths = { ...containmentHelpers, ...runtimeResources };
+  const allowedReadRoots = unique([
+    ...systemReadRoots,
+    ...executableReadRoots,
+    ...Object.values(runtimeResources),
+  ]);
   const runRoot = await realpath(await mkdtemp(path.join(temporaryRoot, "opp-sandbox-")));
   let denyProxy;
   let manager;

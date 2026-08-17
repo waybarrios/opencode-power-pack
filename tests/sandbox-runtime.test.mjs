@@ -273,6 +273,20 @@ test("runtime probing reports readiness and fails closed on unsupported or missi
   assert.equal(ready.executionLevel, "shell-contained");
   assert.deepEqual(ready.warnings, ["preview"]);
 
+  const unsupportedArchitecture = await probeSandboxRuntime({
+    platform: "linux",
+    architecture: "s390x",
+    loadRuntime: async () => ({
+      SandboxManager: {
+        isSupportedPlatform: () => true,
+        checkDependenciesAsync: async () => ({ errors: [], warnings: [] }),
+      },
+    }),
+    hostProbe: async () => ({ errors: [], warnings: [] }),
+  });
+  assert.equal(unsupportedArchitecture.runnerReady, false);
+  assert.match(unsupportedArchitecture.errors[0], /unsupported on architecture/);
+
   const unsupported = await probeSandboxRuntime({ platform: "win32" });
   assert.equal(unsupported.runnerReady, false);
   assert.match(unsupported.errors[0], /Unsupported platform/);
@@ -318,7 +332,11 @@ test("runner initializes before spawn, uses shell false, propagates exit codes, 
   }, {
     cwd: REPO,
     home: os.homedir(),
-    env: { PATH: "/usr/bin:/bin", GH_TOKEN: "secret" },
+    env: {
+      PATH: "/usr/bin:/bin",
+      GH_TOKEN: "secret",
+      "JAVA_HOME_17.0.16_x64": "/invalid-host-key",
+    },
     helperPaths: { bwrap: "/usr/bin/bwrap", rg: "/usr/bin/rg", socat: "/usr/bin/socat" },
     platform: "linux",
     loadRuntime: async () => ({
@@ -333,8 +351,19 @@ test("runner initializes before spawn, uses shell false, propagates exit codes, 
   assert.equal(resetCount, 1);
   assert.equal(spawnOptions.shell, false);
   assert.equal(spawnOptions.env.GH_TOKEN, undefined);
+  assert.equal(spawnOptions.env["JAVA_HOME_17.0.16_x64"], undefined);
   assert.equal(spawnOptions.env.SHOULD_NOT_LEAK, undefined);
   assert.equal(initialized.enableWeakerNestedSandbox, false);
+  assert.ok(initialized.seccomp.applyPath.endsWith(path.join(
+    "vendor",
+    "seccomp",
+    process.arch === "arm64" ? "arm64" : "x64",
+    "apply-seccomp",
+  )));
+  assert.ok(initialized.filesystem.allowRead.includes(initialized.seccomp.applyPath));
+  assert.equal(initialized.credentials.envVars.some(
+    (entry) => entry.name === "JAVA_HOME_17.0.16_x64",
+  ), false);
   assert.equal(wrappedCommand, `'printf' '%s' 'literal;$(not-run)'`);
   assert.match(diagnostics, /Sandbox: observe, shell-contained/);
   assert.doesNotMatch(diagnostics, /GH_TOKEN|secret|literal/);
@@ -478,8 +507,10 @@ test("runner exposes an explicitly selected executable outside static system roo
     assert.ok(runtimeConfig.filesystem.allowRead.some(
       (allowed) => allowed === executable || isParent(allowed, executable),
     ));
+    const canonicalRuntimeResource = await realpath(runtimeResource);
     assert.ok(runtimeConfig.filesystem.allowRead.some(
-      (allowed) => allowed === runtimeResource || isParent(allowed, runtimeResource),
+      (allowed) => allowed === canonicalRuntimeResource
+        || isParent(allowed, canonicalRuntimeResource),
     ));
   } finally {
     await rm(fixture, { recursive: true, force: true });
@@ -608,6 +639,16 @@ test("runner discovers Git roots from nested directories and validates linked wo
   ]);
   const linkedNested = path.join(linkedWorktree, "src");
   await mkdir(linkedNested);
+  const canonicalRepository = await realpath(repository);
+  const canonicalNested = await realpath(nested);
+  const canonicalCredentialSibling = await realpath(credentialSibling);
+  const canonicalDeepCredential = await realpath(deepCredential);
+  const canonicalLinkedWorktree = await realpath(linkedWorktree);
+  const canonicalLinkedNested = await realpath(linkedNested);
+  const canonicalSubmodule = await realpath(submodule);
+  const canonicalSubmoduleNested = await realpath(submoduleNested);
+  const canonicalSubmoduleGitDirectory = await realpath(submoduleGitDirectory);
+  const canonicalRepositoryGitDirectory = await realpath(path.join(repository, ".git"));
   let runtimeConfig;
   let wrappedCwd;
   const manager = {
@@ -639,35 +680,37 @@ test("runner discovers Git roots from nested directories and validates linked wo
   });
   try {
     assert.equal(await execute(nested), 0);
-    assert.equal(wrappedCwd, nested);
-    assert.ok(runtimeConfig.filesystem.allowRead.includes(repository));
+    assert.equal(wrappedCwd, canonicalNested);
+    assert.ok(runtimeConfig.filesystem.allowRead.includes(canonicalRepository));
     assert.ok(runtimeConfig.credentials.files.some(
-      (entry) => entry.path === path.join(nested, ".env") && entry.mode === "deny",
+      (entry) => entry.path === path.join(canonicalNested, ".env") && entry.mode === "deny",
     ));
     assert.ok(runtimeConfig.credentials.files.some(
-      (entry) => entry.path === path.join(repository, "**", ".env") && entry.mode === "deny",
+      (entry) => entry.path === path.join(canonicalRepository, "**", ".env") && entry.mode === "deny",
     ));
-    assert.ok(runtimeConfig.filesystem.denyWrite.includes(path.join(nested, ".npmrc")));
-    assert.ok(runtimeConfig.filesystem.denyWrite.includes(path.join(credentialSibling, ".npmrc")));
-    assert.ok(runtimeConfig.filesystem.denyWrite.includes(path.join(credentialSibling, ".ssh")));
-    assert.ok(runtimeConfig.filesystem.denyWrite.includes(deepCredential));
-    assert.ok(runtimeConfig.filesystem.denyWrite.includes(path.join(submodule, ".git")));
+    assert.ok(runtimeConfig.filesystem.denyWrite.includes(path.join(canonicalNested, ".npmrc")));
+    assert.ok(runtimeConfig.filesystem.denyWrite.includes(path.join(canonicalCredentialSibling, ".npmrc")));
+    assert.ok(runtimeConfig.filesystem.denyWrite.includes(path.join(canonicalCredentialSibling, ".ssh")));
+    assert.ok(runtimeConfig.filesystem.denyWrite.includes(canonicalDeepCredential));
+    assert.ok(runtimeConfig.filesystem.denyWrite.includes(path.join(canonicalSubmodule, ".git")));
     assert.ok(runtimeConfig.filesystem.denyWrite.includes(
-      path.join(submoduleGitDirectory, "config"),
+      path.join(canonicalSubmoduleGitDirectory, "config"),
     ));
 
     assert.equal(await execute(linkedNested), 0);
-    assert.equal(wrappedCwd, linkedNested);
-    assert.ok(runtimeConfig.filesystem.allowRead.includes(linkedWorktree));
-    assert.ok(runtimeConfig.filesystem.allowRead.includes(path.join(repository, ".git")));
-    assert.ok(runtimeConfig.filesystem.denyWrite.includes(path.join(repository, ".git", "config")));
+    assert.equal(wrappedCwd, canonicalLinkedNested);
+    assert.ok(runtimeConfig.filesystem.allowRead.includes(canonicalLinkedWorktree));
+    assert.ok(runtimeConfig.filesystem.allowRead.includes(canonicalRepositoryGitDirectory));
+    assert.ok(runtimeConfig.filesystem.denyWrite.includes(
+      path.join(canonicalRepositoryGitDirectory, "config"),
+    ));
 
     assert.equal(await execute(submoduleNested), 0);
-    assert.equal(wrappedCwd, submoduleNested);
-    assert.ok(runtimeConfig.filesystem.allowRead.includes(submodule));
-    assert.ok(runtimeConfig.filesystem.allowRead.includes(submoduleGitDirectory));
-    assert.equal(runtimeConfig.filesystem.allowRead.includes(repository), false);
-    assert.ok(runtimeConfig.filesystem.denyWrite.includes(path.join(submodule, ".git")));
+    assert.equal(wrappedCwd, canonicalSubmoduleNested);
+    assert.ok(runtimeConfig.filesystem.allowRead.includes(canonicalSubmodule));
+    assert.ok(runtimeConfig.filesystem.allowRead.includes(canonicalSubmoduleGitDirectory));
+    assert.equal(runtimeConfig.filesystem.allowRead.includes(canonicalRepository), false);
+    assert.ok(runtimeConfig.filesystem.denyWrite.includes(path.join(canonicalSubmodule, ".git")));
 
     await writeFile(
       path.join(submodule, ".git"),
