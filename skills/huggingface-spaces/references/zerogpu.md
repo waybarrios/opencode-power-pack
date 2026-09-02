@@ -169,7 +169,7 @@ Handlers run **concurrently by default**. Three rules:
 
 1. **No mutable global state.** Handlers writing to a module-level dict / list race each other.
 2. **No fixed output paths.** Two concurrent calls writing to `output.png` clobber each other (and leak data across users). Use `tempfile.NamedTemporaryFile(suffix=...)`.
-3. **Read-only globals are safe** — models, tokenizers, configs loaded once and only read inside handlers.
+3. **Globals used without mutation are safe** — models, tokenizers, configs loaded once and only accessed inside handlers.
 
 ## Process isolation and pickle
 

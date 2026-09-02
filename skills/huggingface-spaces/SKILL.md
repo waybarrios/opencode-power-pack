@@ -220,7 +220,7 @@ Order of operations:
 
 1. Read the logs: `hf spaces logs <id> --build --follow` (build error) or `hf spaces logs <id> --follow` (runtime error). Find the **first** error, not the last.
 2. Grep [`references/known-errors.md`](references/known-errors.md) for the error string. Check if this is a known issue before trying your own fix — most common ZeroGPU / Gradio / dependency errors have a 1–2 line fix there.
-3. Iterate using the cheapest rung from [`references/debugging.md`](references/debugging.md). The vast majority of issues resolve with log-reading + smoke-test loops; interactive dev mode + SSH is a heavy-hammer last resort.
+3. Iterate using the cheapest rung from [`references/debugging.md`](references/debugging.md). The vast majority of issues resolve with log inspection + smoke-test loops; interactive dev mode + SSH is a heavy-hammer last resort.
 
 If you solve an error that wasn't in the known-errors list, suggest the user PR it back to this skill so future runs benefit.
 

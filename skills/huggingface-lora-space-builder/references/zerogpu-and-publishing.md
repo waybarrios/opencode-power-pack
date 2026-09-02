@@ -52,7 +52,7 @@ Typical durations:
 
 ### Authentication — check first, ask only if needed
 
-Don't ask for a token reflexively. Check whether the user is already authenticated, and only prompt if there's no usable session.
+Don't ask for a token reflexively. Check whether the user has an authenticated session, and only prompt if there's no usable session.
 
 ```python
 from huggingface_hub import HfApi, get_token
@@ -71,13 +71,13 @@ def resolve_auth():
 
 Decision tree:
 
-- **User already authenticated and the LoRA repo is public**: use the existing token. Confirm the username with the user before publishing ("I'll publish to `{username}` — confirm?").
-- **User already authenticated and the LoRA repo is private**: try `api.repo_info(repo_id, token=cached)`. If it succeeds, the existing token has the right scope — proceed. If it fails (token doesn't have access to that repo), ask for a token with broader access.
+- **User has an authenticated session and the LoRA repo is public**: use the existing token. Confirm the username with the user before publishing ("I'll publish to `{username}` — confirm?").
+- **User has an authenticated session and the LoRA repo is private**: try `api.repo_info(repo_id, token=cached)`. If it succeeds, the existing token has the right scope — proceed. If it fails (token doesn't have access to that repo), ask for a token with broader access.
 - **No cached token**: ask the user. One ask, with the explanation: "I need a Hugging Face access token with **write** scope. Create one at https://huggingface.co/settings/tokens. Paste it here." The same token will be reused for publishing.
 
 The default flow on a Hugging Face Space, in a logged-in user's local environment with `huggingface-cli login`, or in any environment with `HF_TOKEN` set, will *not* require asking the user for a token. Asking is the fallback, not the default.
 
-### Reading the LoRA repo
+### Inspecting the LoRA repo
 
 ```python
 from huggingface_hub import HfApi, ModelCard

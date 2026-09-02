@@ -201,7 +201,7 @@ Three rules. Full treatment with examples in `references/concurrency.md`.
 
 1. **No mutable global state.** Concurrent requests overwrite each other.
 2. **No fixed file paths for outputs.** Concurrent requests clobber the same file. Use `tempfile` for unique paths.
-3. **Read-only globals are safe.** Model objects, tokenizers, configs loaded once at startup and only read during requests are safe and encouraged.
+3. **Globals used without mutation are safe.** Model objects, tokenizers, configs loaded once at startup and only accessed during requests are safe and encouraged.
 
 ## Call Granularity
 
@@ -260,7 +260,7 @@ GRADIO_CACHE_EXAMPLES=true GRADIO_CACHE_MODE=lazy python app.py
 
 ### `python_version` pin in README frontmatter
 
-Pinning `python_version` is **effectively required** for ZeroGPU. The runtime default is currently Python 3.10, so a local environment using 3.11+ will fail to install on the Space without an explicit pin. Pin to a ZeroGPU-supported version (3.12 is a reasonable default); the authoritative supported list lives in the [ZeroGPU docs](https://huggingface.co/docs/hub/spaces-zerogpu) — do not hardcode the full list, refer to the docs.
+Pinning `python_version` is **effectively required** for ZeroGPU. The runtime default is currently Python 3.10, so a local setup using 3.11+ will fail to install on the Space without an explicit pin. Pin to a ZeroGPU-supported version (3.12 is a reasonable default); the authoritative supported list lives in the [ZeroGPU docs](https://huggingface.co/docs/hub/spaces-zerogpu) — do not hardcode the full list, refer to the docs.
 
 ```yaml
 # README.md frontmatter
