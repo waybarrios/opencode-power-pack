@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
 import { spawn } from "node:child_process";
 import {
   chmodSync,
@@ -12,6 +12,7 @@ import {
   statSync,
   writeFileSync,
 } from "node:fs";
+import { createServer } from "node:net";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -515,33 +516,74 @@ export function redactResponse(response, testCase) {
   return redacted.replace(credential, "[REDACTED]");
 }
 
-export function parseJsonEvents(stdout) {
+/**
+ * Collects the assistant text from a V2 session context response and notes
+ * whether the model requested any tool. A tool request means the eval runtime
+ * could not keep the model inside the permission-free envelope.
+ */
+export function parseSessionContext(context) {
+  if (!isObject(context) || !Array.isArray(context.data)) {
+    throw new TypeError("malformed OpenCode session context");
+  }
   const textParts = [];
   let toolRequested = false;
-  for (const line of stdout.split(/\r?\n/)) {
-    if (line.trim() === "") continue;
-    let event;
-    try {
-      event = JSON.parse(line);
-    } catch {
-      throw new TypeError("malformed OpenCode JSON event");
+  for (const message of context.data) {
+    if (!isObject(message) || message.type !== "assistant") continue;
+    if (!Array.isArray(message.content)) {
+      throw new TypeError("malformed OpenCode session context");
     }
-    if (!isObject(event) || !isObject(event.part)) {
-      throw new TypeError("malformed OpenCode JSON event");
-    }
-    if (event.part.type === "tool") toolRequested = true;
-    if (event.type === "text" && event.part.type === "text") {
-      if (typeof event.part.text !== "string") {
-        throw new TypeError("malformed OpenCode JSON event");
+    for (const part of message.content) {
+      if (!isObject(part)) throw new TypeError("malformed OpenCode session context");
+      if (part.type === "tool") toolRequested = true;
+      if (part.type === "text") {
+        if (typeof part.text !== "string") {
+          throw new TypeError("malformed OpenCode session context");
+        }
+        textParts.push(part.text);
       }
-      textParts.push(event.part.text);
     }
   }
   return { response: textParts.join("\n"), toolRequested };
 }
 
-export function buildEvalConfig(pluginUrl) {
-  return { plugin: [pluginUrl], permission: { "*": "deny" } };
+/**
+ * V2 loads a configured plugin directory through its index.js entrypoint and
+ * uses an ordered permission ruleset. The eval denies every tool so a case
+ * can only pass on model text.
+ */
+export function buildEvalConfig(pluginDirectory) {
+  return {
+    plugins: [pluginDirectory],
+    permissions: [{ action: "*", resource: "*", effect: "deny" }],
+  };
+}
+
+function parseModelReference(model) {
+  const separator = model.indexOf("/");
+  return { providerID: model.slice(0, separator), id: model.slice(separator + 1) };
+}
+
+async function availablePort() {
+  const server = createServer();
+  await new Promise((resolve, reject) => server.listen(0, "127.0.0.1", resolve).once("error", reject));
+  const address = server.address();
+  await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
+  return address.port;
+}
+
+/**
+ * Writes the plugin-directory shim the eval runtime loads. The shim keeps the
+ * package entrypoint in the repository, so its skills and dependencies resolve
+ * exactly as they do for an installed package.
+ */
+function writePluginShim(runtime, repo) {
+  const directory = path.join(runtime.root, "plugin");
+  mkdirSync(directory, { recursive: true });
+  const entrypoint = pathToFileURL(
+    path.join(repo, ".opencode/plugins/opencode-power-pack.js"),
+  ).href;
+  writeFileSync(path.join(directory, "index.js"), `export { default } from ${JSON.stringify(entrypoint)};\n`);
+  return directory;
 }
 
 export function defaultOpenCodeCommand(platform = process.platform) {
@@ -639,7 +681,7 @@ function createRuntime(env) {
   }
 }
 
-function isolatedEnv(env, runtime, model, pluginUrl) {
+function isolatedEnv(env, runtime, model, config, password) {
   const childEnv = {};
   const isolatedPaths = new Set([
     "HOME", "USERPROFILE", "APPDATA", "LOCALAPPDATA",
@@ -662,8 +704,48 @@ function isolatedEnv(env, runtime, model, pluginUrl) {
     XDG_CACHE_HOME: runtime.cache,
     XDG_STATE_HOME: runtime.state,
     OPENCODE_EVAL_MODEL: model,
-    OPENCODE_CONFIG_CONTENT: JSON.stringify(buildEvalConfig(pluginUrl)),
+    OPENCODE_SERVER_PASSWORD: password,
+    OPENCODE_CONFIG_CONTENT: JSON.stringify(config),
   };
+}
+
+async function requestJson(url, { method = "GET", body, authorization, signal } = {}) {
+  const response = await fetch(url, {
+    method,
+    headers: {
+      ...(authorization ? { authorization } : {}),
+      ...(body === undefined ? {} : { "content-type": "application/json" }),
+    },
+    body: body === undefined ? undefined : JSON.stringify(body),
+    signal,
+  });
+  if (!response.ok) {
+    throw new TypeError(`OpenCode API ${method} ${url} returned HTTP ${response.status}`);
+  }
+  const text = await response.text();
+  if (text === "") return undefined;
+  try {
+    return JSON.parse(text);
+  } catch {
+    throw new TypeError("malformed OpenCode API response");
+  }
+}
+
+async function waitForServer(baseURL, { authorization, signal, child, spawnError }) {
+  while (!signal.aborted) {
+    if (spawnError.error || child.exitCode !== null || child.signalCode !== null) return false;
+    try {
+      const response = await fetch(`${baseURL}/api/info`, {
+        headers: { authorization },
+        signal: AbortSignal.any([signal, AbortSignal.timeout(1_000)]),
+      });
+      if (response.ok) return true;
+    } catch {
+      if (signal.aborted) break;
+    }
+    await delay(100);
+  }
+  return false;
 }
 
 export async function runCase(testCase, options) {
@@ -677,118 +759,95 @@ export async function runCase(testCase, options) {
   } = options;
   const started = Date.now();
   const runtime = createRuntime(env);
-  const pluginUrl = pathToFileURL(path.join(repo, ".opencode/plugins/opencode-power-pack.js")).href;
-  const args = [
-    ...commandArgsPrefix,
-    "run",
-    "--model", model,
-    "--command", testCase.skill,
-    "--format", "json",
-    testCase.prompt,
-  ];
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), testCase.timeoutMs);
+  const spawnError = { error: undefined };
+  let child;
+  const finish = (status, failures, response) => reportEntry(
+    testCase, options, started, status, failures, response,
+  );
 
   try {
-    let outcome;
+    const pluginDirectory = writePluginShim(runtime, repo);
+    const port = await availablePort();
+    const password = randomBytes(24).toString("base64url");
+    const authorization = `Basic ${Buffer.from(`opencode:${password}`).toString("base64")}`;
+    const baseURL = `http://127.0.0.1:${port}`;
+    const args = [...commandArgsPrefix, "serve", "--hostname", "127.0.0.1", "--port", String(port)];
+
+    child = spawn(command, args, {
+      cwd: runtime.project,
+      env: isolatedEnv(env, runtime, model, buildEvalConfig(pluginDirectory), password),
+      detached: process.platform !== "win32",
+      shell: false,
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+    child.stdout.resume();
+    child.stderr.resume();
+    child.once("error", (error) => {
+      spawnError.error = error;
+    });
+
+    const ready = await waitForServer(baseURL, { authorization, signal: controller.signal, child, spawnError });
+    if (!ready) {
+      if (controller.signal.aborted) return finish("incomplete", ["incomplete:timeout"], "");
+      return finish("incomplete", ["incomplete:process-exit"], "");
+    }
+
     try {
-      outcome = await new Promise((resolve, reject) => {
-        const chunks = [];
-        let timedOut = false;
-        let termination;
-        const child = spawn(command, args, {
-          cwd: runtime.project,
-          env: isolatedEnv(env, runtime, model, pluginUrl),
-          detached: process.platform !== "win32",
-          shell: false,
-          stdio: ["ignore", "pipe", "pipe"],
-        });
-        child.stdout.on("data", (chunk) => chunks.push(chunk));
-        child.stderr.resume();
-        const timeout = setTimeout(() => {
-          timedOut = true;
-          termination = terminateTimedOutChild(child);
-          termination.catch(reject);
-        }, testCase.timeoutMs);
-        child.once("error", (error) => {
-          clearTimeout(timeout);
-          reject(error);
-        });
-        child.once("close", async (code) => {
-          clearTimeout(timeout);
-          try {
-            if (termination) await termination;
-          } catch {
-            return;
-          }
-          resolve({ stdout: Buffer.concat(chunks).toString("utf8"), code, timedOut });
-        });
+      const created = await requestJson(`${baseURL}/api/session`, {
+        method: "POST",
+        authorization,
+        signal: controller.signal,
+        body: { title: testCase.id, model: parseModelReference(model) },
       });
+      const sessionID = created?.data?.id;
+      if (typeof sessionID !== "string" || sessionID === "") {
+        throw new TypeError("malformed OpenCode session");
+      }
+      await requestJson(`${baseURL}/api/session/${sessionID}/prompt`, {
+        method: "POST",
+        authorization,
+        signal: controller.signal,
+        body: { text: testCase.prompt, skills: [{ id: testCase.skill }] },
+      });
+      await requestJson(`${baseURL}/api/experimental/session/${sessionID}/wait`, {
+        method: "POST",
+        authorization,
+        signal: controller.signal,
+      });
+      const context = await requestJson(`${baseURL}/api/session/${sessionID}/context`, {
+        authorization,
+        signal: controller.signal,
+      });
+      let parsed;
+      try {
+        parsed = parseSessionContext(context);
+      } catch {
+        return finish("incomplete", ["incomplete:malformed-response"], "");
+      }
+      const { response, toolRequested } = parsed;
+      if (toolRequested) {
+        return finish("incomplete", ["incomplete:permission"], "");
+      }
+      if (response.trim() === "") {
+        return finish("incomplete", ["incomplete:missing-response"], "");
+      }
+      const grade = gradeResponse(testCase, response);
+      return finish(
+        grade.status,
+        grade.failures,
+        normalizeResponse(redactResponse(response, testCase)),
+      );
     } catch {
-      return reportEntry(
-        testCase,
-        options,
-        started,
-        "incomplete",
-        ["incomplete:process-exit"],
-        "",
-      );
+      if (controller.signal.aborted) return finish("incomplete", ["incomplete:timeout"], "");
+      return finish("incomplete", ["incomplete:malformed-response"], "");
     }
-    if (outcome.timedOut) {
-      return reportEntry(testCase, options, started, "incomplete", ["incomplete:timeout"], "");
-    }
-    if (outcome.code !== 0) {
-      return reportEntry(
-        testCase,
-        options,
-        started,
-        "incomplete",
-        ["incomplete:process-exit"],
-        "",
-      );
-    }
-    let parsed;
-    try {
-      parsed = parseJsonEvents(outcome.stdout);
-    } catch {
-      return reportEntry(
-        testCase,
-        options,
-        started,
-        "incomplete",
-        ["incomplete:malformed-events"],
-        "",
-      );
-    }
-    const { response, toolRequested } = parsed;
-    if (toolRequested) {
-      return reportEntry(
-        testCase,
-        options,
-        started,
-        "incomplete",
-        ["incomplete:permission"],
-        "",
-      );
-    }
-    if (response.trim() === "") {
-      return reportEntry(
-        testCase,
-        options,
-        started,
-        "incomplete",
-        ["incomplete:missing-response"],
-        "",
-      );
-    }
-    const grade = gradeResponse(testCase, response);
-    return reportEntry(
-      testCase,
-      options,
-      started,
-      grade.status,
-      grade.failures,
-      normalizeResponse(redactResponse(response, testCase)),
-    );
   } finally {
+    clearTimeout(timeout);
+    if (child && child.exitCode === null && child.signalCode === null) {
+      await terminateTimedOutChild(child);
+    }
     rmSync(runtime.root, { recursive: true, force: true });
   }
 }

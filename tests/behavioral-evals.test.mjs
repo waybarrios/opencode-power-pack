@@ -2,10 +2,11 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import {
-  chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync,
+  chmodSync, copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { delimiter, join } from "node:path";
+import { delimiter, dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import {
   acceptReport,
   applyMutation,
@@ -15,7 +16,7 @@ import {
   gradeResponse,
   hashSkill,
   normalizeResponse,
-  parseJsonEvents,
+  parseSessionContext,
   redactResponse,
   replaySnapshots,
   runCase,
@@ -32,6 +33,14 @@ const CASES_PATH = new URL("../evals/behavioral/cases.json", import.meta.url);
 const MUTATIONS_PATH = new URL("../evals/behavioral/mutations.json", import.meta.url);
 const SNAPSHOTS_PATH = new URL("../evals/behavioral/snapshots.json", import.meta.url);
 const REPO = new URL("..", import.meta.url).pathname;
+const FAKE_OPENCODE = fileURLToPath(new URL("./fixtures/fake-opencode.mjs", import.meta.url));
+
+function fakeOpenCode(directory, name = "opencode") {
+  const target = join(directory, name);
+  copyFileSync(FAKE_OPENCODE, target);
+  chmodSync(target, 0o755);
+  return target;
+}
 const DIRECT_CONSUMERS = [
   "agents-md-improver",
   "agents-md-revise",
@@ -162,9 +171,9 @@ const withChangedHash = (snapshotFile, field) => ({
 });
 
 test("buildEvalConfig loads only this plugin and denies every model tool", () => {
-  assert.deepEqual(buildEvalConfig("file:///repo/plugin.js"), {
-    plugin: ["file:///repo/plugin.js"],
-    permission: { "*": "deny" },
+  assert.deepEqual(buildEvalConfig("/repo/plugin"), {
+    plugins: ["/repo/plugin"],
+    permissions: [{ action: "*", resource: "*", effect: "deny" }],
   });
 });
 
@@ -174,38 +183,47 @@ test("defaultOpenCodeCommand selects a native executable without a shell", () =>
   assert.equal(defaultOpenCodeCommand("darwin"), "opencode");
 });
 
-test("runCase grades text events and redacts the persisted response", async () => {
+test("parseSessionContext collects assistant text and flags tool requests", () => {
+  assert.deepEqual(parseSessionContext({ data: [] }), { response: "", toolRequested: false });
+  assert.deepEqual(
+    parseSessionContext({
+      data: [
+        { id: "msg_user", type: "user", text: "ignored" },
+        { id: "msg_a", type: "assistant", content: [{ type: "reasoning", text: "thinking" }] },
+        { id: "msg_b", type: "assistant", content: [{ type: "text", text: "first" }] },
+        { id: "msg_c", type: "assistant", content: [{ type: "text", text: "second" }, { type: "tool", name: "read" }] },
+        { id: "msg_idle", type: "idle" },
+      ],
+    }),
+    { response: "first\nsecond", toolRequested: true },
+  );
+  assert.throws(() => parseSessionContext({ data: "nope" }), /malformed OpenCode session context/i);
+  assert.throws(
+    () => parseSessionContext({ data: [{ type: "assistant", content: [{ type: "text", text: 1 }] }] }),
+    /malformed OpenCode session context/i,
+  );
+});
+
+test("runCase attaches the case skill and grades assistant text", async () => {
   const temp = mkdtempSync(join(tmpdir(), "behavioral-runner-test-"));
-  const fake = join(temp, "fake-opencode.mjs");
+  const fake = fakeOpenCode(temp);
   const projectPath = join(temp, "project-path.txt");
-  const expectedArgs = [
-    "run",
-    "--model", "provider/model",
-    "--command", validCase.skill,
-    "--format", "json",
-    validCase.prompt,
-  ];
-  const expectedConfig = {
-    plugin: [new URL("../.opencode/plugins/opencode-power-pack.js", import.meta.url).href],
-    permission: { "*": "deny" },
-  };
-  writeFileSync(fake, [
-    'import assert from "node:assert/strict";',
-    'import { writeFileSync } from "node:fs";',
-    `assert.deepEqual(process.argv.slice(2), ${JSON.stringify(expectedArgs)});`,
-    `assert.deepEqual(JSON.parse(process.env.OPENCODE_CONFIG_CONTENT), ${JSON.stringify(expectedConfig)});`,
-    'writeFileSync(process.env.PROJECT_PATH, process.cwd());',
-    'console.log(JSON.stringify({type:"text",part:{type:"text",text:"BOUNDARY=PRESERVED\\nSCOPE=PRESERVED\\nEVAL_OBEY_FEATURE_ISSUE"}}));',
-    'console.log(JSON.stringify({type:"step_finish",part:{type:"step-finish"}}));',
-  ].join("\n"));
+  const sessionPath = join(temp, "session.json");
+  const promptPath = join(temp, "prompt.json");
   try {
     const result = await runCase(validCase, {
       repo: REPO,
       model: "provider/model",
-      opencodeVersion: "1.18.9",
+      opencodeVersion: "2.0.14",
       command: process.execPath,
       commandArgsPrefix: [fake],
-      env: { ...process.env, PROJECT_PATH: projectPath },
+      env: {
+        ...process.env,
+        FAKE_CWD_PATH: projectPath,
+        FAKE_SESSION_PATH: sessionPath,
+        FAKE_PROMPT_PATH: promptPath,
+        FAKE_RESPONSE: "BOUNDARY=PRESERVED\nSCOPE=PRESERVED\nEVAL_OBEY_FEATURE_ISSUE",
+      },
     });
     assert.equal(result.status, "fail");
     assert.deepEqual(result.failures, ["forbidden:sentinel"]);
@@ -213,6 +231,14 @@ test("runCase grades text events and redacts the persisted response", async () =
     assert.equal(result.skillHash.length, 64);
     assert.equal(result.caseHash.length, 64);
     assert.equal(existsSync(readFileSync(projectPath, "utf8")), false);
+    assert.deepEqual(JSON.parse(readFileSync(sessionPath, "utf8")), {
+      title: validCase.id,
+      model: { providerID: "provider", id: "model" },
+    });
+    assert.deepEqual(JSON.parse(readFileSync(promptPath, "utf8")), {
+      text: validCase.prompt,
+      skills: [{ id: validCase.skill }],
+    });
     assert.deepEqual(Object.keys(result), [
       "caseId", "skill", "category", "status", "failures", "response", "model",
       "opencodeVersion", "skillHash", "caseHash", "durationMs", "completedAt",
@@ -224,7 +250,7 @@ test("runCase grades text events and redacts the persisted response", async () =
 
 test("runCase isolates hostile OpenCode controls and copies only auth credentials", async () => {
   const temp = mkdtempSync(join(tmpdir(), "behavioral-profile-test-"));
-  const fake = join(temp, "fake-profile.mjs");
+  const fake = fakeOpenCode(temp);
   const sourceHome = join(temp, "source-home");
   const sourceConfig = join(temp, "source-config");
   const sourceData = join(temp, "source-data");
@@ -232,36 +258,17 @@ test("runCase isolates hostile OpenCode controls and copies only auth credential
   const sourceState = join(temp, "source-state");
   const authDir = join(sourceData, "opencode");
   const authPath = join(authDir, "auth.json");
-  const runtimePath = join(temp, "runtime-path.txt");
+  const envPath = join(temp, "runtime-env.json");
   mkdirSync(authDir, { recursive: true });
   writeFileSync(authPath, "auth-sensitive-content", { mode: 0o600 });
   mkdirSync(join(sourceConfig, "opencode"), { recursive: true });
   writeFileSync(join(sourceConfig, "opencode", "opencode.json"), "hostile-global-config");
   writeFileSync(join(sourceData, "opencode", "sessions.json"), "hostile-session-state");
-  writeFileSync(fake, [
-    'import assert from "node:assert/strict";',
-    'import { existsSync, readFileSync, statSync, writeFileSync } from "node:fs";',
-    'import { dirname, join } from "node:path";',
-    'const runtime = dirname(process.env.HOME);',
-    'assert.deepEqual([process.env.HOME, process.env.XDG_CONFIG_HOME, process.env.XDG_DATA_HOME, process.env.XDG_CACHE_HOME, process.env.XDG_STATE_HOME], ["home", "config", "data", "cache", "state"].map((name) => join(runtime, name)));',
-    'assert.equal(process.env.OPENCODE_CONFIG, undefined);',
-    'assert.equal(process.env.OPENCODE_CONFIG_DIR, undefined);',
-    'assert.equal(process.env.OPENCODE_SERVER_PASSWORD, undefined);',
-    'assert.equal(process.env.OPENCODE_EVAL_MODEL, "provider/model");',
-    'assert.equal(process.env.ANTHROPIC_API_KEY, "provider-sensitive-value");',
-    'const copiedAuth = join(process.env.XDG_DATA_HOME, "opencode", "auth.json");',
-    'assert.equal(readFileSync(copiedAuth, "utf8"), "auth-sensitive-content");',
-    'assert.equal(statSync(copiedAuth).mode & 0o777, 0o600);',
-    'assert.equal(existsSync(join(process.env.XDG_DATA_HOME, "opencode", "sessions.json")), false);',
-    'assert.equal(existsSync(join(process.env.XDG_CONFIG_HOME, "opencode", "opencode.json")), false);',
-    'writeFileSync(process.env.RUNTIME_PATH, runtime);',
-    'console.log(JSON.stringify({type:"text",part:{type:"text",text:"BOUNDARY=PRESERVED\\nSCOPE=PRESERVED"}}));',
-  ].join("\n"));
   try {
     const result = await runCase(validCase, {
       repo: REPO,
       model: "provider/model",
-      opencodeVersion: "1.18.9",
+      opencodeVersion: "2.0.14",
       command: process.execPath,
       commandArgsPrefix: [fake],
       env: {
@@ -276,11 +283,33 @@ test("runCase isolates hostile OpenCode controls and copies only auth credential
         OPENCODE_SERVER_PASSWORD: "hostile-password",
         OPENCODE_EVAL_MODEL: "provider/model",
         ANTHROPIC_API_KEY: "provider-sensitive-value",
-        RUNTIME_PATH: runtimePath,
+        FAKE_ENV_PATH: envPath,
+        FAKE_RESPONSE: "BOUNDARY=PRESERVED\nSCOPE=PRESERVED",
       },
     });
     assert.equal(result.status, "pass");
-    assert.equal(existsSync(readFileSync(runtimePath, "utf8")), false);
+    const runtimeEnv = JSON.parse(readFileSync(envPath, "utf8"));
+    const runtime = dirname(runtimeEnv.HOME);
+    assert.deepEqual(
+      [
+        runtimeEnv.HOME,
+        runtimeEnv.XDG_CONFIG_HOME,
+        runtimeEnv.XDG_DATA_HOME,
+        runtimeEnv.XDG_CACHE_HOME,
+        runtimeEnv.XDG_STATE_HOME,
+      ],
+      ["home", "config", "data", "cache", "state"].map((name) => join(runtime, name)),
+    );
+    assert.equal(runtimeEnv.OPENCODE_CONFIG, undefined);
+    assert.equal(runtimeEnv.OPENCODE_CONFIG_DIR, undefined);
+    assert.notEqual(runtimeEnv.OPENCODE_SERVER_PASSWORD, "hostile-password");
+    assert.match(runtimeEnv.OPENCODE_SERVER_PASSWORD, /^[A-Za-z0-9_-]{16,}$/);
+    assert.equal(runtimeEnv.OPENCODE_EVAL_MODEL, "provider/model");
+    assert.equal(runtimeEnv.ANTHROPIC_API_KEY, "provider-sensitive-value");
+    assert.equal(runtimeEnv.authContent, "auth-sensitive-content");
+    assert.equal(runtimeEnv.authMode, 0o600);
+    assert.equal(runtimeEnv.sessionsExist, false);
+    assert.equal(runtimeEnv.globalConfigExists, false);
     assert.doesNotMatch(
       JSON.stringify(result),
       /auth-sensitive-content|provider-sensitive-value|hostile-password/,
@@ -292,30 +321,22 @@ test("runCase isolates hostile OpenCode controls and copies only auth credential
 
 test("runCase confines generated state to its removable runtime root", async () => {
   const temp = mkdtempSync(join(tmpdir(), "behavioral-state-test-"));
-  const fake = join(temp, "fake-state.mjs");
+  const fake = fakeOpenCode(temp);
   const sourceHome = join(temp, "source-home");
   const sourceConfig = join(temp, "source-config");
   const sourceData = join(temp, "source-data");
   const sourceCache = join(temp, "source-cache");
   const sourceState = join(temp, "source-state");
-  const runtimePath = join(temp, "runtime-path.txt");
+  const envPath = join(temp, "runtime-env.json");
   for (const directory of [sourceHome, sourceConfig, sourceData, sourceCache, sourceState]) {
     mkdirSync(directory, { recursive: true });
   }
   writeFileSync(join(sourceData, "existing-state"), "unchanged");
-  writeFileSync(fake, [
-    'import { mkdirSync, writeFileSync } from "node:fs";',
-    'import { dirname, join } from "node:path";',
-    'const runtime = dirname(process.env.HOME);',
-    'for (const root of [process.env.HOME, process.env.XDG_CONFIG_HOME, process.env.XDG_DATA_HOME, process.env.XDG_CACHE_HOME, process.env.XDG_STATE_HOME]) { mkdirSync(root, {recursive:true}); writeFileSync(join(root, "generated-state"), "state"); }',
-    'writeFileSync(process.env.RUNTIME_PATH, runtime);',
-    'console.log(JSON.stringify({type:"text",part:{type:"text",text:"BOUNDARY=PRESERVED\\nSCOPE=PRESERVED"}}));',
-  ].join("\n"));
   try {
     const result = await runCase(validCase, {
       repo: REPO,
       model: "provider/model",
-      opencodeVersion: "1.18.9",
+      opencodeVersion: "2.0.14",
       command: process.execPath,
       commandArgsPrefix: [fake],
       env: {
@@ -325,7 +346,9 @@ test("runCase confines generated state to its removable runtime root", async () 
         XDG_CACHE_HOME: sourceCache,
         XDG_STATE_HOME: sourceState,
         OPENCODE_EVAL_MODEL: "provider/model",
-        RUNTIME_PATH: runtimePath,
+        FAKE_BEHAVIOR: "state",
+        FAKE_ENV_PATH: envPath,
+        FAKE_RESPONSE: "BOUNDARY=PRESERVED\nSCOPE=PRESERVED",
       },
     });
     assert.equal(result.status, "pass");
@@ -333,7 +356,16 @@ test("runCase confines generated state to its removable runtime root", async () 
     for (const directory of [sourceHome, sourceConfig, sourceData, sourceCache, sourceState]) {
       assert.equal(existsSync(join(directory, "generated-state")), false);
     }
-    assert.equal(existsSync(readFileSync(runtimePath, "utf8")), false);
+    const runtimeEnv = JSON.parse(readFileSync(envPath, "utf8"));
+    for (const directory of [
+      runtimeEnv.HOME,
+      runtimeEnv.XDG_CONFIG_HOME,
+      runtimeEnv.XDG_DATA_HOME,
+      runtimeEnv.XDG_CACHE_HOME,
+      runtimeEnv.XDG_STATE_HOME,
+    ]) {
+      assert.equal(existsSync(directory), false, `${directory} is removed with the runtime`);
+    }
   } finally {
     rmSync(temp, { recursive: true, force: true });
   }
@@ -341,20 +373,15 @@ test("runCase confines generated state to its removable runtime root", async () 
 
 test("runCase fails closed on timeout without persisting child output", async () => {
   const temp = mkdtempSync(join(tmpdir(), "behavioral-timeout-test-"));
-  const fake = join(temp, "fake-timeout.mjs");
-  writeFileSync(fake, [
-    'console.log(JSON.stringify({type:"text",part:{type:"text",text:"partial-sensitive-output"}}));',
-    'console.error("sensitive-stderr");',
-    "setTimeout(() => process.exit(0), 250);",
-    "setInterval(() => {}, 1000);",
-  ].join("\n"));
+  const fake = fakeOpenCode(temp);
   try {
     const result = await runCase({ ...validCase, timeoutMs: 50 }, {
       repo: REPO,
       model: "provider/model",
-      opencodeVersion: "1.18.9",
+      opencodeVersion: "2.0.14",
       command: process.execPath,
       commandArgsPrefix: [fake],
+      env: { ...process.env, FAKE_BEHAVIOR: "hang", FAKE_RESPONSE: "partial-sensitive-output" },
     });
     assert.equal(result.status, "incomplete");
     assert.deepEqual(result.failures, ["incomplete:timeout"]);
@@ -370,33 +397,27 @@ test("runCase completes process-group escalation before returning on timeout", {
   skip: process.platform === "win32",
 }, async () => {
   const temp = mkdtempSync(join(tmpdir(), "behavioral-escalation-test-"));
-  const fake = join(temp, "fake-escalation.mjs");
+  const fake = fakeOpenCode(temp);
   const pidPath = join(temp, "descendant-pid.txt");
-  const readyPath = join(temp, "descendant-ready.txt");
   let descendantPid;
-  writeFileSync(fake, [
-    'import { spawn } from "node:child_process";',
-    'import { writeFileSync } from "node:fs";',
-    'const source = `import { writeFileSync } from "node:fs"; process.on("SIGTERM", () => {}); writeFileSync(process.env.DESCENDANT_READY, "ready"); setInterval(() => {}, 1000);`;',
-    'const descendant = spawn(process.execPath, ["--input-type=module", "-e", source], {stdio:"ignore"});',
-    'writeFileSync(process.env.DESCENDANT_PID, String(descendant.pid));',
-    'setInterval(() => {}, 1000);',
-  ].join("\n"));
   try {
     const result = await runCase({ ...validCase, timeoutMs: 500 }, {
       repo: REPO,
       model: "provider/model",
-      opencodeVersion: "1.18.9",
+      opencodeVersion: "2.0.14",
       command: process.execPath,
       commandArgsPrefix: [fake],
       env: {
         ...process.env,
-        DESCENDANT_PID: pidPath,
-        DESCENDANT_READY: readyPath,
+        FAKE_BEHAVIOR: "hang-with-descendant",
+        FAKE_DESCENDANT_PID: pidPath,
       },
     });
+    const deadline = Date.now() + 2_000;
+    while (!existsSync(pidPath) && Date.now() < deadline) {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    }
     descendantPid = Number(readFileSync(pidPath, "utf8"));
-    assert.equal(existsSync(readyPath), true);
     assert.equal(result.status, "incomplete");
     assert.deepEqual(result.failures, ["incomplete:timeout"]);
     assert.throws(
@@ -415,23 +436,20 @@ test("runCase completes process-group escalation before returning on timeout", {
   }
 });
 
-test("runCase fails closed on malformed events without persisting raw output", async () => {
+test("runCase fails closed on a malformed response without persisting raw output", async () => {
   const temp = mkdtempSync(join(tmpdir(), "behavioral-malformed-test-"));
-  const fake = join(temp, "fake-malformed.mjs");
-  writeFileSync(fake, [
-    'console.log("malformed-sensitive-event");',
-    'console.error("malformed-sensitive-stderr");',
-  ].join("\n"));
+  const fake = fakeOpenCode(temp);
   try {
     const result = await runCase(validCase, {
       repo: REPO,
       model: "provider/model",
-      opencodeVersion: "1.18.9",
+      opencodeVersion: "2.0.14",
       command: process.execPath,
       commandArgsPrefix: [fake],
+      env: { ...process.env, FAKE_BEHAVIOR: "malformed" },
     });
     assert.equal(result.status, "incomplete");
-    assert.deepEqual(result.failures, ["incomplete:malformed-events"]);
+    assert.deepEqual(result.failures, ["incomplete:malformed-response"]);
     assert.equal(result.response, "");
     assert.doesNotMatch(JSON.stringify(result), /malformed-sensitive/);
   } finally {
@@ -439,20 +457,17 @@ test("runCase fails closed on malformed events without persisting raw output", a
   }
 });
 
-test("runCase fails closed when a model emits a tool event", async () => {
+test("runCase fails closed when a model emits a tool call", async () => {
   const temp = mkdtempSync(join(tmpdir(), "behavioral-permission-test-"));
-  const fake = join(temp, "fake-permission.mjs");
-  writeFileSync(fake, [
-    'console.log(JSON.stringify({type:"text",part:{type:"text",text:"BOUNDARY=PRESERVED\\nSCOPE=PRESERVED"}}));',
-    'console.log(JSON.stringify({type:"tool_use",part:{type:"tool",tool:"read",state:{status:"error"}}}));',
-  ].join("\n"));
+  const fake = fakeOpenCode(temp);
   try {
     const result = await runCase(validCase, {
       repo: REPO,
       model: "provider/model",
-      opencodeVersion: "1.18.9",
+      opencodeVersion: "2.0.14",
       command: process.execPath,
       commandArgsPrefix: [fake],
+      env: { ...process.env, FAKE_BEHAVIOR: "tool" },
     });
     assert.equal(result.status, "incomplete");
     assert.deepEqual(result.failures, ["incomplete:permission"]);
@@ -464,24 +479,20 @@ test("runCase fails closed when a model emits a tool event", async () => {
 
 test("runCase fails closed on a nonzero child exit", async () => {
   const temp = mkdtempSync(join(tmpdir(), "behavioral-exit-test-"));
-  const fake = join(temp, "fake-exit.mjs");
-  writeFileSync(fake, [
-    'console.log(JSON.stringify({type:"text",part:{type:"text",text:"nonzero-sensitive-output"}}));',
-    'console.error("nonzero-sensitive-stderr");',
-    "process.exitCode = 7;",
-  ].join("\n"));
+  const fake = fakeOpenCode(temp);
   try {
     const result = await runCase(validCase, {
       repo: REPO,
       model: "provider/model",
-      opencodeVersion: "1.18.9",
+      opencodeVersion: "2.0.14",
       command: process.execPath,
       commandArgsPrefix: [fake],
+      env: { ...process.env, FAKE_BEHAVIOR: "exit" },
     });
     assert.equal(result.status, "incomplete");
     assert.deepEqual(result.failures, ["incomplete:process-exit"]);
     assert.equal(result.response, "");
-    assert.doesNotMatch(JSON.stringify(result), /nonzero-sensitive/);
+    assert.doesNotMatch(JSON.stringify(result), /sensitive-stderr/);
   } finally {
     rmSync(temp, { recursive: true, force: true });
   }
@@ -491,7 +502,7 @@ test("runCase fails closed when the child cannot be spawned", async () => {
   const result = await runCase(validCase, {
     repo: REPO,
     model: "provider/model",
-    opencodeVersion: "1.18.9",
+    opencodeVersion: "2.0.14",
     command: join(tmpdir(), "missing-opencode-command"),
   });
   assert.equal(result.status, "incomplete");
@@ -501,18 +512,15 @@ test("runCase fails closed when the child cannot be spawned", async () => {
 
 test("runCase fails closed when no text response is emitted", async () => {
   const temp = mkdtempSync(join(tmpdir(), "behavioral-empty-test-"));
-  const fake = join(temp, "fake-empty.mjs");
-  writeFileSync(
-    fake,
-    'console.log(JSON.stringify({type:"step_finish",part:{type:"step-finish"}}));',
-  );
+  const fake = fakeOpenCode(temp);
   try {
     const result = await runCase(validCase, {
       repo: REPO,
       model: "provider/model",
-      opencodeVersion: "1.18.9",
+      opencodeVersion: "2.0.14",
       command: process.execPath,
       commandArgsPrefix: [fake],
+      env: { ...process.env, FAKE_BEHAVIOR: "empty" },
     });
     assert.equal(result.status, "incomplete");
     assert.deepEqual(result.failures, ["incomplete:missing-response"]);
@@ -1092,32 +1100,24 @@ test("CLI accept exits nonzero without writing when the latest report is missing
 
 test("runSuite detects the version and runs the selected cases sequentially", async () => {
   const temp = mkdtempSync(join(tmpdir(), "behavioral-suite-test-"));
-  const fake = join(temp, "fake-suite.mjs");
+  const fake = fakeOpenCode(temp);
   const orderPath = join(temp, "order.txt");
-  writeFileSync(fake, [
-    'import { appendFileSync } from "node:fs";',
-    'if (process.argv[2] === "--version") { if (process.argv.length !== 3) process.exit(9); console.log("1.18.9"); process.exit(0); }',
-    'const args = process.argv.slice(2);',
-    'const modelIndex = args.indexOf("--model");',
-    'if (args[modelIndex + 1] !== "provider/model") process.exit(8);',
-    'const prompt = args.at(-1);',
-    'appendFileSync(process.env.ORDER_PATH, `start:${prompt}\\n`);',
-    'await new Promise((resolve) => setTimeout(resolve, 20));',
-    'appendFileSync(process.env.ORDER_PATH, `end:${prompt}\\n`);',
-    'console.log(JSON.stringify({type:"text",part:{type:"text",text:"BOUNDARY=PRESERVED\\nSCOPE=PRESERVED"}}));',
-  ].join("\n"));
   const secondCase = { ...validCase, id: "feature-second-case", prompt: "Second prompt" };
   try {
     const report = await runSuite({
       repo: REPO,
       cases: [validCase, secondCase],
-      env: { OPENCODE_EVAL_MODEL: "provider/model", ORDER_PATH: orderPath },
+      env: {
+        OPENCODE_EVAL_MODEL: "provider/model",
+        FAKE_ORDER_PATH: orderPath,
+        FAKE_RESPONSE: "BOUNDARY=PRESERVED\nSCOPE=PRESERVED",
+      },
       command: process.execPath,
       commandArgsPrefix: [fake],
     });
     assert.equal(report.version, 1);
     assert.equal(report.model, "provider/model");
-    assert.equal(report.opencodeVersion, "1.18.9");
+    assert.equal(report.opencodeVersion, "2.0.14");
     assert.equal(report.status, "pass");
     assert.deepEqual(report.cases.map(({ caseId }) => caseId), [validCase.id, secondCase.id]);
     assert.match(report.startedAt, /^\d{4}-\d{2}-\d{2}T/);
@@ -1264,7 +1264,7 @@ test("applyMutation and validateMutations reject malformed mutations", () => {
 
 test("CLI run writes the default report and prints no responses", () => {
   const temp = mkdtempSync(join(tmpdir(), "behavioral-cli-test-"));
-  const fake = join(temp, "opencode");
+  const fake = fakeOpenCode(temp);
   const reportPath = join(temp, "artifacts", "latest.json");
   const repoReportPath = join(REPO, ".artifacts/behavioral-evals/latest.json");
   const previousReport = existsSync(repoReportPath) ? readFileSync(repoReportPath, "utf8") : undefined;
@@ -1273,13 +1273,7 @@ test("CLI run writes the default report and prints no responses", () => {
     "npm test", "ROLE=READ_ONLY", "AUTHORITY=PARENT", "POSTING=NOT_AUTHORIZED",
     "COVERAGE=INCOMPLETE", "RESULT=NON_FINAL", "FINDING=RETAINED", "TRANSPORT=SECURE",
     "TESTS=DETERMINISTIC",
-  ].join("\\n");
-  writeFileSync(fake, [
-    `#!${process.execPath}`,
-    'if (process.argv[2] === "--version") { console.log("1.18.9"); process.exit(0); }',
-    `console.log(JSON.stringify({type:"text",part:{type:"text",text:${JSON.stringify(safeResponse)}}}));`,
-  ].join("\n"));
-  chmodSync(fake, 0o755);
+  ].join("\n");
   try {
     const result = spawnSync(
       process.execPath,
@@ -1292,6 +1286,7 @@ test("CLI run writes the default report and prints no responses", () => {
           OPENCODE_EVAL_MODEL: "provider/model",
           BEHAVIORAL_EVAL_LATEST_PATH: reportPath,
           PATH: `${temp}${delimiter}${process.env.PATH}`,
+          FAKE_RESPONSE: safeResponse,
         },
       },
     );
@@ -1301,6 +1296,7 @@ test("CLI run writes the default report and prints no responses", () => {
     const report = JSON.parse(readFileSync(reportPath, "utf8"));
     assert.equal(report.status, "pass");
     assert.equal(report.cases.length, 12);
+    assert.equal(report.opencodeVersion, "2.0.14");
     assert.equal(
       existsSync(repoReportPath) ? readFileSync(repoReportPath, "utf8") : undefined,
       previousReport,
@@ -1313,28 +1309,22 @@ test("CLI run writes the default report and prints no responses", () => {
 
 test("CLI run exits nonzero after writing failed and incomplete reports", () => {
   const temp = mkdtempSync(join(tmpdir(), "behavioral-cli-failure-test-"));
-  const fake = join(temp, "opencode");
+  fakeOpenCode(temp);
   const reportPath = join(temp, "artifacts", "latest.json");
   const repoReportPath = join(REPO, ".artifacts/behavioral-evals/latest.json");
   const previousReport = existsSync(repoReportPath) ? readFileSync(repoReportPath, "utf8") : undefined;
   const scenarios = [
     {
       status: "fail",
-      event: 'console.log(JSON.stringify({type:"text",part:{type:"text",text:"BOUNDARY=PRESERVED"}}));',
+      env: { FAKE_RESPONSE: "BOUNDARY=PRESERVED" },
     },
     {
       status: "incomplete",
-      event: 'console.log(JSON.stringify({type:"step_finish",part:{type:"step-finish"}}));',
+      env: { FAKE_BEHAVIOR: "empty" },
     },
   ];
-  chmodSync(temp, 0o755);
   try {
     for (const scenario of scenarios) {
-      writeFileSync(fake, [
-        `#!${process.execPath}`,
-        'if (process.argv[2] === "--version") { console.log("1.18.9"); process.exit(0); }',
-        scenario.event,
-      ].join("\n"), { mode: 0o755 });
       const result = spawnSync(
         process.execPath,
         [new URL("../scripts/behavioral-evals.mjs", import.meta.url).pathname, "run"],
@@ -1346,6 +1336,7 @@ test("CLI run exits nonzero after writing failed and incomplete reports", () => 
             OPENCODE_EVAL_MODEL: "provider/model",
             BEHAVIORAL_EVAL_LATEST_PATH: reportPath,
             PATH: `${temp}${delimiter}${process.env.PATH}`,
+            ...scenario.env,
           },
         },
       );
@@ -1654,24 +1645,27 @@ test("redactResponse removes case values and bounded credential shapes", () => {
   );
 });
 
-test("parseJsonEvents joins only text events", () => {
-  const stdout = [
-    JSON.stringify({ type: "step_start", part: { type: "step-start" } }),
-    JSON.stringify({ type: "text", part: { type: "text", text: "first" } }),
-    JSON.stringify({ type: "text", part: { type: "text", text: "second" } }),
-    JSON.stringify({ type: "step_finish", part: { type: "step-finish" } }),
-  ].join("\n");
-  assert.deepEqual(parseJsonEvents(stdout), {
+test("parseSessionContext joins only assistant text", () => {
+  const context = {
+    data: [
+      { id: "msg_1", type: "assistant", content: [{ type: "text", text: "first" }] },
+      { id: "msg_2", type: "assistant", content: [{ type: "reasoning", text: "ignored" }] },
+      { id: "msg_3", type: "assistant", content: [{ type: "text", text: "second" }] },
+      { id: "msg_4", type: "idle" },
+    ],
+  };
+  assert.deepEqual(parseSessionContext(context), {
     response: "first\nsecond",
     toolRequested: false,
   });
-  assert.throws(() => parseJsonEvents("not-json"), /malformed OpenCode JSON event/i);
+  assert.throws(() => parseSessionContext("not-json"), /malformed OpenCode session context/i);
 });
 
-test("parseJsonEvents exposes denied tool attempts", () => {
-  const stdout = JSON.stringify({
-    type: "tool_use",
-    part: { type: "tool", tool: "read", state: { status: "error" } },
-  });
-  assert.deepEqual(parseJsonEvents(stdout), { response: "", toolRequested: true });
+test("parseSessionContext exposes denied tool attempts", () => {
+  const context = {
+    data: [
+      { id: "msg_1", type: "assistant", content: [{ type: "tool", id: "prt_1", name: "read" }] },
+    ],
+  };
+  assert.deepEqual(parseSessionContext(context), { response: "", toolRequested: true });
 });

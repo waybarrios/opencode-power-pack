@@ -103,8 +103,9 @@ Copyright 2025 Anthropic. The upstream notice is available at
 
 ## Superpowers OpenCode Plugin Pattern
 
-The skill-path registration pattern in `.opencode/plugins/opencode-power-pack.js`
-is adapted from the MIT-licensed `obra/superpowers` OpenCode plugin.
+The V1 skill-path registration pattern in the OpenCode plugin was adapted from
+the MIT-licensed `obra/superpowers` OpenCode plugin. The plugin keeps that
+hook for OpenCode 1 and adds the OpenCode 2 port through the V2 plugin API.
 
 Copyright 2025 Jesse Vincent. The upstream notice is available at
 `LICENSES/Superpowers-MIT.txt`.

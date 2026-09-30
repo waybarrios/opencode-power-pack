@@ -1,22 +1,21 @@
 /**
  * opencode-power-pack
  *
- * Auto-registers the bundled skills directory so OpenCode discovers all
- * skills shipped by this plugin (code-review, feature-dev, code-explorer,
- * code-architect, code-reviewer, security-review, frontend-design,
- * mcp-builder, skill-creator, agents-md-improver, agents-md-revise) without
- * requiring symlinks or manual config.
+ * Registers every bundled skill and the feature workflow's specialist roles
+ * as read-only subagents derived from their SKILL.md bodies, on both hosts:
  *
- * OpenCode 1.18.7+ exposes discovered skills as same-named slash commands.
- * The plugin also registers the feature workflow's specialist roles as
- * read-only subagents derived from their SKILL.md bodies.
+ * - OpenCode 2 calls `setup` and receives the skill and agent transforms.
+ * - OpenCode 1 (1.18.7+) calls `server` on the default export and receives
+ *   the config hook, which registers skills/ in `config.skills.paths` and
+ *   merges the agents into `config.agent`.
+ *
+ * User-defined agents with the same names are preserved.
  *
  * ──── Attribution ────────────────────────────────────────────────────────
  *
- * The plugin loader pattern (importing fs/path via fileURLToPath, exporting
- * an async ctx → hooks function, pushing into config.skills.paths via the
- * `config` hook) is adapted directly from Jesse Vincent's superpowers
- * plugin: https://github.com/obra/superpowers
+ * The OpenCode 1 loader pattern (importing fs/path via fileURLToPath and
+ * pushing into config.skills.paths via the `config` hook) is adapted directly
+ * from Jesse Vincent's superpowers plugin: https://github.com/obra/superpowers
  *
  * The skills under skills/ are modified upstream works. See UPSTREAMS.json
  * for immutable source commits and blobs, and THIRD_PARTY_NOTICES.md for
@@ -26,24 +25,37 @@
 
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { loadAgentConfigs } from './agent-config.js';
+import { agents, legacyAgents, loadSkills } from '../lib/agent-config.js';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const skillsDir = path.resolve(__dirname, '../../skills');
-const bundledAgents = loadAgentConfigs(skillsDir);
+const skillsDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../skills');
+const skills = loadSkills(skillsDir);
 
-export const OpencodePowerPack = async () => {
-  return {
-    config: async (config) => {
-      config.skills = config.skills || {};
-      config.skills.paths = config.skills.paths || [];
-      if (!config.skills.paths.includes(skillsDir)) {
-        config.skills.paths.push(skillsDir);
+export default {
+  id: 'opencode-power-pack',
+
+  async setup(ctx) {
+    await ctx.skill.transform((editor) => {
+      for (const skill of skills) editor.add({ ...skill });
+    });
+    await ctx.agent.transform((editor) => {
+      for (const [name, agent] of Object.entries(agents(skills))) {
+        if (!editor.get(name)) editor.update(name, (draft) => Object.assign(draft, agent));
       }
-      config.agent = config.agent || {};
-      for (const [name, agent] of Object.entries(bundledAgents)) {
-        if (!config.agent[name]) config.agent[name] = agent;
-      }
-    },
-  };
+    });
+  },
+
+  async server() {
+    return {
+      config: async (config) => {
+        config.skills = config.skills || {};
+        config.skills.paths = config.skills.paths || [];
+        if (!config.skills.paths.includes(skillsDir)) config.skills.paths.push(skillsDir);
+
+        config.agent = config.agent || {};
+        for (const [name, agent] of Object.entries(legacyAgents(skills))) {
+          if (!config.agent[name]) config.agent[name] = agent;
+        }
+      },
+    };
+  },
 };

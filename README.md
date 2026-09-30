@@ -17,7 +17,7 @@
   <a href="https://github.com/hashgraph-online/hol-guard"><img alt="HOL Guard scanner" src="https://img.shields.io/badge/HOL%20Guard-scanned-00a67e?style=flat-square"></a>
   <img alt="Skills: 54" src="https://img.shields.io/badge/skills-54-FFD60A?style=flat-square&labelColor=0B0F14">
   <img alt="Claude Code plugin" src="https://img.shields.io/badge/Claude_Code-plugin-0B0F14?style=flat-square&labelColor=FFD60A">
-  <img alt="OpenCode 1.18.7+" src="https://img.shields.io/badge/opencode-1.18.7%2B-0B0F14?style=flat-square&labelColor=FFD60A">
+  <img alt="OpenCode 1.18.7+ / 2.x" src="https://img.shields.io/badge/opencode-1.18.7%2B%20%2F%202.x-0B0F14?style=flat-square&labelColor=FFD60A">
   <img alt="Codex plugin" src="https://img.shields.io/badge/Codex-plugin-0B0F14?style=flat-square&labelColor=FFD60A">
   <img alt="Pi package" src="https://img.shields.io/badge/Pi-package-0B0F14?style=flat-square&labelColor=FFD60A">
 </p>
@@ -328,7 +328,7 @@ They are complementary rather than duplicate workflows. Codex shows distinct use
 - Node.js 20.11.0 or newer, including npm/npx, for [selective installation](#selective-install-with-npm) and the sandbox runner
 - One supported host:
   - A current Claude Code installation with plugin support: <https://code.claude.com/docs/en/plugins>
-  - OpenCode 1.18.7 or newer: <https://opencode.ai>
+  - OpenCode 1.18.7 or newer, including OpenCode 2: <https://opencode.ai>
   - A current Codex CLI or Codex desktop environment with plugin support: <https://developers.openai.com/codex/>
   - A current Pi coding agent installation: <https://pi.dev/>
 
@@ -359,26 +359,34 @@ For a smaller personal or repository-specific set, use the [selective npm instal
 
 ### OpenCode From GitHub
 
+On OpenCode 2:
+
+```bash
+opencode plugin add "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"
+```
+
+On OpenCode 1:
+
 ```bash
 opencode plugin --global "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"
 ```
 
-Restart OpenCode after installation. OpenCode discovers each skill and creates its same-named slash command automatically.
+Restart OpenCode after installation. One plugin adapts to the host version: OpenCode 2 registers all fifty-four skills and the three specialist agents through the V2 plugin API, and OpenCode 1 keeps the original `config.skills.paths` and `config.agent` hook. Either way the skills are invocable by name and the three roles are registered as read-only subagents.
 
-To pin a published release, append its tag:
+To pin a published release, append its tag to the same spec:
 
 ```bash
-opencode plugin --global "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git#<tag>"
+opencode plugin add "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git#<tag>"
 ```
 
 ### OpenCode From A Local Clone
 
 ```bash
 git clone https://github.com/waybarrios/opencode-power-pack.git ~/code/opencode-power-pack
-opencode plugin --global "opencode-power-pack@git+file:///home/you/code/opencode-power-pack"
+opencode plugin add "opencode-power-pack@git+file:///home/you/code/opencode-power-pack"
 ```
 
-Use an absolute `file://` URL adjusted for your operating system. The target directory must be a Git repository.
+Use an absolute `file://` URL adjusted for your operating system. The target directory must be a Git repository. On OpenCode 1, replace `plugin add` with `plugin --global` as shown above.
 
 ### Pi From GitHub
 
@@ -402,12 +410,24 @@ After marketplace installation, run `/plugin` and confirm that `opencode-power-p
 
 ### Verify OpenCode
 
+Restart OpenCode, then check the registered skills and specialist agents.
+
+On OpenCode 2:
+
+```bash
+opencode debug agents
+```
+
+The output should include `code-explorer`, `code-architect`, and `code-reviewer` as `subagent` entries with editing denied. In the TUI, the slash catalog should list `/code-review`, `/feature-dev`, `/frontend-design`, and the other bundled skills.
+
+On OpenCode 1:
+
 ```bash
 opencode debug skill
 opencode debug agent code-explorer
 ```
 
-The first command should include all fifty-four unprefixed skill names. The second should report a `subagent` with editing denied. In the TUI, `ctrl+p` should list `/code-review`, `/feature-dev`, `/frontend-design`, and the other skill-derived commands.
+The first command lists all fifty-four bundled skill names, and the second reports the read-only subagent.
 
 ### Verify Codex
 
@@ -451,13 +471,19 @@ For Pi:
 pi update git:github.com/waybarrios/opencode-power-pack
 ```
 
-For an OpenCode GitHub installation:
+For an OpenCode GitHub installation on OpenCode 2:
 
 ```bash
-opencode plugin --global --force "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"
+opencode plugin update opencode-power-pack
 ```
 
-Restart OpenCode after the command finishes. For a pinned installation, update the tag first. Local-clone users should run `git pull` in the clone and reinstall with the same `git+file://` spec.
+On OpenCode 1, reinstall with the same spec:
+
+```bash
+opencode plugin --global "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"
+```
+
+Restart OpenCode after the command finishes. For a pinned installation, update the tag first. Local-clone users should run `git pull` in the clone; the existing plugin entry keeps loading the updated checkout.
 
 ## Uninstalling
 
@@ -479,7 +505,13 @@ For Pi:
 pi remove git:github.com/waybarrios/opencode-power-pack
 ```
 
-For OpenCode, remove the `opencode-power-pack@...` entry from the `plugin` array in the config where it was installed, then restart OpenCode. There are no command symlinks or copied command files to remove.
+For OpenCode 2, remove the plugin from the global configuration:
+
+```bash
+opencode plugin remove opencode-power-pack
+```
+
+Alternatively, delete the `opencode-power-pack@...` entry from the `plugins` array in the config where it was installed, then restart OpenCode. On OpenCode 1, delete the entry from the `plugin` array instead. There are no command symlinks or copied command files to remove.
 
 ## Troubleshooting
 
@@ -490,15 +522,15 @@ For OpenCode, remove the `opencode-power-pack@...` entry from the `plugin` array
 | Codex cannot find the marketplace | Marketplace snapshot is missing or stale | Run `codex plugin marketplace add waybarrios/opencode-power-pack --ref main`, or upgrade the existing marketplace |
 | Codex installed the plugin but skills do not appear | The current session predates installation | Start a new Codex session and inspect `/plugins` |
 | Pi does not show the skills | Package is absent, disabled, or the session predates installation | Run `pi list`, inspect `pi config`, and start a new Pi session |
-| Skills or commands do not appear | OpenCode is older than 1.18.7 | Upgrade OpenCode, restart, and run `opencode debug skill` |
-| Skills are missing from debug output | Plugin installation failed or its config entry is absent | Re-run `opencode plugin --global --force <module-spec>` and inspect the reported error |
-| Specialist agents are missing | Stale plugin checkout | Force reinstall, restart, and run `opencode debug agent code-explorer` |
+| Skills or commands do not appear | OpenCode is older than 1.18.7 | Upgrade OpenCode, restart, and check the slash catalog or run `opencode debug skill` |
+| Skills are missing from the catalog | Plugin installation failed or its `plugins` entry is absent | Reinstall with `opencode plugin add <module-spec>` (OpenCode 2) or `opencode plugin --global <module-spec>` (OpenCode 1) and inspect the reported error |
+| Specialist agents are missing | Stale plugin checkout | Update the plugin, restart, and run `opencode debug agents` (OpenCode 2) or `opencode debug agent code-explorer` (OpenCode 1) |
 | Installation reports a Git error | Invalid URL, network failure, or inaccessible repository | Validate the source with `git ls-remote <url>` |
 | A workflow is rushed or incomplete | The backing model skipped multi-stage instructions | Use a stronger model and inspect whether required subagent tools are available |
 
 ## Invocation
 
-Claude Code exposes plugin skills as `/opencode-power-pack:<skill>`, Codex uses `$` mentions, OpenCode 1.18.7+ exposes same-named slash commands, and Pi loads workflows from the installed skills package:
+Claude Code exposes plugin skills as `/opencode-power-pack:<skill>`, Codex uses `$` mentions, OpenCode exposes the bundled skills by name (`/` catalog on OpenCode 2, same-named slash commands on OpenCode 1), and Pi loads workflows from the installed skills package:
 
 ```text
 /code-review
@@ -559,10 +591,15 @@ opencode-power-pack
 |   +-- runs opt-in commands in the pinned native sandbox backend
 |
 +-- .opencode/plugins/opencode-power-pack.js
-|   +-- registers skills/ in config.skills.paths
+|   +-- OpenCode 1: registers config.skills.paths and config.agent
+|   +-- OpenCode 2: registers skills and agents through the V2 transforms
 |   +-- registers code-explorer as a read-only subagent
 |   +-- registers code-architect as a read-only subagent
 |   +-- registers code-reviewer with read-only Git commands
+|
++-- .opencode/lib/agent-config.js
+|   +-- derives skill and subagent definitions from the SKILL.md frontmatter
+|   +-- builds the OpenCode 1 permission maps and OpenCode 2 rulesets
 |
 +-- skills/<name>/SKILL.md
 |   +-- shared Codex/OpenCode workflow
@@ -573,9 +610,9 @@ opencode-power-pack
     +-- repository, commit, path, blob, date, and adaptation type
 ```
 
-Each `SKILL.md` is the single source for its workflow. Claude Code loads the directory through its plugin namespace. The OpenCode plugin derives specialist-agent prompts from those files at startup. Codex loads the same skills from its plugin and follows `feature-dev`'s specialist assignments with its native subagent workflow; installing a skill does not itself create a named custom agent.
+Each `SKILL.md` is the single source for its workflow. Claude Code loads the directory through its plugin namespace. The OpenCode plugin adapts to the host version and derives specialist-agent prompts from those files at startup. Codex loads the same skills from its plugin and follows `feature-dev`'s specialist assignments with its native subagent workflow; installing a skill does not itself create a named custom agent.
 
-The packaged agents deny edits, external network access, and nested tasks. `code-reviewer` additionally allows a narrow set of read-only Git commands.
+The packaged agents deny edits, external network access, and nested subagents. `code-reviewer` additionally allows a narrow set of read-only Git commands.
 
 ## Scope And Non-Goals
 

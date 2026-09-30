@@ -8,7 +8,7 @@ Locally inspected host versions:
 
 - Codex CLI 0.147.0
 - Claude Code 2.1.231
-- OpenCode 1.18.18
+- OpenCode 1.18.32 and 2.0.14
 - Pi 0.83.0
 
 The repository smoke tests retain their separately pinned minimum versions. Host APIs evolve, so adapter tests and this matrix must be updated together.
@@ -31,14 +31,14 @@ The current runner is `shell-contained`. The command and its descendants are iso
 |---|---|---|---|---|---|
 | Codex | Supported through the Codex plugin and portable skill installation | Supported when the npm package is installed | Not yet implemented | Temporary native sandbox configuration plus the shared runner for explicit network access | Codex has native `read-only` and `workspace-write` shell sandboxes, but a skill cannot safely change the active session sandbox by prompt text alone. |
 | Claude Code | Supported through the namespaced Claude plugin | Supported when the npm package is installed | Not yet implemented | Native sandbox settings plus hooks and permissions for tools outside Bash | Claude's native sandbox applies to Bash and descendants. Read, Edit, Write, WebFetch, MCP, and computer-use tools require separate permission controls. |
-| OpenCode | Supported through the plugin and portable skill installation | Supported when the npm package is installed | Not yet implemented | A custom sandbox tool paired with per-agent denial of ordinary `bash` | File-edit and external-directory permissions also need profile-specific controls. |
+| OpenCode | Supported through the plugin and portable skill installation | Supported when the npm package is installed | Not yet implemented | A custom sandbox tool paired with per-agent denial of ordinary `shell` | File-edit and external-directory permissions also need profile-specific controls. |
 | Pi | Supported through the Pi package declaration and portable skill installation | Supported when the npm package is installed | Not yet implemented | An extension that intercepts or replaces built-in shell and file tools | A skill file by itself is advisory. |
 
 Official host surfaces used by the adapter design:
 
 - [Codex configuration reference](https://developers.openai.com/codex/config-reference/) documents `sandbox_mode`, workspace-write network controls, permission profiles, and environment policy.
 - [Claude Code sandboxing](https://code.claude.com/docs/en/sandboxing) documents its Bash-only OS sandbox, `/sandbox`, `failIfUnavailable`, and the unsandboxed escape hatch. [Claude Code hooks](https://code.claude.com/docs/en/hooks) documents `PreToolUse` denial and input replacement.
-- [OpenCode agents](https://opencode.ai/docs/agents/) documents per-agent `allow`, `ask`, and `deny` permissions. [OpenCode custom tools](https://opencode.ai/docs/custom-tools/) provides the portable runner integration point.
+- [OpenCode permissions](https://opencode.ai/v2/docs/permissions/) documents the ordered `allow`, `ask`, and `deny` ruleset. [OpenCode tools](https://opencode.ai/v2/docs/tools/) and the [plugin tools API](https://opencode.ai/v2/docs/build/plugins/) provide the portable runner integration point.
 - [Pi extensions](https://github.com/badlogic/pi-mono/blob/main/packages/coding-agent/docs/extensions.md) documents custom tools, built-in tool overrides, dynamic active tools, and blocking `tool_call` events.
 
 ## What Works Before Host Adapters
