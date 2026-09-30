@@ -3,7 +3,7 @@ import { createServer } from "node:http";
 import { spawn } from "node:child_process";
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { fetchJson, stopServer } from "../scripts/opencode-smoke.mjs";
+import { createSmokeCredentials, fetchJson, stopServer } from "../scripts/opencode-smoke.mjs";
 
 test("fetchJson aborts a stalled OpenCode response", async () => {
   const server = createServer(() => {});
@@ -31,4 +31,16 @@ test("stopServer tolerates a child that already exited by signal", async () => {
 
   await stopServer(child, 50);
   assert.notEqual(child.signalCode, null);
+});
+
+test("createSmokeCredentials genera password base64url y authorization valida", () => {
+  const first = createSmokeCredentials();
+  const second = createSmokeCredentials();
+  assert.match(first.serverPassword, /^[A-Za-z0-9_-]{16,}$/);
+  assert.match(second.serverPassword, /^[A-Za-z0-9_-]{16,}$/);
+  assert.notEqual(first.serverPassword, second.serverPassword);
+  assert.equal(
+    first.authorization,
+    `Basic ${Buffer.from(`opencode:${first.serverPassword}`).toString("base64")}`,
+  );
 });

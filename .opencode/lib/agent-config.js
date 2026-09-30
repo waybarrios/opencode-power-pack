@@ -1,5 +1,5 @@
-import { readdirSync, readFileSync, statSync } from "fs";
-import path from "path";
+import { readdirSync, readFileSync, statSync } from "node:fs";
+import path from "node:path";
 
 const AGENT_NAMES = ["code-explorer", "code-architect", "code-reviewer"];
 const READ_ONLY_PERMISSION = {
@@ -33,19 +33,39 @@ const REVIEW_BASH_PERMISSION = {
   "git *--ext-diff*": "deny",
   "git *>*": "deny",
 };
-// OpenCode 2 renamed these V1 permission keys and folded `list` into `read`.
-const V2_ACTIONS = { bash: "shell", task: "subagent", list: null };
+// OpenCode 2 renamed V1 keys bash->shell and task->subagent and folded list into read.
+// See https://opencode.ai/v2/docs/permissions/ for the ordered V2 ruleset and
+// https://opencode.ai/v2/docs/tools/ for the tool names.
+// Mapeo explicito: list:allow se convierte en {action:"read", resource:"*", effect:"allow"}
+// para conservar la capacidad de listar de V1 sin depender de semantica implicita del host.
+const V2_ACTIONS = { bash: "shell", task: "subagent", list: "read" };
+
+function decodeScalar(value, key, id) {
+  if (value.startsWith('"')) {
+    try {
+      const decoded = JSON.parse(value);
+      if (typeof decoded === "string") return decoded;
+    } catch {
+      // Report the frontmatter field below with its skill context.
+    }
+    throw new Error(`Invalid ${key} in ${id}/SKILL.md`);
+  }
+  return value;
+}
 
 function readSkill(skillsDir, id) {
   const file = path.join(skillsDir, id, "SKILL.md");
   const match = readFileSync(file, "utf8").match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
   if (!match) throw new Error(`Invalid frontmatter in ${id}/SKILL.md`);
 
-  const field = (key) => match[1]
-    .split(/\r?\n/)
-    .find((line) => line.startsWith(`${key}:`))
-    ?.slice(key.length + 1)
-    .trim();
+  const field = (key) => {
+    const value = match[1]
+      .split(/\r?\n/)
+      .find((line) => line.startsWith(`${key}:`))
+      ?.slice(key.length + 1)
+      .trim();
+    return value === undefined ? undefined : decodeScalar(value, key, id);
+  };
   const description = field("description");
   if (!description) throw new Error(`Missing description in ${id}/SKILL.md`);
 
@@ -85,6 +105,37 @@ function toRuleset(permission) {
     const patterns = typeof value === "string" ? { "*": value } : value;
     return Object.entries(patterns).map(([resource, effect]) => ({ action, resource, effect }));
   });
+}
+
+// Exportado solo para tests, sin cambiar API publica.
+export function wildcardMatch(input, pattern) {
+  const normalized = input.replaceAll("\\", "/");
+  let escaped = pattern
+    .replaceAll("\\", "/")
+    .replace(/[.+^${}()|[\]\\]/g, "\\$&")
+    .replace(/\*/g, ".*")
+    .replace(/\?/g, ".");
+  if (escaped.endsWith(" .*")) escaped = `${escaped.slice(0, -3)}( .*)?`;
+  return new RegExp(`^${escaped}$`, process.platform === "win32" ? "si" : "s").test(normalized);
+}
+
+const SHELL_METACHARS = [";", "&", "|", "$", "`", "\n"];
+
+function hasShellMetachars(resource) {
+  return SHELL_METACHARS.some((c) => resource.includes(c));
+}
+
+/** Returns true when this plugin's rules deny any requested resource. */
+export function deniesSpecialistPermission(name, action, resources) {
+  if (!AGENT_NAMES.includes(name)) return false;
+  const normalizedAction = action in V2_ACTIONS && V2_ACTIONS[action] ? V2_ACTIONS[action] : action;
+  if (name === "code-reviewer" && normalizedAction === "shell") {
+    if (resources.some((resource) => hasShellMetachars(String(resource)))) return true;
+  }
+  const rules = toRuleset(permissionFor(name));
+  return resources.some((resource) => rules.findLast(
+    (rule) => wildcardMatch(normalizedAction, rule.action) && wildcardMatch(resource, rule.resource),
+  )?.effect === "deny");
 }
 
 /** OpenCode 1 agent definitions, merged through the plugin config hook. */

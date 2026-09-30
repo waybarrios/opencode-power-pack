@@ -558,12 +558,21 @@ export function buildEvalConfig(pluginDirectory) {
   };
 }
 
-function parseModelReference(model) {
+export function parseModelReference(model) {
   const separator = model.indexOf("/");
-  return { providerID: model.slice(0, separator), id: model.slice(separator + 1) };
+  if (separator <= 0 || separator >= model.length - 1) {
+    throw new TypeError("OPENCODE_EVAL_MODEL must use provider/model form");
+  }
+  const providerID = model.slice(0, separator);
+  const id = model.slice(separator + 1);
+  if (!providerID.trim() || !id.trim()) {
+    throw new TypeError("OPENCODE_EVAL_MODEL must use provider/model form");
+  }
+  return { providerID, id };
 }
 
-async function availablePort() {
+// gemelo en scripts/opencode-smoke.mjs: mantener sincronizado. TOCTOU conocido: se cierra y se reutiliza, reintentar con otro puerto ante EADDRINUSE.
+export async function availablePort() {
   const server = createServer();
   await new Promise((resolve, reject) => server.listen(0, "127.0.0.1", resolve).once("error", reject));
   const address = server.address();
@@ -590,9 +599,9 @@ export function defaultOpenCodeCommand(platform = process.platform) {
   return platform === "win32" ? "opencode.exe" : "opencode";
 }
 
-function signalChild(child, signal) {
+function signalChild(child, signal, platform = process.platform) {
   try {
-    if (process.platform === "win32") child.kill(signal);
+    if (platform === "win32") child.kill(signal);
     else process.kill(-child.pid, signal);
   } catch (error) {
     if (error.code !== "ESRCH") throw error;
@@ -613,18 +622,23 @@ function processGroupExists(pid) {
   }
 }
 
-async function terminateTimedOutChild(child) {
-  if (process.platform === "win32") {
-    signalChild(child, "SIGTERM");
-    await delay(100);
-    if (child.exitCode === null && child.signalCode === null) signalChild(child, "SIGKILL");
+export async function terminateTimedOutChild(child, platform = process.platform) {
+  if (child.exitCode !== null || child.signalCode !== null) return;
+  const closed = new Promise((resolve) => child.once("close", resolve));
+
+  if (platform === "win32") {
+    signalChild(child, "SIGTERM", platform);
+    await Promise.race([closed, delay(100)]);
+    if (child.exitCode === null && child.signalCode === null) signalChild(child, "SIGKILL", platform);
+    await closed;
     return;
   }
 
-  signalChild(child, "SIGTERM");
+  signalChild(child, "SIGTERM", platform);
   await delay(100);
-  signalChild(child, "SIGKILL");
+  signalChild(child, "SIGKILL", platform);
   while (processGroupExists(child.pid)) await delay(10);
+  await closed;
 }
 
 function reportEntry(testCase, options, started, status, failures, response) {
@@ -770,6 +784,7 @@ export async function runCase(testCase, options) {
   try {
     const pluginDirectory = writePluginShim(runtime, repo);
     const port = await availablePort();
+    // 24 bytes dan 32 chars base64url, sobre mínimo 16 exigido en tests.
     const password = randomBytes(24).toString("base64url");
     const authorization = `Basic ${Buffer.from(`opencode:${password}`).toString("base64")}`;
     const baseURL = `http://127.0.0.1:${port}`;

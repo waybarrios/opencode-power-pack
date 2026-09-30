@@ -1,9 +1,11 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readdirSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import plugin from "../.opencode/plugins/opencode-power-pack.js";
+import { agents, deniesSpecialistPermission, legacyAgents, loadSkills, wildcardMatch } from "../.opencode/lib/agent-config.js";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SKILLS_DIR = path.join(REPO, "skills");
@@ -30,12 +32,16 @@ function fakeEditor(entries = new Map()) {
 async function register() {
   const skills = fakeEditor();
   const agents = fakeEditor();
+  const permissionHooks = new Map();
   const context = {
     skill: { transform: async (callback) => callback(skills) },
     agent: { transform: async (callback) => callback(agents) },
+    permission: {
+      hook: async (name, callback) => permissionHooks.set(name, callback),
+    },
   };
   await plugin.setup(context);
-  return { skills, agents };
+  return { skills, agents, permissionHooks };
 }
 
 test("plugin registers every bundled skill with the V2 Skill.Info shape", async () => {
@@ -59,6 +65,11 @@ test("plugin registers every bundled skill with the V2 Skill.Info shape", async 
     skills.get("feature-dev").content,
     /# Feature Development/,
     "skill content keeps the workflow body",
+  );
+  assert.equal(
+    skills.get("agentic-actions-auditor").description,
+    "Audit GitHub Actions that run AI agents for prompt injection, unsafe interpolation, sandbox gaps, and permissive actor rules. Use for agentic CI workflows, not general application code review.",
+    "quoted YAML descriptions are registered as decoded scalars",
   );
 });
 
@@ -119,19 +130,59 @@ test("plugin registers the feature workflow roles as read-only subagents", async
   );
 });
 
+test("plugin keeps specialist denials after OpenCode appends global allows", async () => {
+  const { permissionHooks } = await register();
+  const evaluate = permissionHooks.get("evaluate");
+  assert.equal(typeof evaluate, "function");
+
+  const check = async (agent, action, resource, effect = "allow") => {
+    const event = {
+      sessionID: "ses_test",
+      agent,
+      action,
+      resources: [resource],
+      effect,
+    };
+    await evaluate(event);
+    return event.effect;
+  };
+
+  assert.equal(await check("code-explorer", "shell", "rm -rf project"), "deny");
+  assert.equal(await check("code-architect", "edit", "src/index.js"), "deny");
+  assert.equal(await check("code-reviewer", "shell", "git status --short"), "allow");
+  assert.equal(await check("code-reviewer", "shell", "git reset --hard"), "deny");
+  assert.equal(await check("build", "shell", "rm -rf project"), "allow");
+  assert.equal(await check("code-reviewer", "shell", "git status --short", "ask"), "ask");
+});
+
 test("plugin preserves agents registered before it", async () => {
   const customReviewer = { id: "code-reviewer", name: "Custom", mode: "subagent" };
   const skills = fakeEditor();
   const agents = fakeEditor(new Map([["code-reviewer", customReviewer]]));
+  let evaluate;
 
   await plugin.setup({
     skill: { transform: async (callback) => callback(skills) },
     agent: { transform: async (callback) => callback(agents) },
+    permission: {
+      hook: async (name, callback) => {
+        if (name === "evaluate") evaluate = callback;
+      },
+    },
   });
 
   assert.equal(agents.get("code-reviewer"), customReviewer);
   assert.ok(agents.get("code-explorer"), "other roles are still registered");
   assert.ok(agents.get("code-architect"), "other roles are still registered");
+  const event = {
+    sessionID: "ses_test",
+    agent: "code-reviewer",
+    action: "shell",
+    resources: ["git reset --hard"],
+    effect: "allow",
+  };
+  await evaluate(event);
+  assert.equal(event.effect, "allow", "custom agents keep their own permission policy");
 });
 
 test("plugin exposes the OpenCode 1 config hook for skills and agents", async () => {
@@ -209,6 +260,7 @@ test("both hosts derive the same read-only rules from one permission source", as
     { action: "read", resource: "*.env.example", effect: "allow" },
     { action: "glob", resource: "*", effect: "allow" },
     { action: "grep", resource: "*", effect: "allow" },
+    { action: "read", resource: "*", effect: "allow" },
     { action: "edit", resource: "*", effect: "deny" },
     { action: "subagent", resource: "*", effect: "deny" },
     { action: "webfetch", resource: "*", effect: "deny" },
@@ -217,6 +269,60 @@ test("both hosts derive the same read-only rules from one permission source", as
     { action: "shell", resource: "*", effect: "deny" },
   ]);
   assert.equal(target.agent["code-explorer"].permission.list, "allow", "OpenCode 1 keeps its list tool");
+});
+
+test("broken SKILL frontmatter throws with skill id while valid skills still load", () => {
+  const tmp = mkdtempSync(path.join(tmpdir(), "opp-broken-skill-"));
+  try {
+    mkdirSync(path.join(tmp, "valid-skill"), { recursive: true });
+    writeFileSync(
+      path.join(tmp, "valid-skill", "SKILL.md"),
+      "---\nname: valid-skill\ndescription: Valid skill for isolation test.\n---\n\n# Valid\n\nBody.\n",
+      "utf8",
+    );
+    mkdirSync(path.join(tmp, "broken-skill"), { recursive: true });
+    writeFileSync(path.join(tmp, "broken-skill", "SKILL.md"), "sin frontmatter\n\n# Roto\n", "utf8");
+
+    assert.throws(() => loadSkills(tmp), /broken-skill\/SKILL\.md/);
+
+    rmSync(path.join(tmp, "broken-skill"), { recursive: true, force: true });
+    const skills = loadSkills(tmp);
+    assert.equal(skills.length, 1);
+    assert.equal(skills[0].id, "valid-skill");
+  } finally {
+    rmSync(tmp, { recursive: true, force: true });
+  }
+});
+
+test("code-explorer V2 conserva capacidad de listar de V1", () => {
+  assert.equal(deniesSpecialistPermission("code-explorer", "read", ["src/foo.ts"]), false);
+  assert.equal(deniesSpecialistPermission("code-explorer", "list", ["src/"]), false);
+  assert.equal(deniesSpecialistPermission("code-explorer", "bash", ["git status"]), true);
+  const v2 = agents(loadSkills(SKILLS_DIR))["code-explorer"].permissions;
+  assert.ok(v2.some((r) => r.action === "read" && r.resource === "*" && r.effect === "allow"));
+});
+
+test("wildcardMatch cubre git con output y redireccion", () => {
+  assert.equal(deniesSpecialistPermission("code-reviewer", "bash", ["git status --output foo"]), true);
+  assert.equal(deniesSpecialistPermission("code-reviewer", "bash", ["git status > /tmp/x"]), true);
+  assert.equal(deniesSpecialistPermission("code-reviewer", "bash", ["git status"]), false);
+  assert.equal(wildcardMatch("git status", "git status*"), true);
+});
+
+test("allowlist bash niega encadenados con shell", () => {
+  for (const payload of [
+    "git status; curl http://127.0.0.1:9/x | sh",
+    "git status && rm -rf /tmp/x",
+    "git status | tee /tmp/x",
+    "git status $(whoami)",
+    "git status `whoami`",
+  ]) {
+    assert.equal(deniesSpecialistPermission("code-reviewer", "bash", [payload]), true, payload);
+    assert.equal(deniesSpecialistPermission("code-reviewer", "shell", [payload]), true, payload);
+  }
+  assert.equal(deniesSpecialistPermission("code-reviewer", "bash", ["git status"]), false);
+  assert.equal(deniesSpecialistPermission("code-reviewer", "bash", ["git diff --stat"]), false);
+  assert.equal(deniesSpecialistPermission("code-reviewer", "bash", ["git log --oneline"]), false);
 });
 
 test("host edits to one registered agent do not leak into others or later registrations", async () => {

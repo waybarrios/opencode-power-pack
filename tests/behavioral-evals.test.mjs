@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
+import { once } from "node:events";
 import {
   chmodSync, copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync,
 } from "node:fs";
@@ -16,6 +17,7 @@ import {
   gradeResponse,
   hashSkill,
   normalizeResponse,
+  parseModelReference,
   parseSessionContext,
   redactResponse,
   replaySnapshots,
@@ -181,6 +183,31 @@ test("defaultOpenCodeCommand selects a native executable without a shell", () =>
   assert.equal(defaultOpenCodeCommand("win32"), "opencode.exe");
   assert.equal(defaultOpenCodeCommand("linux"), "opencode");
   assert.equal(defaultOpenCodeCommand("darwin"), "opencode");
+});
+
+test("Windows child termination waits for close before cleanup can continue", {
+  skip: process.platform === "win32",
+}, async () => {
+  const { terminateTimedOutChild } = await import("../scripts/behavioral-evals.mjs");
+  assert.equal(typeof terminateTimedOutChild, "function");
+
+  const child = spawn(process.execPath, [
+    "--input-type=module",
+    "-e",
+    "process.on('SIGTERM', () => {}); process.send('ready'); setInterval(() => {}, 1000);",
+  ], { stdio: ["ignore", "ignore", "ignore", "ipc"] });
+  let closed = false;
+  child.once("close", () => (closed = true));
+  try {
+    await once(child, "message");
+    await terminateTimedOutChild(child, "win32");
+    assert.equal(closed, true);
+  } finally {
+    if (!closed) {
+      child.kill("SIGKILL");
+      await once(child, "close");
+    }
+  }
 });
 
 test("parseSessionContext collects assistant text and flags tool requests", () => {
@@ -1015,7 +1042,7 @@ test("CLI accept reads the latest report and writes only accepted snapshots", ()
     );
     assert.equal(result.status, 0, result.stderr);
     assert.equal(result.stdout, "Accepted 12 behavioral snapshots\n");
-    assert.equal(result.stderr, "");
+    assert.equal(result.stderr.trim(), "", "unexpected stderr: " + result.stderr);
     assert.deepEqual(
       validateSnapshots(JSON.parse(readFileSync(snapshotsPath, "utf8")), manifest, REPO),
       JSON.parse(readFileSync(snapshotsPath, "utf8")),
@@ -1668,4 +1695,18 @@ test("parseSessionContext exposes denied tool attempts", () => {
     ],
   };
   assert.deepEqual(parseSessionContext(context), { response: "", toolRequested: true });
+});
+
+test("parseModelReference validates provider/model form", () => {
+  for (const model of ["foo", "/model", "prov/"]) {
+    assert.throws(
+      () => parseModelReference(model),
+      /OPENCODE_EVAL_MODEL must use provider\/model form/,
+      String(model),
+    );
+  }
+  assert.deepEqual(parseModelReference("anthropic/claude"), {
+    providerID: "anthropic",
+    id: "claude",
+  });
 });

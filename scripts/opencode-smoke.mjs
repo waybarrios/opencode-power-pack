@@ -18,8 +18,6 @@ const expectedSkills = readdirSync(path.join(repo, "skills"), { withFileTypes: t
   .map((entry) => entry.name)
   .sort();
 const expectedAgents = ["code-architect", "code-explorer", "code-reviewer"];
-const serverPassword = randomBytes(32).toString("base64url");
-const authorization = `Basic ${Buffer.from(`opencode:${serverPassword}`).toString("base64")}`;
 const verifierSource = [
   'import { writeFileSync } from "node:fs";',
   "",
@@ -37,12 +35,19 @@ const verifierSource = [
   "",
 ].join("\n");
 
-async function availablePort() {
+// gemelo en scripts/behavioral-evals.mjs: mantener sincronizado. TOCTOU conocido: se cierra y se reutiliza, reintentar con otro puerto ante EADDRINUSE.
+export async function availablePort() {
   const server = createServer();
   await new Promise((resolve, reject) => server.listen(0, "127.0.0.1", resolve).once("error", reject));
   const address = server.address();
   await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
   return address.port;
+}
+
+export function createSmokeCredentials(bytes = 32) {
+  const serverPassword = randomBytes(bytes).toString("base64url");
+  const authorization = `Basic ${Buffer.from(`opencode:${serverPassword}`).toString("base64")}`;
+  return { serverPassword, authorization };
 }
 
 async function waitForServer(url, child, stderr, health) {
@@ -218,6 +223,7 @@ async function main() {
     npm_config_cache: process.env.npm_config_cache || path.join(process.env.HOME || tmpdir(), ".npm"),
   };
   const port = await availablePort();
+  const { serverPassword, authorization } = createSmokeCredentials();
   const url = `http://127.0.0.1:${port}`;
   const stderr = [];
   let child;

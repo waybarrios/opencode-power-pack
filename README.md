@@ -420,6 +420,8 @@ opencode debug agents
 
 The output should include `code-explorer`, `code-architect`, and `code-reviewer` as `subagent` entries with editing denied. In the TUI, the slash catalog should list `/code-review`, `/feature-dev`, `/frontend-design`, and the other bundled skills.
 
+Do not add a global `shell: allow` or `subagent: allow` rule alongside this pack. On OpenCode 2 the last matching rule wins, so a global allow would override the plugin deny and break the read-only guarantee for the three specialists. See `docs/sandbox-compatibility.md` for the verified version table.
+
 On OpenCode 1:
 
 ```bash

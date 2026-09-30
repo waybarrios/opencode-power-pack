@@ -13,6 +13,10 @@ Locally inspected host versions:
 
 The repository smoke tests retain their separately pinned minimum versions. Host APIs evolve, so adapter tests and this matrix must be updated together.
 
+Verified version table for OpenCode (single source): `1.18.7` is the minimum supported floor from `package.json` engines, `1.18.32` and `2.0.14` are the locally inspected versions above, and CI smoke pins `["1.18.7", "2.0.14"]` as suelo, not latest. Latest 1.x seen is `1.18.33`.
+
+Read-only guarantee limitation on OpenCode 2: global user rules are appended after plugin rules and the last match wins. A global `shell: allow` or `subagent: allow` overrides the plugin deny for `code-explorer`, `code-architect` and `code-reviewer`. Do not combine such a global allow with this pack. Repro: install the plugin, add a global shell allow, invoke `code-explorer` and request a shell command.
+
 ## Compatibility Levels
 
 | Level | Meaning |

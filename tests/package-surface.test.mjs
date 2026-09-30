@@ -97,7 +97,7 @@ test("plugin loads as an ES module without runtime warnings", () => {
     );
 
     assert.equal(result.status, 0, result.stderr);
-    assert.equal(result.stderr, "");
+    assert.equal(result.stderr.trim(), "", "unexpected stderr: " + result.stderr);
   } finally {
     rmSync(packedRoot, { recursive: true, force: true });
   }

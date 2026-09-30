@@ -23,28 +23,42 @@
  * ─────────────────────────────────────────────────────────────────────────
  */
 
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { agents, legacyAgents, loadSkills } from '../lib/agent-config.js';
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { agents, deniesSpecialistPermission, legacyAgents, loadSkills } from "../lib/agent-config.js";
 
-const skillsDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../skills');
-const skills = loadSkills(skillsDir);
+const skillsDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../skills");
 
 export default {
-  id: 'opencode-power-pack',
+  id: "opencode-power-pack",
 
   async setup(ctx) {
+    const skills = loadSkills(skillsDir);
+    const protectedAgents = new Set();
     await ctx.skill.transform((editor) => {
       for (const skill of skills) editor.add({ ...skill });
     });
     await ctx.agent.transform((editor) => {
+      protectedAgents.clear();
       for (const [name, agent] of Object.entries(agents(skills))) {
-        if (!editor.get(name)) editor.update(name, (draft) => Object.assign(draft, agent));
+        if (!editor.get(name)) {
+          editor.update(name, (draft) => Object.assign(draft, structuredClone(agent)));
+          protectedAgents.add(name);
+        }
+      }
+    });
+    await ctx.permission.hook("evaluate", (event) => {
+      if (
+        protectedAgents.has(event.agent)
+        && deniesSpecialistPermission(event.agent, event.action, event.resources)
+      ) {
+        event.effect = "deny";
       }
     });
   },
 
   async server() {
+    const skills = loadSkills(skillsDir);
     return {
       config: async (config) => {
         config.skills = config.skills || {};

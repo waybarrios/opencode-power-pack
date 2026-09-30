@@ -10,6 +10,9 @@ on:
       - ".github/workflows/opencode-smoke.yml"
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   opencode:
     name: opencode-${{ matrix.version }}
@@ -17,6 +20,10 @@ jobs:
     timeout-minutes: 10
     strategy:
       fail-fast: false
+      # Matriz es suelo de compatibilidad, no latest.
+      # 1.18.7 es minimo soportado, 2.0.14 es 2.x verificado.
+      # Latest 1.x visto: 1.18.28 en npm y v1.18.33 en changelog del 28 sep 2026.
+      # No agregar 1.18.33 a la matriz sin aprobacion para no triplicar CI.
       matrix:
         version: ["1.18.7", "2.0.14"]
     steps:
@@ -24,5 +31,6 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: "24"
+          cache: "npm"
       - run: npm ci
       - run: node scripts/opencode-smoke.mjs ${{ matrix.version }}
