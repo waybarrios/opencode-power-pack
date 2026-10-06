@@ -278,6 +278,7 @@ It complements [obra/superpowers](https://github.com/obra/superpowers), which pr
 | Code quality | `code-quality` | Linting, complexity, and review checklists across Rust, TypeScript, Python, and shell |
 | Code quality | `design-patterns` | Pattern trade-offs (when to use, when to skip) for Rust, TS/React, and Django/Python |
 | Research | `paper-summarizer` | Extract actionable findings and a claim-evidence map from academic/technical papers |
+| Authoring | `humanizer` | Rewrite AI-generated copy in ES/EN into direct, natural prose without inventing facts |
 | Authoring | `mcp-builder` | Design and build MCP servers in TypeScript or Python |
 | Authoring | `skill-creator` | Create, test, and improve reusable `SKILL.md` workflows |
 | Hugging Face | `hf-cli` | Core `hf` CLI usage — auth, cache, repos, jobs, papers, Spaces, and more |
