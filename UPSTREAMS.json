@@ -498,6 +498,14 @@
       }
     },
     {
+      "name": "humanizer",
+      "license": "MIT",
+      "adaptation": "original",
+      "reviewedAt": "2026-10-06",
+      "source": null,
+      "inspiration": "https://www.sabrina.dev/p/best-ai-prompt-to-humanize-ai-writing"
+    },
+    {
       "name": "insecure-defaults",
       "license": "MIT",
       "adaptation": "adapted",

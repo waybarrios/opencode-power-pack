@@ -89,6 +89,7 @@
     "authoring": {
       "description": "Create reusable skills and MCP servers, and summarize technical papers.",
       "skills": [
+        "humanizer",
         "mcp-builder",
         "paper-summarizer",
         "skill-creator"

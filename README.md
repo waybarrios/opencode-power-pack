@@ -5,7 +5,7 @@
 <h1 align="center">OpenCode Power Pack for Claude Code, Codex, OpenCode + Pi</h1>
 
 <p align="center">
-  <i>Fifty-four portable workflows for Claude Code, Codex, OpenCode, and Pi.<br/>
+  <i>Fifty-five portable workflows for Claude Code, Codex, OpenCode, and Pi.<br/>
   Code review, security audit, feature development, frontend design, project memory, and authoring tools.</i>
 </p>
 
@@ -15,7 +15,7 @@
   <a href="https://github.com/waybarrios/opencode-power-pack/commits/main"><img alt="Last commit" src="https://img.shields.io/github/last-commit/waybarrios/opencode-power-pack?style=flat-square"></a>
   <a href="https://github.com/waybarrios/opencode-power-pack/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/waybarrios/opencode-power-pack?style=flat-square"></a>
   <a href="https://github.com/hashgraph-online/hol-guard"><img alt="HOL Guard scanner" src="https://img.shields.io/badge/HOL%20Guard-scanned-00a67e?style=flat-square"></a>
-  <img alt="Skills: 54" src="https://img.shields.io/badge/skills-54-FFD60A?style=flat-square&labelColor=0B0F14">
+  <img alt="Skills: 55" src="https://img.shields.io/badge/skills-55-FFD60A?style=flat-square&labelColor=0B0F14">
   <img alt="Claude Code plugin" src="https://img.shields.io/badge/Claude_Code-plugin-0B0F14?style=flat-square&labelColor=FFD60A">
   <img alt="OpenCode 1.18.7+" src="https://img.shields.io/badge/opencode-1.18.7%2B-0B0F14?style=flat-square&labelColor=FFD60A">
   <img alt="Codex plugin" src="https://img.shields.io/badge/Codex-plugin-0B0F14?style=flat-square&labelColor=FFD60A">
@@ -80,7 +80,7 @@ Start a new Codex session, open `/plugins` to confirm the installation, or invok
 pi install git:github.com/waybarrios/opencode-power-pack
 ```
 
-Pi discovers the fifty-four skills declared by the package. Use `pi list` to verify the installation. For a project-local installation recorded in `.pi/settings.json`, add `-l`:
+Pi discovers the fifty-five skills declared by the package. Use `pi list` to verify the installation. For a project-local installation recorded in `.pi/settings.json`, add `-l`:
 
 ```bash
 pi install git:github.com/waybarrios/opencode-power-pack -l
@@ -245,7 +245,7 @@ Selective installations include a generated `SANDBOX_POLICY.json` beside each co
 
 Claude Code, Codex, OpenCode, and Pi read `SKILL.md` workflows, but many valuable workflows originated as Claude-specific commands and agents. Copying those artifacts directly does not preserve their orchestration, permissions, or subagent behavior.
 
-This package exposes the shared skills as a namespaced Claude Code plugin, registers feature-development specialist roles as read-only OpenCode subagents, lets Codex execute the same phase assignments with its native subagent workflow, and exposes all fifty-four skills as a Pi package. It ships immutable provenance for every upstream work.
+This package exposes the shared skills as a namespaced Claude Code plugin, registers feature-development specialist roles as read-only OpenCode subagents, lets Codex execute the same phase assignments with its native subagent workflow, and exposes all fifty-five skills as a Pi package. It ships immutable provenance for every upstream work.
 
 It complements [obra/superpowers](https://github.com/obra/superpowers), which provides process skills such as brainstorming, TDD, debugging, and plan execution.
 
@@ -278,6 +278,7 @@ It complements [obra/superpowers](https://github.com/obra/superpowers), which pr
 | Code quality | `code-quality` | Linting, complexity, and review checklists across Rust, TypeScript, Python, and shell |
 | Code quality | `design-patterns` | Pattern trade-offs (when to use, when to skip) for Rust, TS/React, and Django/Python |
 | Research | `paper-summarizer` | Extract actionable findings and a claim-evidence map from academic/technical papers |
+| Authoring | `humanizer` | Rewrite AI-generated copy in ES/EN into direct, natural prose without inventing facts |
 | Authoring | `mcp-builder` | Design and build MCP servers in TypeScript or Python |
 | Authoring | `skill-creator` | Create, test, and improve reusable `SKILL.md` workflows |
 | Hugging Face | `hf-cli` | Core `hf` CLI usage — auth, cache, repos, jobs, papers, Spaces, and more |
@@ -353,7 +354,7 @@ codex plugin add opencode-power-pack@opencode-power-pack
 codex plugin list --marketplace opencode-power-pack
 ```
 
-Start a new Codex session after installation so the fifty-four bundled skills are loaded. Use `/plugins` to inspect the installed plugin or `$` to select one of its skills explicitly. Codex plugin packaging follows the [official plugin structure](https://developers.openai.com/plugins/build/plugins).
+Start a new Codex session after installation so the fifty-five bundled skills are loaded. Use `/plugins` to inspect the installed plugin or `$` to select one of its skills explicitly. Codex plugin packaging follows the [official plugin structure](https://developers.openai.com/plugins/build/plugins).
 
 For a smaller personal or repository-specific set, use the [selective npm installer](#selective-install-with-npm) instead of the full plugin.
 
@@ -407,7 +408,7 @@ opencode debug skill
 opencode debug agent code-explorer
 ```
 
-The first command should include all fifty-four unprefixed skill names. The second should report a `subagent` with editing denied. In the TUI, `ctrl+p` should list `/code-review`, `/feature-dev`, `/frontend-design`, and the other skill-derived commands.
+The first command should include all fifty-five unprefixed skill names. The second should report a `subagent` with editing denied. In the TUI, `ctrl+p` should list `/code-review`, `/feature-dev`, `/frontend-design`, and the other skill-derived commands.
 
 ### Verify Codex
 
@@ -549,7 +550,7 @@ opencode-power-pack
 |   +-- declares skills/ as a Pi package for pi install
 |
 +-- sandbox/contract.json
-|   +-- maps all fifty-four skills to versioned capability profiles
+|   +-- maps all fifty-five skills to versioned capability profiles
 |   +-- records allowed escalation paths without claiming enforcement
 |
 +-- bin/sandbox/policy.mjs

@@ -197,6 +197,10 @@
       "defaultProfile": "publish",
       "allowedEscalations": []
     },
+    "humanizer": {
+      "defaultProfile": "observe",
+      "allowedEscalations": []
+    },
     "insecure-defaults": {
       "defaultProfile": "observe",
       "allowedEscalations": []
