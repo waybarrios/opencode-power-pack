@@ -137,7 +137,7 @@ test("packed npm artifact exposes a working selective-installer executable", () 
     });
     const sandboxOutput = sandboxDoctor.stdout;
     assert.match(sandboxOutput, /Sandbox contract: valid/);
-    assert.match(sandboxOutput, /Assigned skills: 54\/54/);
+    assert.match(sandboxOutput, /Assigned skills: 55\/55/);
     assert.match(sandboxOutput, /Backend: @anthropic-ai\/sandbox-runtime@0\.0\.73/);
     assert.match(sandboxOutput, /Strict ready: no/);
     assert.equal(

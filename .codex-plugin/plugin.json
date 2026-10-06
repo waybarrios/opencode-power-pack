@@ -1,7 +1,7 @@
 {
   "name": "opencode-power-pack",
   "version": "0.5.0",
-  "description": "Fifty-four software-development workflows for Claude Code, Codex, OpenCode, and Pi.",
+  "description": "Fifty-five software-development workflows for Claude Code, Codex, OpenCode, and Pi.",
   "author": {
     "name": "Wayner Barrios",
     "url": "https://github.com/waybarrios"
@@ -25,7 +25,7 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Cross-Agent Power Pack",
-    "shortDescription": "Fifty-four workflows for Claude Code, Codex, OpenCode, and Pi",
+    "shortDescription": "Fifty-five workflows for Claude Code, Codex, OpenCode, and Pi",
     "longDescription": "Review code, audit security, design and implement features, build MCP servers, and maintain project guidance with reusable workflows for Claude Code, Codex, OpenCode, and Pi.",
     "developerName": "Wayner Barrios",
     "category": "Productivity",

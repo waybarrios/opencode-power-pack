@@ -29,13 +29,22 @@ test("provenance manifest covers every shipped skill with an immutable source", 
 
   assert.deepEqual(entries.map((entry) => entry.name), skillNames);
   for (const entry of entries) {
+    // humanizer is original MIT content (not a port/adaptation); inspiration
+    // https://www.sabrina.dev/p/best-ai-prompt-to-humanize-ai-writing is not
+    // an upstream source, so no immutable commit/blob is claimed (source:null).
+    if (entry.adaptation === "original") {
+      assert.equal(entry.source, null, `${entry.name}: original work has no upstream source`);
+      assert.match(entry.reviewedAt, REVIEW_DATE_RE, `${entry.name}: review date`);
+      assert.ok(["Apache-2.0", "MIT"].includes(entry.license), `${entry.name}: known license`);
+      continue;
+    }
     assert.match(entry.source.commit, COMMIT_RE, `${entry.name}: immutable source commit`);
     assert.match(entry.source.blob, COMMIT_RE, `${entry.name}: immutable source blob`);
     assert.match(entry.reviewedAt, REVIEW_DATE_RE, `${entry.name}: review date`);
     assert.match(entry.source.repository, /^https:\/\/github\.com\/[^/]+\/[^/]+$/);
     assert.ok(entry.source.path.length > 0, `${entry.name}: source path`);
     assert.ok(["Apache-2.0", "MIT"].includes(entry.license), `${entry.name}: known license`);
-    assert.ok(["adapted", "ported", "translated"].includes(entry.adaptation), `${entry.name}: adaptation type`);
+    assert.ok(["adapted", "ported", "translated", "original"].includes(entry.adaptation), `${entry.name}: adaptation type`);
   }
 });
 
@@ -46,8 +55,13 @@ test("distributed artifacts carry matching third-party license notices", () => {
   assert.equal(packageJson.license, "MIT AND Apache-2.0");
 
   for (const entry of manifest.skills) {
-    const expected = `${entry.license} (modified`;
     const skill = frontmatter(join(REPO, "skills", entry.name, "SKILL.md"));
+    // Original work (e.g. humanizer) carries its plain license, not a "(modified" marker.
+    if (entry.adaptation === "original") {
+      assert.equal(skill.license, entry.license, `${entry.name}: original skill keeps its plain license`);
+      continue;
+    }
+    const expected = `${entry.license} (modified`;
     assert.ok(skill.license?.startsWith(expected), `${entry.name}: skill marks the source as modified`);
   }
 

@@ -206,8 +206,8 @@ test("sandbox doctor reports complete coverage and the opt-in runner separately"
     executionLevel: "shell-contained",
     strictReady: false,
     profiles: 4,
-    assignedSkills: 54,
-    packagedSkills: 54,
+    assignedSkills: 55,
+    packagedSkills: 55,
     warnings: [
       "Skill metadata remains advisory until a host adapter routes commands through sandbox exec.",
     ],
@@ -234,7 +234,7 @@ test("sandbox CLI supports deterministic text and JSON output", async () => {
   };
 
   assert.equal(await main(["sandbox", "doctor"], context), 0);
-  assert.match(output, /Assigned skills: 54\/54/);
+  assert.match(output, /Assigned skills: 55\/55/);
   assert.match(output, /Enforcement: advisory/);
   assert.match(output, /Runner ready: yes/);
   assert.match(output, /Execution level: shell-contained/);

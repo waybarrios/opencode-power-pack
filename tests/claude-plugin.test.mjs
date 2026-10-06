@@ -24,7 +24,7 @@ test("Claude Code plugin manifest identifies the package and bundled skills", ()
   const names = readdirSync(join(REPO, "skills")).filter((name) =>
     existsSync(join(REPO, "skills", name, "SKILL.md")),
   );
-  assert.equal(names.length, 54);
+  assert.equal(names.length, 55);
 });
 
 test("Claude Code marketplace installs the plugin from the repository root", () => {
@@ -35,7 +35,7 @@ test("Claude Code marketplace installs the plugin from the repository root", () 
   const [entry] = marketplace.plugins;
   assert.equal(entry.name, plugin.name);
   assert.equal(entry.source, "./");
-  assert.match(entry.description, /Fifty-four workflows/i);
+  assert.match(entry.description, /Fifty-five workflows/i);
 });
 
 test("README documents namespaced Claude Code installation and verification", () => {
