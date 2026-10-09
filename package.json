@@ -17,6 +17,7 @@
   },
   "files": [
     "skills",
+    "index.js",
     ".claude-plugin",
     ".codex-plugin",
     ".opencode",
