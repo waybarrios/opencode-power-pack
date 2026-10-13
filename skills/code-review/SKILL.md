@@ -149,11 +149,17 @@ Otherwise emit `Review incomplete` and report completed coverage, missing covera
 
 Posting requires PR scope. If `--comment` or equivalent is requested without PR scope, report the missing target and do not post. Apply the same detection, cross-check, validation, unresolved, and reported-candidate gate before posting a clean summary; never post one for incomplete coverage or validated findings.
 
-Use a marker tied to repository, PR, pinned head SHA, and either `summary` or a stable finding key:
+Use a marker tied to repository, PR, pinned head SHA, either `summary` or a stable finding key, and the overall verdict:
 
 ```html
-<!-- opencode-power-pack:code-review scope=<owner>/<repo>#<pr>@<head-sha> kind=<summary|finding-key> -->
+<!-- opencode-power-pack:code-review scope=<owner>/<repo>#<pr>@<head-sha> kind=<summary|finding-key> verdict=<approve|changes-requested> -->
 ```
+
+Set `verdict=changes-requested` when validation produced reportable findings and `verdict=approve` for a clean result. The field must match the posted result: never pair `verdict=approve` with findings, and never pair `verdict=changes-requested` with a clean result.
+
+When `verdict=changes-requested`, also submit a real review so the PR's review decision blocks a merge. A marker comment alone leaves the decision unchanged:
+
+`POST /repos/<owner>/<repo>/pulls/<pr>/reviews` with `event: REQUEST_CHANGES` and a short body naming the blocking findings.
 
 Determine the authenticated login, then query both issue comments and inline review comments with `gh api --paginate`. Match both the exact marker and authenticated author. For each intended comment:
 

@@ -68,6 +68,12 @@ test("code-review reconciles confidence, runtime inputs, and posting", () => {
   assert.doesNotMatch(review, /A previous review by the agent already exists/);
 });
 
+test("code-review marker carries verdict= and posts a blocking review", () => {
+  assert.match(review, /<!-- opencode-power-pack:code-review[\s\S]{0,400}verdict=<approve\|changes-requested>/);
+  assert.match(review, /POST \/repos\/<owner>\/<repo>\/pulls\/<pr>\/reviews/);
+  assert.match(review, /event: REQUEST_CHANGES/);
+});
+
 test("code-reviewer honors authoritative handoffs and complete local changes", () => {
   assert.match(reviewer, /Dispatched handoff/i);
   assert.match(reviewer, /scope manifest.*authoritative/is);
