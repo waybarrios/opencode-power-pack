@@ -1,7 +1,7 @@
 {
   "name": "OpenCode Power Pack",
   "short_name": "Power Pack",
-  "description": "Fifty-four portable Agent Skills for Claude Code, Codex, OpenCode, and Pi.",
+  "description": "Fifty-five portable Agent Skills for Claude Code, Codex, OpenCode, and Pi.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

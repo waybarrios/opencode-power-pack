@@ -21,7 +21,7 @@
     <meta property="og:title" content="OpenCode Power Pack Documentation">
     <meta
       property="og:description"
-      content="Installation and usage guides for 54 Agent Skills across Claude Code, Codex, OpenCode, and Pi."
+      content="Installation and usage guides for 55 Agent Skills across Claude Code, Codex, OpenCode, and Pi."
    >
     <meta property="og:url" content="https://skills.waybarrios.com/docs/">
     <meta
@@ -34,7 +34,7 @@
     <meta property="og:image:alt" content="OpenCode Power Pack installation and operations documentation">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="OpenCode Power Pack Documentation">
-    <meta name="twitter:description" content="Install and use 54 Agent Skills across Claude Code, Codex, OpenCode, and Pi.">
+    <meta name="twitter:description" content="Install and use 55 Agent Skills across Claude Code, Codex, OpenCode, and Pi.">
     <meta name="twitter:image" content="https://skills.waybarrios.com/assets/social-card.png">
     <meta name="twitter:image:alt" content="OpenCode Power Pack installation and operations documentation">
     <meta name="twitter:image:width" content="1200">
@@ -45,51 +45,58 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&amp;family=IBM+Plex+Mono:wght@400;500;600;700&amp;display=swap"
       rel="stylesheet"
    >
-    <link rel="stylesheet" href="../styles.css?v=0.5.0-sandbox-1">
+    <link rel="stylesheet" href="../styles.css?v=2026-10-19-opencode-2">
     <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "OpenCode Power Pack Documentation",
+  "description": "Installation, usage, and native sandbox documentation for OpenCode Power Pack Agent Skills.",
+  "url": "https://skills.waybarrios.com/docs/",
+  "dateModified": "2026-10-19",
+  "author": {
+    "@type": "Person",
+    "name": "Wayner Barrios",
+    "url": "https://github.com/waybarrios"
+  },
+  "about": {
+    "@type": "SoftwareSourceCode",
+    "name": "OpenCode Power Pack",
+    "codeRepository": "https://github.com/waybarrios/opencode-power-pack",
+    "softwareVersion": "main",
+    "runtimePlatform": [
+      "Claude Code",
+      "Codex",
+      "OpenCode 1 and 2",
+      "Pi"
+    ]
+  },
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
       {
-        "@context": "https://schema.org",
-        "@type": "TechArticle",
-        "headline": "OpenCode Power Pack Documentation",
-        "description": "Installation, usage, and native sandbox documentation for OpenCode Power Pack Agent Skills.",
-        "url": "https://skills.waybarrios.com/docs/",
-        "dateModified": "2026-08-17",
-        "author": {
-          "@type": "Person",
-          "name": "Wayner Barrios",
-          "url": "https://github.com/waybarrios"
-        },
-        "about": {
-          "@type": "SoftwareSourceCode",
-          "name": "OpenCode Power Pack",
-          "codeRepository": "https://github.com/waybarrios/opencode-power-pack"
-        },
-        "breadcrumb": {
-          "@type": "BreadcrumbList",
-          "itemListElement": [
-            {
-              "@type": "ListItem",
-              "position": 1,
-              "name": "OpenCode Power Pack",
-              "item": "https://skills.waybarrios.com/"
-            },
-            {
-              "@type": "ListItem",
-              "position": 2,
-              "name": "Documentation",
-              "item": "https://skills.waybarrios.com/docs/"
-            }
-          ]
-        }
+        "@type": "ListItem",
+        "position": 1,
+        "name": "OpenCode Power Pack",
+        "item": "https://skills.waybarrios.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Documentation",
+        "item": "https://skills.waybarrios.com/docs/"
       }
+    ]
+  }
+}
     </script>
   </head>
   <body class="docs-body">
     <a class="skip-link" href="#docs-main">Skip to documentation</a>
     <div class="status-rail" aria-hidden="true">
-      <span>DOCUMENTATION // v0.5.0</span>
-      <span>54 MODULES</span>
-      <span>LAST UPDATED 2026-08-17</span>
+      <span>DOCUMENTATION // MAIN</span>
+      <span>55 MODULES</span>
+      <span>LAST UPDATED 2026-10-19</span>
     </div>
 
     <div class="docs-shell">
@@ -101,6 +108,7 @@
           <span><b>POWER PACK</b> DOCS</span>
         </a>
         <nav aria-label="Documentation sections">
+          <a href="#opencode-2">OpenCode 2.0 + updates</a>
           <a href="#quick-start">Choose an install</a>
           <a href="#npm">Selective npm</a>
           <a href="#agent-install">Agent-assisted install</a>
@@ -109,7 +117,7 @@
           <a href="#how-skills-work">How skills work</a>
           <a href="#hosts">Full host installs</a>
           <a href="#profiles">Profiles + contents</a>
-          <a href="skills/">All 54 skills</a>
+          <a href="skills/">All 55 skills</a>
           <a href="#reviews">Review skills</a>
           <a href="#maintenance">Update and remove</a>
           <a href="#troubleshooting">Troubleshooting</a>
@@ -133,18 +141,26 @@
           </p>
         </header>
 
+        <section class="docs-section" id="opencode-2">
+          <h2>OpenCode 2.0 and current source</h2>
+          <p>The current main branch includes 55 skills, OpenCode 2.0 support, and humanizer. The published npm package and tag v0.5.0 still contain 54 skills and the V1-only plugin. Use the Git installation for the full OpenCode 2 plugin and humanizer.</p>
+          <p>The npm installer can copy its released skills for OpenCode 2. Copying skills does not register the three named specialists.</p>
+          <p>Smoke tests cover OpenCode 1.18.7, 2.0.14, and 2.0.32. The current suite has 418 tests; the latest local run passed 417 and skipped the optional native sandbox integration.</p>
+          <p>For the host commands and permission checks, see <a href="#host-opencode">OpenCode setup</a>. For the new writing workflow, see <a href="skills/#humanizer">humanizer</a>.</p>
+        </section>
+
         <section class="docs-section" id="quick-start">
           <h2>Choose an installation path</h2>
-          <p>The two paths solve different problems. Choose one before running commands.</p>
+          <p>Choose selected skills from npm or the full plugin from Git main. The sources contain different versions.</p>
           <div class="install-choice-grid">
             <article>
               <span>SELECTIVE</span>
               <h3>npm installer</h3>
               <p>Best when Codex, OpenCode, or Pi should load only the workflows you select.</p>
               <ul>
-                <li>Install one skill, several skills, a profile, or all 54.</li>
+                <li>Install one skill, several skills, a profile, or the released catalog.</li>
                 <li>Choose user-level or repository-local scope.</li>
-                <li>Requires Node.js 20 or newer.</li>
+                <li>Requires Node.js 20.11.0 or newer.</li>
               </ul>
               <div class="docs-code"><code>npx @waybarrios/opencode-power-pack install --profile recommended</code></div>
               <a href="#npm">Follow the selective guide →</a>
@@ -152,7 +168,7 @@
             <article>
               <span>COMPLETE CATALOG</span>
               <h3>Native host plugin</h3>
-              <p>Best when you want all 54 workflows through the host's normal package manager.</p>
+              <p>Best when you want all 55 workflows through the host's normal package manager.</p>
               <ul>
                 <li>Claude Code receives collision-safe namespaced skills.</li>
                 <li>Codex, OpenCode, and Pi receive native package integration.</li>
@@ -177,7 +193,7 @@ pi install ...</code></div>
           <ol class="installation-steps">
             <li>
               <h3>Inspect the catalog</h3>
-              <p>This prints the eight profiles and all 54 available skill IDs. It does not modify files.</p>
+              <p>This prints the profiles and skill IDs in the published npm package. It does not modify files.</p>
               <div class="docs-code"><code>npx @waybarrios/opencode-power-pack list</code></div>
             </li>
             <li>
@@ -194,7 +210,7 @@ npx @waybarrios/opencode-power-pack install --profile review
 
 # Combine a profile with another skill
 npx @waybarrios/opencode-power-pack install --profile frontend code-quality</code></div>
-              <p><a href="skills/">Compare all 54 skills and copy individual commands →</a></p>
+              <p><a href="skills/">Compare all 55 skills and copy individual commands →</a></p>
             </li>
             <li>
               <h3>Choose the destination</h3>
@@ -231,6 +247,15 @@ npx @waybarrios/opencode-power-pack install --profile security</code></div>
           </p>
         </section>
 
+        <section class="docs-section" id="github-packages">
+          <h2>GitHub Packages mirror</h2>
+          <p>npmjs is the public install source and does not require GitHub authentication. The released package is also available through GitHub Packages.</p>
+          <p>For the mirror, use a GitHub personal access token (classic) with <code>read:packages</code>:</p>
+          <div class="docs-code"><code>npm login --scope=@waybarrios --auth-type=legacy --registry=https://npm.pkg.github.com
+npm install --global @waybarrios/opencode-power-pack --registry=https://npm.pkg.github.com</code></div>
+          <p>The mirror follows release tags. It does not include additions that are only on main.</p>
+        </section>
+
         <section class="docs-section" id="agent-install">
           <h2>Let your agent install it</h2>
           <p>
@@ -245,6 +270,8 @@ npx @waybarrios/opencode-power-pack install --profile security</code></div>
             <div class="docs-code"><code id="agent-install-prompt">Help me choose and install the right OpenCode Power Pack skills safely and project-locally in the current Git repository.
 
 Your goal is to understand what I need, recommend the smallest useful profile or set of individual skills, obtain my explicit selection, install it for the active coding-agent host, preserve all existing project work, and leave a reproducible verification report.
+
+The npm procedure below uses the published catalog. OpenCode 2 can use those copied skills, but the native V2 plugin and humanizer require Git main. If I need either, show the current Git install guide and wait for my source choice before continuing.
 
 Safety rules:
 1. Do not modify package.json, package-lock.json, npm-shrinkwrap.json, pnpm-lock.yaml, yarn.lock, bun.lock, or application dependencies.
@@ -266,7 +293,7 @@ Phase 2: preflight without changing repository files.
 
 1. Print the current directory with pwd.
 2. Run git rev-parse --show-toplevel. Stop if this is not a Git repository. Save the absolute Git root.
-3. Run node --version. Parse the major version and require Node.js 20 or newer. If it is older or unavailable, stop and explain how to satisfy the prerequisite without changing this project.
+3. Run node --version. Parse the full version and require Node.js 20.11.0 or newer. If it is older or unavailable, stop and explain how to satisfy the prerequisite without changing this project.
 4. Run npm --version and stop if npm or npx is unavailable.
 5. Capture git status --short before installation. Use it only as a baseline; do not alter any listed file.
 6. State that the only permitted destination is &lt;git-root&gt;/.agents/skills.
@@ -308,8 +335,9 @@ Phase 6: verify and report.
 3. Run git status --short again and compare it with the saved baseline. Confirm that installation introduced no changes outside .agents/skills and did not change dependency manifests or lockfiles. Do not revert unrelated differences.
 4. Tell the user to start a new agent session if the skills do not appear automatically.
 5. Give the host-specific verification command:
-   - Codex: inspect /plugins, then invoke an installed skill such as $code-review.
-   - OpenCode: run opencode debug skill, then invoke /code-review.
+   - Codex: invoke an installed skill such as $code-review in a new session. Use /plugins only for a native plugin installation.
+   - OpenCode 1: run opencode debug skill, then invoke /code-review.
+   - OpenCode 2: check the skill picker, then invoke /code-review.
    - Pi: run pi list, then request a task that matches an installed workflow.
 6. Finish with a concise structured report containing: stated need, approved selection and rationale, alternatives not chosen, host, Node/npm versions, Git root, destination, exact commands run, resolved skill count and names, installed entries, preserved/skipped entries, warnings or failures, worktree comparison, verification result, and any user action still required.</code></div>
             <button
@@ -352,7 +380,7 @@ npx @waybarrios/opencode-power-pack install --profile recommended --project</cod
                 <tr><td><code>list</code></td><td>Print all profiles and skill IDs from the installed package.</td></tr>
                 <tr><td><code>install &lt;skill...&gt;</code></td><td>Install one or more explicit skill IDs.</td></tr>
                 <tr><td><code>--profile &lt;name&gt;</code></td><td>Add a curated profile. Repeat the option to combine profiles.</td></tr>
-                <tr><td><code>--all</code></td><td>Select the complete 54-skill catalog.</td></tr>
+                <tr><td><code>--all</code></td><td>Select every skill in the installed package.</td></tr>
                 <tr><td><code>--global</code></td><td>Write to <code>~/.agents/skills</code>. This is the default.</td></tr>
                 <tr><td><code>--project</code></td><td>Find the current Git root and write to <code>.agents/skills</code> inside it.</td></tr>
                 <tr><td><code>--dry-run</code></td><td>Show the resolved destination and changes without writing files.</td></tr>
@@ -548,7 +576,7 @@ Do not run the child command separately and do not retry without the sandbox.</c
         <section class="docs-section" id="hosts">
           <h2>Full native host installs</h2>
           <p>
-            Each method below installs all 54 workflows. Use the npm path above when you want a smaller
+            Each method below installs all 55 workflows. Use the npm path above when you want a smaller
             set for Codex, OpenCode, or Pi.
           </p>
 
@@ -578,14 +606,20 @@ codex plugin list --marketplace opencode-power-pack</code></div>
           </article>
 
           <article class="host-doc" id="host-opencode">
-            <header><span>03</span><h3>OpenCode</h3><b>FULL CATALOG</b></header>
-            <p>OpenCode 1.18.7 or newer is required. Pin v0.5.0 for a reproducible installation.</p>
-            <div class="docs-code"><code>opencode plugin --global "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git#v0.5.0"</code></div>
+            <header><span>03</span><h3>OpenCode 1 and 2</h3><b>FULL CATALOG</b></header>
+            <p>Use Git main for OpenCode 2.0 and all 55 skills. The v0.5.0 tag predates the V2 plugin port.</p>
+            <div class="docs-code"><code># OpenCode 2
+opencode plugin add "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"
+
+# OpenCode 1
+opencode plugin --global "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"</code></div>
             <dl>
-              <div><dt>Restart</dt><dd>Start a new OpenCode session after the command finishes.</dd></div>
-              <div><dt>Verify</dt><dd>Run <code>opencode debug skill</code>; it should list all 54 unprefixed IDs.</dd></div>
-              <div><dt>Invoke</dt><dd>Use the generated slash command, for example <code>/code-review</code>.</dd></div>
+              <div><dt>Restart</dt><dd>Start a new OpenCode session after installation.</dd></div>
+              <div><dt>Verify V2</dt><dd>Run <code>opencode debug agents</code> and check the skill picker for all 55 workflows.</dd></div>
+              <div><dt>Verify V1</dt><dd>Run <code>opencode debug skill</code> and <code>opencode debug agent code-explorer</code>.</dd></div>
+              <div><dt>Invoke</dt><dd>Use a slash command such as <code>/code-review</code>, <code>/feature-dev</code>, or <code>/humanizer</code>.</dd></div>
             </dl>
+            <p>V2 evaluates the bundled specialists' read-only policy after global rules. The agent listing can show the host's base permissions. A custom system prompt or primary mode replaces the bundled role and keeps the host's permission defaults.</p>
           </article>
 
           <article class="host-doc" id="host-pi">
@@ -661,11 +695,11 @@ pi install git:github.com/waybarrios/opencode-power-pack -l</code></div>
               </div>
             </details>
             <details>
-              <summary><span><code>authoring</code> Reusable workflow creation</span><b>3 skills</b></summary>
+              <summary><span><code>authoring</code> Reusable workflow creation</span><b>4 on main</b></summary>
               <div>
                 <p>Create Agent Skills and MCP servers, or turn technical papers into engineering-ready summaries.</p>
-                <div class="docs-code"><code>npx @waybarrios/opencode-power-pack install --profile authoring</code></div>
-                <p><code>mcp-builder</code>, <code>paper-summarizer</code>, and <code>skill-creator</code>.</p>
+                <div class="docs-code"><code>npx --package=git+https://github.com/waybarrios/opencode-power-pack.git opencode-power-pack install --profile authoring</code></div>
+                <p>On main: <code>humanizer</code>, <code>mcp-builder</code>, <code>paper-summarizer</code>, and <code>skill-creator</code>. npm 0.5.0 has the three earlier skills. <a href="skills/#humanizer">Install humanizer from source.</a></p>
               </div>
             </details>
             <details>
@@ -677,7 +711,7 @@ pi install git:github.com/waybarrios/opencode-power-pack -l</code></div>
               </div>
             </details>
           </div>
-          <p><a href="skills/">Open the complete 54-skill reference for individual installation commands →</a></p>
+          <p><a href="skills/">Open the complete 55-skill reference for individual installation commands →</a></p>
         </section>
 
         <section class="docs-section" id="reviews">
@@ -736,19 +770,27 @@ npm uninstall --global @waybarrios/opencode-power-pack</code></div>
 codex plugin add opencode-power-pack@opencode-power-pack
 codex plugin remove opencode-power-pack@opencode-power-pack</code></div>
 
-          <h3>OpenCode</h3>
-          <div class="docs-code"><code>opencode plugin --global --force "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"</code></div>
-          <p>To remove it, delete the matching <code>opencode-power-pack@...</code> entry from the config where it was installed, then restart OpenCode.</p>
+          <h3>OpenCode 2</h3>
+          <div class="docs-code"><code>opencode plugin update "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"
+opencode plugin remove "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"</code></div>
+          <p>Use the exact configured specification, including a tag or local Git URL. On OpenCode 1, update by reinstalling with <code>plugin --global</code>; remove its entry from the <code>plugin</code> config array to uninstall. For local clones, pull the source and then update or reinstall.</p>
 
           <h3>Pi</h3>
           <div class="docs-code"><code>pi update git:github.com/waybarrios/opencode-power-pack
 pi remove git:github.com/waybarrios/opencode-power-pack</code></div>
         </section>
 
+        <section class="docs-section" id="evaluations">
+          <h2>Contributor checks and live evaluations</h2>
+          <p>The behavioral runner uses the OpenCode 2 session API. It rejects partial text from failed or interrupted turns and accepts optional <code>provider/model#variant</code> model references.</p>
+          <p>Live runs need provider environment credentials. The isolated runtime does not copy OpenCode 2's credential database. See the <a href="https://github.com/waybarrios/opencode-power-pack/blob/main/evals/behavioral/README.md">evaluation guide</a> for setup and evidence review.</p>
+          <p>The <a href="https://github.com/waybarrios/opencode-power-pack/blob/main/docs/opencode-compatibility.md">OpenCode compatibility guide</a> covers version checks, source selection, updates, and specialist permissions.</p>
+        </section>
+
         <section class="docs-section" id="troubleshooting">
           <h2>Troubleshooting</h2>
           <h3>Node rejects the package</h3>
-          <p>The selective installer requires Node.js 20 or newer. Check with <code>node --version</code>, upgrade Node, and run the same <code>npx</code> command again.</p>
+          <p>The selective installer requires Node.js 20.11.0 or newer. Check with <code>node --version</code>, upgrade Node, and run the same <code>npx</code> command again.</p>
 
           <h3>Unknown skill or profile</h3>
           <p>Run <code>npx @waybarrios/opencode-power-pack list</code> and copy the lowercase hyphenated ID exactly. Profile names and skill IDs are case-sensitive.</p>
@@ -787,6 +829,6 @@ pi remove git:github.com/waybarrios/opencode-power-pack</code></div>
         </section>
       </main>
     </div>
-    <script src="../app.js?v=0.5.0-sandbox-1" defer></script>
+    <script src="../app.js?v=2026-10-19-opencode-2" defer></script>
   </body>
 </html>

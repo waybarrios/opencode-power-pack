@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>54 Agent Skills Reference | OpenCode Power Pack</title>
+    <title>55 Agent Skills Reference | OpenCode Power Pack</title>
     <meta
       name="description"
       content="What every OpenCode Power Pack skill does, when to use it, its profiles and dependencies, and the exact npm command to install it for Codex, OpenCode, or Pi."
@@ -18,7 +18,7 @@
     <meta property="og:type" content="article">
     <meta property="og:locale" content="en_US">
     <meta property="og:site_name" content="OpenCode Power Pack">
-    <meta property="og:title" content="54 Agent Skills: Complete Reference">
+    <meta property="og:title" content="55 Agent Skills: Complete Reference">
     <meta
       property="og:description"
       content="Detailed purpose, selection guidance, profiles, dependencies, invocation, and individual installation commands for every bundled skill."
@@ -28,12 +28,12 @@
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:type" content="image/png">
-    <meta property="og:image:alt" content="Complete reference for 54 OpenCode Power Pack Agent Skills">
+    <meta property="og:image:alt" content="Complete reference for 55 OpenCode Power Pack Agent Skills">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="54 Agent Skills: Complete Reference">
+    <meta name="twitter:title" content="55 Agent Skills: Complete Reference">
     <meta name="twitter:description" content="Purpose, dependencies, invocation, and exact install command for every OpenCode Power Pack skill.">
     <meta name="twitter:image" content="https://skills.waybarrios.com/assets/social-card.png">
-    <meta name="twitter:image:alt" content="Complete reference for 54 OpenCode Power Pack Agent Skills">
+    <meta name="twitter:image:alt" content="Complete reference for 55 OpenCode Power Pack Agent Skills">
     <meta name="twitter:image:width" content="1200">
     <meta name="twitter:image:height" content="630">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -42,434 +42,441 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&amp;family=IBM+Plex+Mono:wght@400;500;600;700&amp;display=swap"
       rel="stylesheet"
     >
-    <link rel="stylesheet" href="../../styles.css?v=0.5.0-sandbox-1">
+    <link rel="stylesheet" href="../../styles.css?v=2026-10-19-opencode-2">
     <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "OpenCode Power Pack Skill Reference",
+  "description": "Detailed documentation and individual installation commands for 55 Agent Skills.",
+  "url": "https://skills.waybarrios.com/docs/skills/",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "OpenCode Power Pack",
+    "url": "https://skills.waybarrios.com/"
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "numberOfItems": 55,
+    "itemListElement": [
       {
-              "@context": "https://schema.org",
-              "@type": "CollectionPage",
-              "name": "OpenCode Power Pack Skill Reference",
-              "description": "Detailed documentation and individual installation commands for 54 Agent Skills.",
-              "url": "https://skills.waybarrios.com/docs/skills/",
-              "isPartOf": {
-                      "@type": "WebSite",
-                      "name": "OpenCode Power Pack",
-                      "url": "https://skills.waybarrios.com/"
-              },
-              "mainEntity": {
-                      "@type": "ItemList",
-                      "numberOfItems": 54,
-                      "itemListElement": [
-                              {
-                                      "@type": "ListItem",
-                                      "position": 1,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#agentic-actions-auditor",
-                                      "name": "agentic-actions-auditor",
-                                      "description": "Audit GitHub Actions that run AI agents for prompt injection, unsafe interpolation, sandbox gaps, and permissive actor rules. Use for agentic CI workflows, not general application code review."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 2,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#agents-md-improver",
-                                      "name": "agents-md-improver",
-                                      "description": "Audit and improve project-rules files (AGENTS.md, CLAUDE.md, .agents/instructions, local overrides) so the agent keeps accurate project context. Use when the user asks to check, audit, review, update, improve, or fix their AGENTS.md or CLAUDE.md, mentions \"project rules maintenance\" or \"agent context optimization\", or when the codebase has changed enough that the rules file may be stale. Scans the repository for every rules file, grades each against a quality rubric, outputs a quality report, and applies targeted edits only after user approval."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 3,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#agents-md-revise",
-                                      "name": "agents-md-revise",
-                                      "description": "Capture learnings from the current session into the project-rules file (AGENTS.md, CLAUDE.md, or local override) so future sessions benefit. Use when the user says \"revise the rules\", \"update AGENTS.md / CLAUDE.md with what we just learned\", \"save this to project memory\", \"remember this for next time\", or at the end of a productive session when valuable context has emerged that is not yet documented. This complements agents-md-improver; improver audits, while this one captures."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 4,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#ai-slop",
-                                      "name": "ai-slop",
-                                      "description": "Operational rubric that turns \"don't make AI slop\" into observable properties, severity levels, evidence requirements, and repair actions for interface design. Use as the reference rubric when building or reviewing marketing sites, product interfaces, dashboards, portfolios, or e-commerce pages, especially alongside frontend-design."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 5,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#code-architect",
-                                      "name": "code-architect",
-                                      "description": "Design a feature architecture by analyzing existing codebase patterns and conventions, then provide a comprehensive implementation blueprint with specific files to create or modify, component designs, data flows, and a build sequence. Use this skill when the user asks for an architecture design, an implementation plan for a non-trivial feature, or when dispatched as a sub-task during feature-dev architecture phase."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 6,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#code-explorer",
-                                      "name": "code-explorer",
-                                      "description": "Deeply analyze an existing codebase feature by tracing execution paths, mapping architecture layers, understanding patterns and abstractions, and documenting dependencies. Use this skill when you need to understand how a feature works before modifying or extending it, when dispatched as a sub-task during feature-dev exploration, or when the user asks \"how does X work in this codebase\"."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 7,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#code-quality",
-                                      "name": "code-quality",
-                                      "description": "Agents should invoke this skill for code reviews, linting/formatting setup, maintainability checks, complexity concerns, warning cleanup, coding standards, or quality gates in Rust, TypeScript, Python, shell, and mixed repos."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 8,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#code-review",
-                                      "name": "code-review",
-                                      "description": "Review a pull request or a set of code changes for bugs, logic errors, and project-convention violations using a confidence-filtered, multi-agent process. Use this skill when the user asks to review a PR, audit pending changes, or inspect a diff for problems before merging."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 9,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#code-reviewer",
-                                      "name": "code-reviewer",
-                                      "description": "Review code for bugs, logic errors, security vulnerabilities, code quality issues, and adherence to project conventions, using confidence-based filtering to report only high-priority issues that truly matter. Use this skill when reviewing a small set of changes locally (such as unstaged diff), when dispatched as a sub-task during feature-dev quality review, or when the user wants a critique of a specific file or function."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 10,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#codeql",
-                                      "name": "codeql",
-                                      "description": "Run CodeQL database creation and security queries, add data-extension models, or process CodeQL SARIF. Use when CodeQL is explicitly requested; use security-review for a broader manual security review."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 11,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#design-patterns",
-                                      "name": "design-patterns",
-                                      "description": "Agents should invoke this skill when choosing patterns, designing traits/interfaces/components, deciding abstraction boundaries, evaluating dependency injection/callbacks, or comparing implementation approaches in Rust, TypeScript/React, or Django/Python."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 12,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#differential-review",
-                                      "name": "differential-review",
-                                      "description": "Performs security-focused differential review of code changes (PRs, commits, diffs). Adapts analysis depth to codebase size, uses git history for context, calculates blast radius, checks test coverage, and generates comprehensive markdown reports. Automatically detects and prevents security regressions."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 13,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#feature-dev",
-                                      "name": "feature-dev",
-                                      "description": "Guide a feature implementation through a structured seven-phase workflow with deep codebase understanding, clarifying questions, parallel architecture design, and quality review. Use this skill when the user asks to build a new feature, add functionality, or wants a methodical approach to implementation rather than diving straight to code."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 14,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#fp-check",
-                                      "name": "fp-check",
-                                      "description": "Systematically verifies suspected security bugs to eliminate false positives. Produces TRUE POSITIVE or FALSE POSITIVE verdicts with documented evidence for each bug."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 15,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#frontend-design",
-                                      "name": "frontend-design",
-                                      "description": "Create distinctive, production-grade frontend interfaces with high design quality and accessible markup. Use this skill when the user asks to build or beautify web components, pages, applications, landing pages, dashboards, artifacts, or React/HTML/CSS UI. Generates creative, polished code that avoids generic AI aesthetics, then self-checks it against an objective accessibility and quality rubric."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 16,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#hf-cli",
-                                      "name": "hf-cli",
-                                      "description": "Use the `hf` CLI for Hub authentication, downloads, uploads, repositories, cache, jobs, buckets, webhooks, and endpoint administration. Use for CLI operations, not model recommendations, paper analysis, training design, or building a Space."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 17,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#hf-cloud-aws-context-discovery",
-                                      "name": "hf-cloud-aws-context-discovery",
-                                      "description": "Discover the active AWS profile, region, account, and caller identity before SageMaker or AWS work. Use when local AWS context is needed or unspecified; do not use for cloud-agnostic model planning."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 18,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#hf-cloud-python-env-setup",
-                                      "name": "hf-cloud-python-env-setup",
-                                      "description": "Create an isolated Python environment with a compatible Python version and boto3 for SageMaker or AWS automation. Use before executing AWS Python code; do not use for general Python environment setup."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 19,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#hf-cloud-sagemaker-deployment-planner",
-                                      "name": "hf-cloud-sagemaker-deployment-planner",
-                                      "description": "Plan and coordinate a model deployment to Amazon SageMaker, including serving stack and real-time versus async inference. Use as the entry point for SageMaker hosting requests, before image, IAM, and endpoint implementation skills."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 20,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#hf-cloud-sagemaker-iam-preflight",
-                                      "name": "hf-cloud-sagemaker-iam-preflight",
-                                      "description": "Verify or select a SageMaker execution role before creating models, endpoints, or training jobs. Use when a role ARN is missing or IAM access fails; inspect existing roles before proposing role creation."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 21,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#hf-cloud-sagemaker-production-defaults",
-                                      "name": "hf-cloud-sagemaker-production-defaults",
-                                      "description": "Implement a production SageMaker endpoint with autoscaling, CloudWatch alarms, and tags. Use after the serving image and IAM role are known; use the deployment planner first when architecture is undecided."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 22,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#hf-cloud-serving-image-selection",
-                                      "name": "hf-cloud-serving-image-selection",
-                                      "description": "Select and verify the current region-specific serving container URI for a SageMaker model deployment. Use after the deployment pathway is chosen and before endpoint code; never infer an image URI from memory."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 23,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#hf-mem",
-                                      "name": "hf-mem",
-                                      "description": "Hugging Face CLI to estimate the required memory to load Safetensors or GGUF model weights for inference from the Hugging Face Hub."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 24,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-best",
-                                      "name": "huggingface-best",
-                                      "description": "Find and compare recommended Hugging Face models for a task using benchmarks, model size, and device constraints. Use for model selection questions; use huggingface-local-models for GGUF setup and hf-cli for Hub operations."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 25,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-community-evals",
-                                      "name": "huggingface-community-evals",
-                                      "description": "Run evaluations for Hugging Face Hub models using inspect-ai and lighteval on local hardware. Use for backend selection, local GPU evals, and choosing between vLLM / Transformers / accelerate. Not for HF Jobs orchestration, model-card PRs, .eval_results publication, or community-evals automation."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 26,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-datasets",
-                                      "name": "huggingface-datasets",
-                                      "description": "Use this skill for Hugging Face Dataset Viewer API workflows that fetch subset/split metadata, paginate rows, search text, apply filters, download parquet URLs, and read size or statistics."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 27,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-gradio",
-                                      "name": "huggingface-gradio",
-                                      "description": "Build Gradio web UIs and demos in Python. Use when creating or editing Gradio apps, components, event listeners, layouts, or chatbots."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 28,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-llm-trainer",
-                                      "name": "huggingface-llm-trainer",
-                                      "description": "Train or fine-tune language models with TRL or Unsloth on Hugging Face Jobs, including SFT, DPO, GRPO, reward models, and GGUF conversion. Use for cloud LLM training; use huggingface-vision-trainer for vision tasks."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 29,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-local-models",
-                                      "name": "huggingface-local-models",
-                                      "description": "Use to select models to run locally with llama.cpp and GGUF on CPU, Mac Metal, CUDA, or ROCm. Covers finding GGUFs, quant selection, running servers, exact GGUF file lookup, conversion, and OpenAI-compatible local serving."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 30,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-lora-space-builder",
-                                      "name": "huggingface-lora-space-builder",
-                                      "description": "Build and publish a Gradio Hugging Face Space for a user-provided image or video LoRA, including pipeline selection and model-card settings. Use for LoRA demos; use huggingface-spaces for general Space work."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 31,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-paper-publisher",
-                                      "name": "huggingface-paper-publisher",
-                                      "description": "Publish and manage research papers on Hugging Face Hub. Supports creating paper pages, linking papers to models/datasets, claiming authorship, and generating professional markdown-based research articles."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 32,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-papers",
-                                      "name": "huggingface-papers",
-                                      "description": "Look up and read Hugging Face paper pages in markdown, and use the papers API for structured metadata such as authors, linked models/datasets/spaces, Github repo and project page. Use when the user shares a Hugging Face paper page URL, an arXiv URL or ID, or asks to summarize, explain, or analyze an AI research paper."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 33,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-spaces",
-                                      "name": "huggingface-spaces",
-                                      "description": "Build, deploy, debug, or maintain a Hugging Face Space using Gradio, Docker, or Static SDKs. Use for general Space hosting and configuration; use huggingface-zerogpu for ZeroGPU runtime constraints and lora-space-builder for LoRA demos."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 34,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-tool-builder",
-                                      "name": "huggingface-tool-builder",
-                                      "description": "Use this skill when the user wants to build tool/scripts or achieve a task where using data from the Hugging Face API would help. This is especially useful when chaining or combining API calls or the task will be repeated/automated. This Skill creates a reusable script to fetch, enrich or process data."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 35,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-trackio",
-                                      "name": "huggingface-trackio",
-                                      "description": "Track and visualize ML training experiments with Trackio. Use when logging metrics during training (Python API), firing alerts for training diagnostics, or retrieving/analyzing logged metrics (CLI). Supports real-time dashboard visualization, alerts with webhooks, HF Space syncing, and JSON output for automation."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 36,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-vision-trainer",
-                                      "name": "huggingface-vision-trainer",
-                                      "description": "Train object-detection, image-classification, or SAM segmentation models on Hugging Face Jobs. Use for vision fine-tuning and evaluation; use huggingface-llm-trainer for language models."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 37,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#huggingface-zerogpu",
-                                      "name": "huggingface-zerogpu",
-                                      "description": "Implement or debug Hugging Face Spaces ZeroGPU code using `@spaces.GPU`, including isolation, state, duration, sizing, and CUDA-wheel constraints. Use for ZeroGPU-specific behavior; use huggingface-spaces for general hosting."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 38,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#insecure-defaults",
-                                      "name": "insecure-defaults",
-                                      "description": "Detects fail-open insecure defaults (hardcoded secrets, weak auth, permissive security) that allow apps to run insecurely in production. Use when auditing security, reviewing config management, or analyzing environment variable handling."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 39,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#mcp-builder",
-                                      "name": "mcp-builder",
-                                      "description": "Guide the creation of high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when the user wants to build an MCP server to integrate an external API or service, whether in Python (FastMCP) or Node/TypeScript (MCP SDK)."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 40,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#paper-summarizer",
-                                      "name": "paper-summarizer",
-                                      "description": "Agents should invoke this skill for academic or technical papers, arXiv/PubMed/IEEE/ACM links, PDFs, methodology review, limitations, practical implications, or extracting findings for engineering decisions."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 41,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#sarif-parsing",
-                                      "name": "sarif-parsing",
-                                      "description": "Parses and processes SARIF files from static analysis tools like CodeQL, Semgrep, or other scanners. Triggers on \\\"parse sarif\\\", \\\"read scan results\\\", \\\"aggregate findings\\\", \\\"deduplicate alerts\\\", or \\\"process sarif output\\\". Handles filtering, deduplication, format conversion, and CI/CD integration of SARIF data. Does NOT run scans; use the Semgrep or CodeQL skills for that."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 42,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#security-review",
-                                      "name": "security-review",
-                                      "description": "Perform a focused security review of pending git changes to identify high-confidence security vulnerabilities with real exploitation potential. Use this skill when the user asks for a security review, security audit, vulnerability scan, or wants to check pending changes on a branch for security issues before merging. This is NOT a general code review."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 43,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#security-threat-model",
-                                      "name": "security-threat-model",
-                                      "description": "Create a repository-grounded AppSec threat model covering assets, trust boundaries, attackers, abuse paths, and mitigations. Use only for explicit threat-modeling requests, not general architecture or code review."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 44,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#semgrep",
-                                      "name": "semgrep",
-                                      "description": "Run Semgrep static analysis across a codebase, optionally using Semgrep Pro for cross-file taint analysis. Use when Semgrep or a static-analysis scan is requested; use security-review for a manual audit."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 45,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#semgrep-rule-creator",
-                                      "name": "semgrep-rule-creator",
-                                      "description": "Creates custom Semgrep rules for detecting security vulnerabilities, bug patterns, and code patterns. Use when writing Semgrep rules or building custom static analysis detections."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 46,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#semgrep-rule-variant-creator",
-                                      "name": "semgrep-rule-variant-creator",
-                                      "description": "Creates language variants of existing Semgrep rules. Use when porting a Semgrep rule to specified target languages. Takes an existing rule and target languages as input, produces independent rule+test directories for each language."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 47,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#sharp-edges",
-                                      "name": "sharp-edges",
-                                      "description": "Identify error-prone APIs, dangerous configuration, and footgun designs that enable security mistakes. Use for API ergonomics, misuse resistance, secure defaults, or pit-of-success reviews; use code-review for general defects."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 48,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#skill-creator",
-                                      "name": "skill-creator",
-                                      "description": "Create new skills (SKILL.md files), modify and improve existing skills, and design skill descriptions for accurate triggering. Use when the user wants to create a new skill from scratch, edit an existing skill, optimize a skill's description, or convert a workflow they just demonstrated into a reusable skill."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 49,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#supply-chain-risk-auditor",
-                                      "name": "supply-chain-risk-auditor",
-                                      "description": "Identifies dependencies at heightened risk of exploitation or takeover. Use when assessing supply chain attack surface, evaluating dependency health, or scoping security engagements."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 50,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#train-sentence-transformers",
-                                      "name": "train-sentence-transformers",
-                                      "description": "Train or fine-tune SentenceTransformer bi-encoders, CrossEncoder rerankers, or SparseEncoder models, including losses, negatives, evaluation, distillation, LoRA, and Matryoshka. Use for sentence-transformers training tasks."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 51,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#transformers-js",
-                                      "name": "transformers-js",
-                                      "description": "Run Hugging Face models in JavaScript or TypeScript with Transformers.js, WebGPU, or WASM across browser, Node.js, Bun, and Deno. Use for client-side or JS-runtime inference, not Python training."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 52,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#trl-training",
-                                      "name": "trl-training",
-                                      "description": "Train and fine-tune transformer language models using TRL (Transformers Reinforcement Learning). Supports SFT, DPO, GRPO, KTO, RLOO and Reward Model training via CLI commands."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 53,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#variant-analysis",
-                                      "name": "variant-analysis",
-                                      "description": "Find similar vulnerabilities and bugs across codebases using pattern-based analysis. Use when hunting bug variants, building CodeQL/Semgrep queries, analyzing security vulnerabilities, or performing systematic code audits after finding an initial issue."
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 54,
-                                      "url": "https://skills.waybarrios.com/docs/skills/#vuln-report",
-                                      "name": "vuln-report",
-                                      "description": "Turn one confirmed security finding into a disclosure-ready GitHub advisory with root cause, proof of concept, impact, and source evidence. Use for reporting an established vulnerability, not discovering or validating one."
-                              }
-                      ]
-              },
-              "breadcrumb": {
-                      "@type": "BreadcrumbList",
-                      "itemListElement": [
-                              {
-                                      "@type": "ListItem",
-                                      "position": 1,
-                                      "name": "OpenCode Power Pack",
-                                      "item": "https://skills.waybarrios.com/"
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 2,
-                                      "name": "Documentation",
-                                      "item": "https://skills.waybarrios.com/docs/"
-                              },
-                              {
-                                      "@type": "ListItem",
-                                      "position": 3,
-                                      "name": "Skill reference",
-                                      "item": "https://skills.waybarrios.com/docs/skills/"
-                              }
-                      ]
-              }
+        "@type": "ListItem",
+        "position": 1,
+        "url": "https://skills.waybarrios.com/docs/skills/#agentic-actions-auditor",
+        "name": "agentic-actions-auditor",
+        "description": "Audit GitHub Actions that run AI agents for prompt injection, unsafe interpolation, sandbox gaps, and permissive actor rules. Use for agentic CI workflows, not general application code review."
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "url": "https://skills.waybarrios.com/docs/skills/#agents-md-improver",
+        "name": "agents-md-improver",
+        "description": "Audit and improve project-rules files (AGENTS.md, CLAUDE.md, .agents/instructions, local overrides) so the agent keeps accurate project context. Use when the user asks to check, audit, review, update, improve, or fix their AGENTS.md or CLAUDE.md, mentions \"project rules maintenance\" or \"agent context optimization\", or when the codebase has changed enough that the rules file may be stale. Scans the repository for every rules file, grades each against a quality rubric, outputs a quality report, and applies targeted edits only after user approval."
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "url": "https://skills.waybarrios.com/docs/skills/#agents-md-revise",
+        "name": "agents-md-revise",
+        "description": "Capture learnings from the current session into the project-rules file (AGENTS.md, CLAUDE.md, or local override) so future sessions benefit. Use when the user says \"revise the rules\", \"update AGENTS.md / CLAUDE.md with what we just learned\", \"save this to project memory\", \"remember this for next time\", or at the end of a productive session when valuable context has emerged that is not yet documented. This complements agents-md-improver; improver audits, while this one captures."
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "url": "https://skills.waybarrios.com/docs/skills/#ai-slop",
+        "name": "ai-slop",
+        "description": "Operational rubric that turns \"don't make AI slop\" into observable properties, severity levels, evidence requirements, and repair actions for interface design. Use as the reference rubric when building or reviewing marketing sites, product interfaces, dashboards, portfolios, or e-commerce pages, especially alongside frontend-design."
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "url": "https://skills.waybarrios.com/docs/skills/#code-architect",
+        "name": "code-architect",
+        "description": "Design a feature architecture by analyzing existing codebase patterns and conventions, then provide a comprehensive implementation blueprint with specific files to create or modify, component designs, data flows, and a build sequence. Use this skill when the user asks for an architecture design, an implementation plan for a non-trivial feature, or when dispatched as a sub-task during feature-dev architecture phase."
+      },
+      {
+        "@type": "ListItem",
+        "position": 6,
+        "url": "https://skills.waybarrios.com/docs/skills/#code-explorer",
+        "name": "code-explorer",
+        "description": "Deeply analyze an existing codebase feature by tracing execution paths, mapping architecture layers, understanding patterns and abstractions, and documenting dependencies. Use this skill when you need to understand how a feature works before modifying or extending it, when dispatched as a sub-task during feature-dev exploration, or when the user asks \"how does X work in this codebase\"."
+      },
+      {
+        "@type": "ListItem",
+        "position": 7,
+        "url": "https://skills.waybarrios.com/docs/skills/#code-quality",
+        "name": "code-quality",
+        "description": "Agents should invoke this skill for code reviews, linting/formatting setup, maintainability checks, complexity concerns, warning cleanup, coding standards, or quality gates in Rust, TypeScript, Python, shell, and mixed repos."
+      },
+      {
+        "@type": "ListItem",
+        "position": 8,
+        "url": "https://skills.waybarrios.com/docs/skills/#code-review",
+        "name": "code-review",
+        "description": "Review a pull request or a set of code changes for bugs, logic errors, and project-convention violations using a confidence-filtered, multi-agent process. Use this skill when the user asks to review a PR, audit pending changes, or inspect a diff for problems before merging."
+      },
+      {
+        "@type": "ListItem",
+        "position": 9,
+        "url": "https://skills.waybarrios.com/docs/skills/#code-reviewer",
+        "name": "code-reviewer",
+        "description": "Review code for bugs, logic errors, security vulnerabilities, code quality issues, and adherence to project conventions, using confidence-based filtering to report only high-priority issues that truly matter. Use this skill when reviewing a small set of changes locally (such as unstaged diff), when dispatched as a sub-task during feature-dev quality review, or when the user wants a critique of a specific file or function."
+      },
+      {
+        "@type": "ListItem",
+        "position": 10,
+        "url": "https://skills.waybarrios.com/docs/skills/#codeql",
+        "name": "codeql",
+        "description": "Run CodeQL database creation and security queries, add data-extension models, or process CodeQL SARIF. Use when CodeQL is explicitly requested; use security-review for a broader manual security review."
+      },
+      {
+        "@type": "ListItem",
+        "position": 11,
+        "url": "https://skills.waybarrios.com/docs/skills/#design-patterns",
+        "name": "design-patterns",
+        "description": "Agents should invoke this skill when choosing patterns, designing traits/interfaces/components, deciding abstraction boundaries, evaluating dependency injection/callbacks, or comparing implementation approaches in Rust, TypeScript/React, or Django/Python."
+      },
+      {
+        "@type": "ListItem",
+        "position": 12,
+        "url": "https://skills.waybarrios.com/docs/skills/#differential-review",
+        "name": "differential-review",
+        "description": "Performs security-focused differential review of code changes (PRs, commits, diffs). Adapts analysis depth to codebase size, uses git history for context, calculates blast radius, checks test coverage, and generates comprehensive markdown reports. Automatically detects and prevents security regressions."
+      },
+      {
+        "@type": "ListItem",
+        "position": 13,
+        "url": "https://skills.waybarrios.com/docs/skills/#feature-dev",
+        "name": "feature-dev",
+        "description": "Guide a feature implementation through a structured seven-phase workflow with deep codebase understanding, clarifying questions, parallel architecture design, and quality review. Use this skill when the user asks to build a new feature, add functionality, or wants a methodical approach to implementation rather than diving straight to code."
+      },
+      {
+        "@type": "ListItem",
+        "position": 14,
+        "url": "https://skills.waybarrios.com/docs/skills/#fp-check",
+        "name": "fp-check",
+        "description": "Systematically verifies suspected security bugs to eliminate false positives. Produces TRUE POSITIVE or FALSE POSITIVE verdicts with documented evidence for each bug."
+      },
+      {
+        "@type": "ListItem",
+        "position": 15,
+        "url": "https://skills.waybarrios.com/docs/skills/#frontend-design",
+        "name": "frontend-design",
+        "description": "Create distinctive, production-grade frontend interfaces with high design quality and accessible markup. Use this skill when the user asks to build or beautify web components, pages, applications, landing pages, dashboards, artifacts, or React/HTML/CSS UI. Generates creative, polished code that avoids generic AI aesthetics, then self-checks it against an objective accessibility and quality rubric."
+      },
+      {
+        "@type": "ListItem",
+        "position": 16,
+        "url": "https://skills.waybarrios.com/docs/skills/#hf-cli",
+        "name": "hf-cli",
+        "description": "Use the `hf` CLI for Hub authentication, downloads, uploads, repositories, cache, jobs, buckets, webhooks, and endpoint administration. Use for CLI operations, not model recommendations, paper analysis, training design, or building a Space."
+      },
+      {
+        "@type": "ListItem",
+        "position": 17,
+        "url": "https://skills.waybarrios.com/docs/skills/#hf-cloud-aws-context-discovery",
+        "name": "hf-cloud-aws-context-discovery",
+        "description": "Discover the active AWS profile, region, account, and caller identity before SageMaker or AWS work. Use when local AWS context is needed or unspecified; do not use for cloud-agnostic model planning."
+      },
+      {
+        "@type": "ListItem",
+        "position": 18,
+        "url": "https://skills.waybarrios.com/docs/skills/#hf-cloud-python-env-setup",
+        "name": "hf-cloud-python-env-setup",
+        "description": "Create an isolated Python environment with a compatible Python version and boto3 for SageMaker or AWS automation. Use before executing AWS Python code; do not use for general Python environment setup."
+      },
+      {
+        "@type": "ListItem",
+        "position": 19,
+        "url": "https://skills.waybarrios.com/docs/skills/#hf-cloud-sagemaker-deployment-planner",
+        "name": "hf-cloud-sagemaker-deployment-planner",
+        "description": "Plan and coordinate a model deployment to Amazon SageMaker, including serving stack and real-time versus async inference. Use as the entry point for SageMaker hosting requests, before image, IAM, and endpoint implementation skills."
+      },
+      {
+        "@type": "ListItem",
+        "position": 20,
+        "url": "https://skills.waybarrios.com/docs/skills/#hf-cloud-sagemaker-iam-preflight",
+        "name": "hf-cloud-sagemaker-iam-preflight",
+        "description": "Verify or select a SageMaker execution role before creating models, endpoints, or training jobs. Use when a role ARN is missing or IAM access fails; inspect existing roles before proposing role creation."
+      },
+      {
+        "@type": "ListItem",
+        "position": 21,
+        "url": "https://skills.waybarrios.com/docs/skills/#hf-cloud-sagemaker-production-defaults",
+        "name": "hf-cloud-sagemaker-production-defaults",
+        "description": "Implement a production SageMaker endpoint with autoscaling, CloudWatch alarms, and tags. Use after the serving image and IAM role are known; use the deployment planner first when architecture is undecided."
+      },
+      {
+        "@type": "ListItem",
+        "position": 22,
+        "url": "https://skills.waybarrios.com/docs/skills/#hf-cloud-serving-image-selection",
+        "name": "hf-cloud-serving-image-selection",
+        "description": "Select and verify the current region-specific serving container URI for a SageMaker model deployment. Use after the deployment pathway is chosen and before endpoint code; never infer an image URI from memory."
+      },
+      {
+        "@type": "ListItem",
+        "position": 23,
+        "url": "https://skills.waybarrios.com/docs/skills/#hf-mem",
+        "name": "hf-mem",
+        "description": "Hugging Face CLI to estimate the required memory to load Safetensors or GGUF model weights for inference from the Hugging Face Hub."
+      },
+      {
+        "@type": "ListItem",
+        "position": 24,
+        "url": "https://skills.waybarrios.com/docs/skills/#huggingface-best",
+        "name": "huggingface-best",
+        "description": "Find and compare recommended Hugging Face models for a task using benchmarks, model size, and device constraints. Use for model selection questions; use huggingface-local-models for GGUF setup and hf-cli for Hub operations."
+      },
+      {
+        "@type": "ListItem",
+        "position": 25,
+        "url": "https://skills.waybarrios.com/docs/skills/#huggingface-community-evals",
+        "name": "huggingface-community-evals",
+        "description": "Run evaluations for Hugging Face Hub models using inspect-ai and lighteval on local hardware. Use for backend selection, local GPU evals, and choosing between vLLM / Transformers / accelerate. Not for HF Jobs orchestration, model-card PRs, .eval_results publication, or community-evals automation."
+      },
+      {
+        "@type": "ListItem",
+        "position": 26,
+        "url": "https://skills.waybarrios.com/docs/skills/#huggingface-datasets",
+        "name": "huggingface-datasets",
+        "description": "Use this skill for Hugging Face Dataset Viewer API workflows that fetch subset/split metadata, paginate rows, search text, apply filters, download parquet URLs, and read size or statistics."
+      },
+      {
+        "@type": "ListItem",
+        "position": 27,
+        "url": "https://skills.waybarrios.com/docs/skills/#huggingface-gradio",
+        "name": "huggingface-gradio",
+        "description": "Build Gradio web UIs and demos in Python. Use when creating or editing Gradio apps, components, event listeners, layouts, or chatbots."
+      },
+      {
+        "@type": "ListItem",
+        "position": 28,
+        "url": "https://skills.waybarrios.com/docs/skills/#huggingface-llm-trainer",
+        "name": "huggingface-llm-trainer",
+        "description": "Train or fine-tune language models with TRL or Unsloth on Hugging Face Jobs, including SFT, DPO, GRPO, reward models, and GGUF conversion. Use for cloud LLM training; use huggingface-vision-trainer for vision tasks."
+      },
+      {
+        "@type": "ListItem",
+        "position": 29,
+        "url": "https://skills.waybarrios.com/docs/skills/#huggingface-local-models",
+        "name": "huggingface-local-models",
+        "description": "Use to select models to run locally with llama.cpp and GGUF on CPU, Mac Metal, CUDA, or ROCm. Covers finding GGUFs, quant selection, running servers, exact GGUF file lookup, conversion, and OpenAI-compatible local serving."
+      },
+      {
+        "@type": "ListItem",
+        "position": 30,
+        "url": "https://skills.waybarrios.com/docs/skills/#huggingface-lora-space-builder",
+        "name": "huggingface-lora-space-builder",
+        "description": "Build and publish a Gradio Hugging Face Space for a user-provided image or video LoRA, including pipeline selection and model-card settings. Use for LoRA demos; use huggingface-spaces for general Space work."
+      },
+      {
+        "@type": "ListItem",
+        "position": 31,
+        "url": "https://skills.waybarrios.com/docs/skills/#huggingface-paper-publisher",
+        "name": "huggingface-paper-publisher",
+        "description": "Publish and manage research papers on Hugging Face Hub. Supports creating paper pages, linking papers to models/datasets, claiming authorship, and generating professional markdown-based research articles."
+      },
+      {
+        "@type": "ListItem",
+        "position": 32,
+        "url": "https://skills.waybarrios.com/docs/skills/#huggingface-papers",
+        "name": "huggingface-papers",
+        "description": "Look up and read Hugging Face paper pages in markdown, and use the papers API for structured metadata such as authors, linked models/datasets/spaces, Github repo and project page. Use when the user shares a Hugging Face paper page URL, an arXiv URL or ID, or asks to summarize, explain, or analyze an AI research paper."
+      },
+      {
+        "@type": "ListItem",
+        "position": 33,
+        "url": "https://skills.waybarrios.com/docs/skills/#huggingface-spaces",
+        "name": "huggingface-spaces",
+        "description": "Build, deploy, debug, or maintain a Hugging Face Space using Gradio, Docker, or Static SDKs. Use for general Space hosting and configuration; use huggingface-zerogpu for ZeroGPU runtime constraints and lora-space-builder for LoRA demos."
+      },
+      {
+        "@type": "ListItem",
+        "position": 34,
+        "url": "https://skills.waybarrios.com/docs/skills/#huggingface-tool-builder",
+        "name": "huggingface-tool-builder",
+        "description": "Use this skill when the user wants to build tool/scripts or achieve a task where using data from the Hugging Face API would help. This is especially useful when chaining or combining API calls or the task will be repeated/automated. This Skill creates a reusable script to fetch, enrich or process data."
+      },
+      {
+        "@type": "ListItem",
+        "position": 35,
+        "url": "https://skills.waybarrios.com/docs/skills/#huggingface-trackio",
+        "name": "huggingface-trackio",
+        "description": "Track and visualize ML training experiments with Trackio. Use when logging metrics during training (Python API), firing alerts for training diagnostics, or retrieving/analyzing logged metrics (CLI). Supports real-time dashboard visualization, alerts with webhooks, HF Space syncing, and JSON output for automation."
+      },
+      {
+        "@type": "ListItem",
+        "position": 36,
+        "url": "https://skills.waybarrios.com/docs/skills/#huggingface-vision-trainer",
+        "name": "huggingface-vision-trainer",
+        "description": "Train object-detection, image-classification, or SAM segmentation models on Hugging Face Jobs. Use for vision fine-tuning and evaluation; use huggingface-llm-trainer for language models."
+      },
+      {
+        "@type": "ListItem",
+        "position": 37,
+        "url": "https://skills.waybarrios.com/docs/skills/#huggingface-zerogpu",
+        "name": "huggingface-zerogpu",
+        "description": "Implement or debug Hugging Face Spaces ZeroGPU code using `@spaces.GPU`, including isolation, state, duration, sizing, and CUDA-wheel constraints. Use for ZeroGPU-specific behavior; use huggingface-spaces for general hosting."
+      },
+      {
+        "@type": "ListItem",
+        "position": 38,
+        "url": "https://skills.waybarrios.com/docs/skills/#humanizer",
+        "name": "humanizer",
+        "description": "Rewrite English and Spanish copy in a direct, natural voice. Keep facts, names, numbers, URLs, and code intact."
+      },
+      {
+        "@type": "ListItem",
+        "position": 39,
+        "url": "https://skills.waybarrios.com/docs/skills/#insecure-defaults",
+        "name": "insecure-defaults",
+        "description": "Detects fail-open insecure defaults (hardcoded secrets, weak auth, permissive security) that allow apps to run insecurely in production. Use when auditing security, reviewing config management, or analyzing environment variable handling."
+      },
+      {
+        "@type": "ListItem",
+        "position": 40,
+        "url": "https://skills.waybarrios.com/docs/skills/#mcp-builder",
+        "name": "mcp-builder",
+        "description": "Guide the creation of high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when the user wants to build an MCP server to integrate an external API or service, whether in Python (FastMCP) or Node/TypeScript (MCP SDK)."
+      },
+      {
+        "@type": "ListItem",
+        "position": 41,
+        "url": "https://skills.waybarrios.com/docs/skills/#paper-summarizer",
+        "name": "paper-summarizer",
+        "description": "Agents should invoke this skill for academic or technical papers, arXiv/PubMed/IEEE/ACM links, PDFs, methodology review, limitations, practical implications, or extracting findings for engineering decisions."
+      },
+      {
+        "@type": "ListItem",
+        "position": 42,
+        "url": "https://skills.waybarrios.com/docs/skills/#sarif-parsing",
+        "name": "sarif-parsing",
+        "description": "Parses and processes SARIF files from static analysis tools like CodeQL, Semgrep, or other scanners. Triggers on \\\"parse sarif\\\", \\\"read scan results\\\", \\\"aggregate findings\\\", \\\"deduplicate alerts\\\", or \\\"process sarif output\\\". Handles filtering, deduplication, format conversion, and CI/CD integration of SARIF data. Does NOT run scans; use the Semgrep or CodeQL skills for that."
+      },
+      {
+        "@type": "ListItem",
+        "position": 43,
+        "url": "https://skills.waybarrios.com/docs/skills/#security-review",
+        "name": "security-review",
+        "description": "Perform a focused security review of pending git changes to identify high-confidence security vulnerabilities with real exploitation potential. Use this skill when the user asks for a security review, security audit, vulnerability scan, or wants to check pending changes on a branch for security issues before merging. This is NOT a general code review."
+      },
+      {
+        "@type": "ListItem",
+        "position": 44,
+        "url": "https://skills.waybarrios.com/docs/skills/#security-threat-model",
+        "name": "security-threat-model",
+        "description": "Create a repository-grounded AppSec threat model covering assets, trust boundaries, attackers, abuse paths, and mitigations. Use only for explicit threat-modeling requests, not general architecture or code review."
+      },
+      {
+        "@type": "ListItem",
+        "position": 45,
+        "url": "https://skills.waybarrios.com/docs/skills/#semgrep",
+        "name": "semgrep",
+        "description": "Run Semgrep static analysis across a codebase, optionally using Semgrep Pro for cross-file taint analysis. Use when Semgrep or a static-analysis scan is requested; use security-review for a manual audit."
+      },
+      {
+        "@type": "ListItem",
+        "position": 46,
+        "url": "https://skills.waybarrios.com/docs/skills/#semgrep-rule-creator",
+        "name": "semgrep-rule-creator",
+        "description": "Creates custom Semgrep rules for detecting security vulnerabilities, bug patterns, and code patterns. Use when writing Semgrep rules or building custom static analysis detections."
+      },
+      {
+        "@type": "ListItem",
+        "position": 47,
+        "url": "https://skills.waybarrios.com/docs/skills/#semgrep-rule-variant-creator",
+        "name": "semgrep-rule-variant-creator",
+        "description": "Creates language variants of existing Semgrep rules. Use when porting a Semgrep rule to specified target languages. Takes an existing rule and target languages as input, produces independent rule+test directories for each language."
+      },
+      {
+        "@type": "ListItem",
+        "position": 48,
+        "url": "https://skills.waybarrios.com/docs/skills/#sharp-edges",
+        "name": "sharp-edges",
+        "description": "Identify error-prone APIs, dangerous configuration, and footgun designs that enable security mistakes. Use for API ergonomics, misuse resistance, secure defaults, or pit-of-success reviews; use code-review for general defects."
+      },
+      {
+        "@type": "ListItem",
+        "position": 49,
+        "url": "https://skills.waybarrios.com/docs/skills/#skill-creator",
+        "name": "skill-creator",
+        "description": "Create new skills (SKILL.md files), modify and improve existing skills, and design skill descriptions for accurate triggering. Use when the user wants to create a new skill from scratch, edit an existing skill, optimize a skill's description, or convert a workflow they just demonstrated into a reusable skill."
+      },
+      {
+        "@type": "ListItem",
+        "position": 50,
+        "url": "https://skills.waybarrios.com/docs/skills/#supply-chain-risk-auditor",
+        "name": "supply-chain-risk-auditor",
+        "description": "Identifies dependencies at heightened risk of exploitation or takeover. Use when assessing supply chain attack surface, evaluating dependency health, or scoping security engagements."
+      },
+      {
+        "@type": "ListItem",
+        "position": 51,
+        "url": "https://skills.waybarrios.com/docs/skills/#train-sentence-transformers",
+        "name": "train-sentence-transformers",
+        "description": "Train or fine-tune SentenceTransformer bi-encoders, CrossEncoder rerankers, or SparseEncoder models, including losses, negatives, evaluation, distillation, LoRA, and Matryoshka. Use for sentence-transformers training tasks."
+      },
+      {
+        "@type": "ListItem",
+        "position": 52,
+        "url": "https://skills.waybarrios.com/docs/skills/#transformers-js",
+        "name": "transformers-js",
+        "description": "Run Hugging Face models in JavaScript or TypeScript with Transformers.js, WebGPU, or WASM across browser, Node.js, Bun, and Deno. Use for client-side or JS-runtime inference, not Python training."
+      },
+      {
+        "@type": "ListItem",
+        "position": 53,
+        "url": "https://skills.waybarrios.com/docs/skills/#trl-training",
+        "name": "trl-training",
+        "description": "Train and fine-tune transformer language models using TRL (Transformers Reinforcement Learning). Supports SFT, DPO, GRPO, KTO, RLOO and Reward Model training via CLI commands."
+      },
+      {
+        "@type": "ListItem",
+        "position": 54,
+        "url": "https://skills.waybarrios.com/docs/skills/#variant-analysis",
+        "name": "variant-analysis",
+        "description": "Find similar vulnerabilities and bugs across codebases using pattern-based analysis. Use when hunting bug variants, building CodeQL/Semgrep queries, analyzing security vulnerabilities, or performing systematic code audits after finding an initial issue."
+      },
+      {
+        "@type": "ListItem",
+        "position": 55,
+        "url": "https://skills.waybarrios.com/docs/skills/#vuln-report",
+        "name": "vuln-report",
+        "description": "Turn one confirmed security finding into a disclosure-ready GitHub advisory with root cause, proof of concept, impact, and source evidence. Use for reporting an established vulnerability, not discovering or validating one."
       }
+    ]
+  },
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "OpenCode Power Pack",
+        "item": "https://skills.waybarrios.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Documentation",
+        "item": "https://skills.waybarrios.com/docs/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Skill reference",
+        "item": "https://skills.waybarrios.com/docs/skills/"
+      }
+    ]
+  }
+}
     </script>
   </head>
   <body class="docs-body">
     <a class="skip-link" href="#skills-main">Skip to skill reference</a>
     <div class="status-rail" aria-hidden="true">
-      <span>SKILL REFERENCE // v0.5.0</span>
-      <span>54 DOCUMENTED</span>
+      <span>SKILL REFERENCE // MAIN</span>
+      <span>55 DOCUMENTED</span>
       <span>INDIVIDUAL INSTALLS</span>
     </div>
 
@@ -484,7 +491,7 @@
         <nav aria-label="Skill reference sections">
           <a href="#install-one">Install one skill</a>
           <a href="#invoke">Invoke by host</a>
-          <a href="#core">Core skills (14)</a>
+          <a href="#core">Core skills (15)</a>
           <a href="#security">Security skills (15)</a>
           <a href="#ml">ML + Hugging Face (25)</a>
         </nav>
@@ -508,10 +515,12 @@
           </p>
         </header>
 
+        <p class="note">The current main branch includes 55 skills, OpenCode 2.0 support, and humanizer. The published npm package and tag v0.5.0 still contain 54 skills and the V1-only plugin. Use the Git installation for the full OpenCode 2 plugin and humanizer. <a href="../#opencode-2">Read the compatibility guide.</a></p>
+
         <section class="docs-section skill-install-guide" id="install-one">
           <h2>Install one skill</h2>
           <p>
-            Use npm when you want a selective set for Codex, OpenCode, or Pi. Node.js 20 or newer is
+            Use npm when you want a selective set for Codex, OpenCode, or Pi. Node.js 20.11.0 or newer is
             required. The default user destination is <code>~/.agents/skills</code>.
           </p>
           <div class="docs-code"><code>npx @waybarrios/opencode-power-pack install &lt;skill-id&gt;
@@ -534,7 +543,7 @@ npx @waybarrios/opencode-power-pack install code-review</code></div>
           </div>
           <p class="note">
             Native Claude Code, Codex, OpenCode, and Pi plugin/package commands install the full catalog.
-            See the <a href="../#hosts">host installation guide</a> when you want all 54 skills.
+            See the <a href="../#hosts">host installation guide</a> when you want all 55 skills.
           </p>
         </section>
 
@@ -556,7 +565,7 @@ npx @waybarrios/opencode-power-pack install code-review</code></div>
           <div class="skill-search">
             <label for="skill-filter">Filter by name, task, profile, or companion</label>
             <input id="skill-filter" type="search" placeholder="Try: PR review, AWS, dataset, frontend">
-            <p id="filter-status" aria-live="polite">Showing all 54 skills</p>
+            <p id="filter-status" aria-live="polite">Showing all 55 skills</p>
           </div>
         </section>
         <p class="skill-filter-empty" id="skill-filter-empty" hidden>
@@ -568,7 +577,7 @@ npx @waybarrios/opencode-power-pack install code-review</code></div>
           <div class="skill-reference-group-heading">
             <span>CORE</span>
             <h2 id="core-title">Build, review, and author</h2>
-            <b>14</b>
+            <b>15</b>
           </div>
           <div class="skill-reference-list">
           <article class="skill-reference-card" id="agents-md-improver" data-skill="agents-md-improver audit and improve project-rules files (agents.md, claude.md, .agents/instructions, local overrides) so the agent keeps accurate project context. use when the user asks to check, audit, review, update, improve, or fix their agents.md or claude.md, mentions &quot;project rules maintenance&quot; or &quot;agent context optimization&quot;, or when the codebase has changed enough that the rules file may be stale. scans the repository for every rules file, grades each against a quality rubric, outputs a quality report, and applies targeted edits only after user approval. core recommended project-memory">
@@ -934,9 +943,21 @@ npx @waybarrios/opencode-power-pack install code-review</code></div>
               <a href="../#hosts">Host setup</a>
             </footer>
           </article>
+          <article class="skill-reference-card" id="humanizer" data-skill="humanizer writing copy editing english spanish authoring core">
+            <header><span>CORE / 12</span><h3><a href="#humanizer">humanizer</a></h3></header>
+            <div class="skill-reference-purpose"><span>What it does / when to use</span><p class="skill-reference-description">Rewrite English and Spanish copy in a direct, natural voice. Keep facts, names, numbers, URLs, and code intact.</p></div>
+            <div class="skill-reference-install"><span>Install from Git main</span><code>npx --package=git+https://github.com/waybarrios/opencode-power-pack.git opencode-power-pack install humanizer</code><button class="small-copy" type="button" data-copy="npx --package=git+https://github.com/waybarrios/opencode-power-pack.git opencode-power-pack install humanizer">Copy command</button></div>
+            <p>This runs the installer from Git main and installs into <code>~/.agents/skills</code>. Add <code>--dry-run</code> to preview, or <code>--project</code> for the current repository. npm 0.5.0 does not include humanizer.</p>
+            <dl class="skill-reference-meta">
+              <div><dt>Included by profiles</dt><dd><code>authoring</code> on main, alongside mcp-builder, paper-summarizer, and skill-creator.</dd></div>
+              <div><dt>Automatic companions</dt><dd>None</dd></div>
+              <div><dt>Invoke after installation</dt><dd><code>$humanizer</code> in Codex, <code>/humanizer</code> in OpenCode, or <code>/opencode-power-pack:humanizer</code> in Claude Code.</dd></div>
+            </dl>
+            <footer><a href="https://github.com/waybarrios/opencode-power-pack/tree/main/skills/humanizer">Read the complete workflow <span aria-hidden="true">↗</span></a><a href="../#hosts">Host setup</a></footer>
+          </article>
           <article class="skill-reference-card" id="mcp-builder" data-skill="mcp-builder guide the creation of high-quality mcp (model context protocol) servers that enable llms to interact with external services through well-designed tools. use when the user wants to build an mcp server to integrate an external api or service, whether in python (fastmcp) or node/typescript (mcp sdk). core recommended authoring">
             <header>
-              <span>CORE / 12</span>
+              <span>CORE / 13</span>
               <h3><a href="#mcp-builder">mcp-builder</a></h3>
             </header>
             <div class="skill-reference-purpose">
@@ -969,7 +990,7 @@ npx @waybarrios/opencode-power-pack install code-review</code></div>
           </article>
           <article class="skill-reference-card" id="paper-summarizer" data-skill="paper-summarizer agents should invoke this skill for academic or technical papers, arxiv/pubmed/ieee/acm links, pdfs, methodology review, limitations, practical implications, or extracting findings for engineering decisions. core authoring">
             <header>
-              <span>CORE / 13</span>
+              <span>CORE / 14</span>
               <h3><a href="#paper-summarizer">paper-summarizer</a></h3>
             </header>
             <div class="skill-reference-purpose">
@@ -1002,7 +1023,7 @@ npx @waybarrios/opencode-power-pack install code-review</code></div>
           </article>
           <article class="skill-reference-card" id="skill-creator" data-skill="skill-creator create new skills (skill.md files), modify and improve existing skills, and design skill descriptions for accurate triggering. use when the user wants to create a new skill from scratch, edit an existing skill, optimize a skill&#39;s description, or convert a workflow they just demonstrated into a reusable skill. core recommended authoring">
             <header>
-              <span>CORE / 14</span>
+              <span>CORE / 15</span>
               <h3><a href="#skill-creator">skill-creator</a></h3>
             </header>
             <div class="skill-reference-purpose">
@@ -2377,6 +2398,6 @@ npx @waybarrios/opencode-power-pack install code-review</code></div>
         </section>
       </main>
     </div>
-    <script src="../../app.js?v=0.5.0-sandbox-1" defer></script>
+    <script src="../../app.js?v=2026-10-19-opencode-2" defer></script>
   </body>
 </html>

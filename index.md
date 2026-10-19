@@ -1,6 +1,14 @@
 # OpenCode Power Pack
 
-OpenCode Power Pack is an open-source collection of 54 portable Agent Skills for Claude Code, Codex, OpenCode, and Pi. The current release is v0.5.0.
+OpenCode Power Pack is an open-source collection of 55 portable Agent Skills for Claude Code, Codex, OpenCode, and Pi. This page follows main. The latest published release is v0.5.0.
+
+## OpenCode 2.0 and humanizer
+
+The current main branch includes 55 skills, OpenCode 2.0 support, and humanizer. The published npm package and tag v0.5.0 still contain 54 skills and the V1-only plugin. Use the Git installation for the full OpenCode 2 plugin and humanizer.
+
+OpenCode 2 uses `opencode plugin add "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"`. OpenCode 1 uses `opencode plugin --global "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"`. Both load 55 skills and three specialists from main.
+
+Humanizer edits English and Spanish copy without changing facts, names, numbers, URLs, or code. It joins mcp-builder, paper-summarizer, and skill-creator in the four-skill authoring profile.
 
 ## Start here
 
@@ -12,7 +20,7 @@ OpenCode Power Pack is an open-source collection of 54 portable Agent Skills for
 
 ## Install
 
-The selective npm installer requires Node.js 20 or newer.
+The selective npm installer requires Node.js 20.11.0 or newer.
 
 ```sh
 # See every skill and profile
@@ -40,7 +48,7 @@ To delegate installation to a coding agent, use the safe dry-run-first prompt an
 | `frontend` | Frontend developers and designers | Interface implementation and anti-generic design critique |
 | `security` | AppSec engineers and security-conscious maintainers | Review, threat modeling, scanning, validation, and reporting |
 | `huggingface` | ML engineers and researchers | Discovery, inference, training, evaluation, Spaces, and AWS deployment |
-| `authoring` | Builders of reusable agent tools | Agent Skills, MCP servers, and paper summarization |
+| `authoring` | Builders of reusable agent tools | Agent Skills, MCP servers, paper summaries, and copy editing on main |
 | `project-memory` | Teams maintaining durable agent context | AGENTS.md and CLAUDE.md improvement and revision |
 
 Install a profile with:
@@ -53,7 +61,7 @@ npx @waybarrios/opencode-power-pack install --profile <profile-name>
 
 - Claude Code uses namespaced plugin skills such as `/opencode-power-pack:code-review`.
 - Codex invokes installed workflows with names such as `$code-review`.
-- OpenCode invokes installed workflows with names such as `/code-review`.
+- OpenCode 1 and 2 invoke installed workflows with names such as `/code-review`. Install the current Git plugin for OpenCode 2.
 - Pi exposes the package's declared skills directory.
 
 ## Review workflows
@@ -80,10 +88,10 @@ Codex, OpenCode, Claude Code, and Pi can all invoke the manual runner. Automatic
 
 ## Quality signals
 
-- 54 of 54 official Agent Skills validations pass.
-- 400 automated behavioral, packaging, and sandbox tests are defined at v0.5.0.
+- 55 of 55 official Agent Skills validations pass.
+- The main branch defines 418 tests. The latest local run passed 417 and skipped the optional native sandbox integration test.
 - Claude plugin and marketplace metadata receive strict validation.
-- OpenCode has minimum-version and latest-version smoke coverage.
+- Smoke tests cover OpenCode 1.18.7, 2.0.14, and 2.0.32, including effective V2 permission checks.
 - Third-party workflows include immutable provenance, notices, and license records.
 
 OpenCode Power Pack is MIT AND Apache-2.0 licensed, subject to the per-skill provenance and notices in the repository.

@@ -1,8 +1,8 @@
 # OpenCode Power Pack: Expanded Documentation
 
-> Canonical, machine-readable project facts for OpenCode Power Pack v0.5.0. Last updated 2026-08-17.
+> Canonical, machine-readable project facts for the current main branch of OpenCode Power Pack. Last updated 2026-10-19.
 
-OpenCode Power Pack is an open-source collection of 54 portable Agent Skills for Claude Code, Codex, OpenCode, and Pi. It packages repeatable workflows for software development, code review, application security, frontend design, MCP authoring, project memory, and Hugging Face machine-learning work.
+OpenCode Power Pack is an open-source collection of 55 portable Agent Skills for Claude Code, Codex, OpenCode, and Pi. It packages repeatable workflows for software development, code review, application security, frontend design, MCP authoring, project memory, and Hugging Face machine-learning work.
 
 Canonical website: https://skills.waybarrios.com/
 Documentation: https://skills.waybarrios.com/docs/
@@ -13,13 +13,21 @@ Release: https://github.com/waybarrios/opencode-power-pack/releases/tag/v0.5.0
 Author: Wayner Barrios
 License: MIT AND Apache-2.0, with per-skill provenance and notices
 
+## OpenCode 2.0 and humanizer
+
+The current main branch includes 55 skills, OpenCode 2.0 support, and humanizer. The published npm package and tag v0.5.0 still contain 54 skills and the V1-only plugin. Use the Git installation for the full OpenCode 2 plugin and humanizer.
+
+OpenCode 2 install: `opencode plugin add "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"`. OpenCode 1 install: `opencode plugin --global "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"`.
+
+Both hosts load all 55 skills and three specialists from main. Install humanizer selectively with `npx --package=git+https://github.com/waybarrios/opencode-power-pack.git opencode-power-pack install humanizer`. Invoke it with `$humanizer` in Codex, `/humanizer` in OpenCode, or `/opencode-power-pack:humanizer` in Claude Code. It edits English and Spanish copy while keeping facts, names, numbers, URLs, and code intact.
+
 ## What an Agent Skill is
 
 An Agent Skill is a reusable workflow centered on a SKILL.md file. It can include durable instructions, decision rules, references, scripts, and examples for a specific task. The workflow ID stays stable across supported coding agents, while packaging and invocation follow each host's conventions.
 
 ## Selective npm installation
 
-Requirement: Node.js 20 or newer.
+Requirement: Node.js 20.11.0 or newer.
 
 List skills and profiles:
 
@@ -45,7 +53,7 @@ Install the recommended profile:
 
     npx @waybarrios/opencode-power-pack install --profile recommended
 
-Install all 54 skills:
+Install every skill in the published npm catalog:
 
     npx @waybarrios/opencode-power-pack install --all
 
@@ -100,7 +108,7 @@ Compatibility specification: https://github.com/waybarrios/opencode-power-pack/b
 - frontend: frontend-design and ai-slop.
 - security: 15 security review, threat-modeling, static-analysis, validation, and reporting workflows.
 - huggingface: 25 discovery, inference, training, evaluation, Spaces, and AWS deployment workflows.
-- authoring: mcp-builder, paper-summarizer, and skill-creator.
+- authoring on main: humanizer, mcp-builder, paper-summarizer, and skill-creator. npm 0.5.0 contains the three earlier authoring skills.
 - project-memory: agents-md-improver and agents-md-revise.
 
 Install any profile with:
@@ -117,9 +125,9 @@ Install any profile with:
 
 ## Complete skill inventory
 
-Every skill can be installed with `npx @waybarrios/opencode-power-pack install <skill-id>`. Purpose, dependencies, profiles, host invocation, and source links are available at `https://skills.waybarrios.com/docs/skills/#<skill-id>`.
+Released skills can be installed with `npx @waybarrios/opencode-power-pack install <skill-id>`. Purpose, dependencies, profiles, host invocation, and source links, including the Git-only humanizer install, are available at `https://skills.waybarrios.com/docs/skills/#<skill-id>`.
 
-### Core and authoring skills (14)
+### Core and authoring skills (15)
 
 1. agents-md-improver: audits and improves AGENTS.md, CLAUDE.md, and related project-rules files.
 2. agents-md-revise: captures session learnings into durable project rules.
@@ -132,9 +140,10 @@ Every skill can be installed with `npx @waybarrios/opencode-power-pack install <
 9. design-patterns: evaluates pattern trade-offs for Rust, TypeScript, React, Django, and Python.
 10. feature-dev: coordinates a structured end-to-end feature implementation workflow.
 11. frontend-design: creates distinctive, production-grade frontend interfaces.
-12. mcp-builder: designs and builds Model Context Protocol servers.
-13. paper-summarizer: analyzes academic and technical papers for engineering decisions.
-14. skill-creator: creates or improves reusable Agent Skills and their trigger descriptions.
+12. humanizer: rewrites English and Spanish copy while preserving facts, names, numbers, URLs, and code.
+13. mcp-builder: designs and builds Model Context Protocol servers.
+14. paper-summarizer: analyzes academic and technical papers for engineering decisions.
+15. skill-creator: creates or improves reusable Agent Skills and their trigger descriptions.
 
 ### Security skills (15)
 
@@ -184,10 +193,10 @@ Every skill can be installed with `npx @waybarrios/opencode-power-pack install <
 
 ## Quality and provenance
 
-- 54 of 54 skills pass official Agent Skills validation.
-- The repository defines 400 automated behavioral, packaging, and sandbox tests at v0.5.0.
+- 55 of 55 skills pass official Agent Skills validation.
+- The main branch defines 418 tests. The latest local run passed 417 and skipped the optional native sandbox integration.
 - Claude plugin and marketplace metadata receive strict validation.
-- OpenCode receives minimum-version and latest-version smoke coverage.
+- OpenCode smoke tests cover 1.18.7, 2.0.14, and 2.0.32, including effective read-only permissions on V2.
 - Third-party workflows have immutable upstream references, notices, and license records.
 
 Evidence and exact provenance live in the repository:
@@ -199,7 +208,7 @@ Evidence and exact provenance live in the repository:
 ## Citation and factual boundaries
 
 Preferred project name: OpenCode Power Pack.
-Current documented version: 0.5.0.
+Current documentation: main. Latest published release: 0.5.0.
 Canonical URL: https://skills.waybarrios.com/
 Repository: https://github.com/waybarrios/opencode-power-pack
 Package: @waybarrios/opencode-power-pack

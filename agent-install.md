@@ -8,10 +8,16 @@ Use the selective npm installer for Codex, OpenCode, or Pi when the user wants o
 
 Use Claude Code's native plugin commands for the complete namespaced catalog. Do not assume that Claude Code loads the portable `.agents/skills` path.
 
+## Current source and OpenCode 2.0
+
+The current main branch includes 55 skills, OpenCode 2.0 support, and humanizer. The published npm package and tag v0.5.0 still contain 54 skills and the V1-only plugin. Use the Git installation for the full OpenCode 2 plugin and humanizer.
+
+The project-local procedure below uses the published npm catalog. Read its output before choosing skills. Do not try to install humanizer from npm 0.5.0 or change sources without the user's selection.
+
 ## Safe project-local procedure
 
 1. Confirm the current directory belongs to the intended Git repository.
-2. Run `node --version`. Stop if Node.js is older than 20.
+2. Run `node --version`. Stop if Node.js is older than 20.11.0.11.0.
 3. Preview the resolved selection and destination.
 4. Report the destination, selected skills, automatic companions, existing conflicts, and planned writes.
 5. If the preview matches the user's requested scope, repeat the command without `--dry-run`.
@@ -56,8 +62,9 @@ Verify through `/plugin`, then invoke a workflow with its collision-safe namespa
 
 ## Host verification
 
-- Codex: start a new session, inspect `/plugins`, and invoke `$code-review` or another installed ID.
-- OpenCode: start a new session, run `opencode debug skill`, and invoke `/code-review` or another installed ID.
+- Codex: start a new session and invoke `$code-review` or another installed ID. Inspect `/plugins` only for a native plugin installation.
+- OpenCode 1: start a new session, run `opencode debug skill`, and invoke `/code-review` or another installed ID.
+- OpenCode 2: start a new session, check the skill picker, and invoke `/code-review` or another installed ID. Use `opencode debug agents` only to inspect specialists from the native plugin.
 - Pi: start a new session, run `pi list`, and ask for a task matching the installed workflow.
 - Claude Code: inspect `/plugin` and use `/opencode-power-pack:<skill-id>`.
 
@@ -67,6 +74,8 @@ Verify through `/plugin`, then invoke a workflow with its collision-safe namespa
 Help me choose and install the right OpenCode Power Pack skills safely and project-locally in the current Git repository.
 
 Your goal is to understand what I need, recommend the smallest useful profile or set of individual skills, obtain my explicit selection, install it for the active coding-agent host, preserve all existing project work, and leave a reproducible verification report.
+
+The npm procedure below uses the published catalog. OpenCode 2 can use those copied skills, but the native V2 plugin and humanizer require Git main. If I need either, show the current Git install guide and wait for my source choice before continuing.
 
 Safety rules:
 1. Do not modify package.json, package-lock.json, npm-shrinkwrap.json, pnpm-lock.yaml, yarn.lock, bun.lock, or application dependencies.
@@ -88,7 +97,7 @@ Phase 2: preflight without changing repository files.
 
 1. Print the current directory with pwd.
 2. Run git rev-parse --show-toplevel. Stop if this is not a Git repository. Save the absolute Git root.
-3. Run node --version. Parse the major version and require Node.js 20 or newer. If it is older or unavailable, stop and explain how to satisfy the prerequisite without changing this project.
+3. Run node --version. Parse the full version and require Node.js 20.11.0 or newer. If it is older or unavailable, stop and explain how to satisfy the prerequisite without changing this project.
 4. Run npm --version and stop if npm or npx is unavailable.
 5. Capture git status --short before installation. Use it only as a baseline; do not alter any listed file.
 6. State that the only permitted destination is <git-root>/.agents/skills.
@@ -130,8 +139,9 @@ Phase 6: verify and report.
 3. Run git status --short again and compare it with the saved baseline. Confirm that installation introduced no changes outside .agents/skills and did not change dependency manifests or lockfiles. Do not revert unrelated differences.
 4. Tell the user to start a new agent session if the skills do not appear automatically.
 5. Give the host-specific verification command:
-   - Codex: inspect /plugins, then invoke an installed skill such as $code-review.
-   - OpenCode: run opencode debug skill, then invoke /code-review.
+   - Codex: invoke an installed skill such as $code-review in a new session. Use /plugins only for a native plugin installation.
+   - OpenCode 1: run opencode debug skill, then invoke /code-review.
+   - OpenCode 2: check the skill picker, then invoke /code-review.
    - Pi: run pi list, then request a task that matches an installed workflow.
 6. Finish with a concise structured report containing: stated need, approved selection and rationale, alternatives not chosen, host, Node/npm versions, Git root, destination, exact commands run, resolved skill count and names, installed entries, preserved/skipped entries, warnings or failures, worktree comparison, verification result, and any user action still required.
 ```

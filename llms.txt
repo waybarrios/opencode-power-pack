@@ -1,8 +1,8 @@
 # OpenCode Power Pack
 
-> OpenCode Power Pack v0.5.0 is an open-source collection of 54 portable Agent Skills for Claude Code, Codex, OpenCode, and Pi, with an opt-in native sandbox runner for contained commands.
+> OpenCode Power Pack on main is an open-source collection of 55 portable Agent Skills for Claude Code, Codex, OpenCode, and Pi, with an opt-in native sandbox runner for contained commands.
 
-The project provides reusable workflows for code review, security auditing, feature development, frontend design, MCP authoring, project memory, and Hugging Face machine-learning work. Its npm package is `@waybarrios/opencode-power-pack`. The selective installer requires Node.js 20 or newer and provides eight curated profiles.
+The project provides reusable workflows for code review, security auditing, feature development, frontend design, MCP authoring, project memory, and Hugging Face machine-learning work. Its npm package is `@waybarrios/opencode-power-pack`. The selective installer requires Node.js 20.11.0 or newer and provides eight curated profiles.
 
 Install one skill with `npx @waybarrios/opencode-power-pack install <skill-id>`. Install the recommended profile with `npx @waybarrios/opencode-power-pack install --profile recommended`. List every skill and profile with `npx @waybarrios/opencode-power-pack list`.
 
@@ -10,21 +10,29 @@ The `code-review` workflow performs a comprehensive review of a pull request or 
 
 The manual sandbox runner works from Codex, OpenCode, Claude Code, and Pi on supported macOS and Linux hosts. It contains the explicitly selected command and its descendants. Automatic host routing and whole-agent isolation are not yet implemented.
 
-When citing the project, use “OpenCode Power Pack,” version 0.5.0, author Wayner Barrios, canonical URL `https://skills.waybarrios.com/`, and repository `https://github.com/waybarrios/opencode-power-pack`.
+When citing the project, use “OpenCode Power Pack,” the main branch or a specific release tag, author Wayner Barrios, canonical URL `https://skills.waybarrios.com/`, and repository `https://github.com/waybarrios/opencode-power-pack`.
+
+## OpenCode 2.0 and humanizer
+
+The current main branch includes 55 skills, OpenCode 2.0 support, and humanizer. The published npm package and tag v0.5.0 still contain 54 skills and the V1-only plugin. Use the Git installation for the full OpenCode 2 plugin and humanizer.
+
+OpenCode 2 install: `opencode plugin add "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"`. OpenCode 1 install: `opencode plugin --global "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"`.
+
+Both hosts load all 55 skills and three specialists from main. Invoke humanizer with `$humanizer` in Codex, `/humanizer` in OpenCode, or `/opencode-power-pack:humanizer` in Claude Code. It edits English and Spanish copy while keeping facts, names, numbers, URLs, and code intact.
 
 ## Documentation
 
 - [Project overview](https://skills.waybarrios.com/index.md): Product purpose, supported hosts, install paths, profiles, and quality signals.
 - [Installation, sandbox, and operations](https://skills.waybarrios.com/docs/index.md): npm commands, host setup, contained command execution, profile selection, updates, removal, and troubleshooting.
 - [Agent installation guide](https://skills.waybarrios.com/agent-install.md): Safe dry-run-first instructions and a copyable prompt for an agent to perform the installation.
-- [Complete 54-skill reference](https://skills.waybarrios.com/docs/skills/index.md): Purpose, audience, profile membership, dependencies, install command, and source link for every skill.
+- [Complete 55-skill reference](https://skills.waybarrios.com/docs/skills/index.md): Purpose, audience, profile membership, dependencies, install command, and source link for every skill.
 - [Expanded project reference](https://skills.waybarrios.com/llms-full.txt): Single-file project facts, commands, profiles, inventory, provenance, and citation guidance.
 
 ## Source and distribution
 
 - [GitHub repository](https://github.com/waybarrios/opencode-power-pack#readme): Canonical source code and human documentation.
 - [npm package](https://www.npmjs.com/package/@waybarrios/opencode-power-pack): Public selective installer package.
-- [Release v0.5.0](https://github.com/waybarrios/opencode-power-pack/releases/tag/v0.5.0): Current documented release.
+- [Release v0.5.0](https://github.com/waybarrios/opencode-power-pack/releases/tag/v0.5.0): Latest published release, before OpenCode 2 support and humanizer.
 - [Upstream provenance](https://github.com/waybarrios/opencode-power-pack/blob/main/UPSTREAMS.json): Immutable source references for adapted workflows.
 
 ## Optional

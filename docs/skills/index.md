@@ -1,14 +1,16 @@
 # OpenCode Power Pack: Complete Skill Reference
 
-> Purpose, audience, profile membership, dependencies, install command, invocation, and source link for all 54 skills in v0.5.0.
+> Purpose, audience, profile membership, dependencies, install command, invocation, and source link for all 55 skills on main.
 
 Canonical HTML browser: https://skills.waybarrios.com/docs/skills/
 
-Install any skill at user scope with `npx @waybarrios/opencode-power-pack install <skill-id>`. Add `--project` for repository-local scope or `--dry-run` to preview the resolved changes.
+Install released skills at user scope with `npx @waybarrios/opencode-power-pack install <skill-id>`. Add `--project` for repository-local scope or `--dry-run` to preview the resolved changes.
 
 Required companion skills are installed automatically. Invoke an installed workflow as `$<skill-id>` in Codex, `/<skill-id>` in OpenCode, or `/opencode-power-pack:<skill-id>` in Claude Code.
 
-## Core and authoring skills (14)
+The current main branch includes 55 skills, OpenCode 2.0 support, and humanizer. The published npm package and tag v0.5.0 still contain 54 skills and the V1-only plugin. Use the Git installation for the full OpenCode 2 plugin and humanizer.
+
+## Core and authoring skills (15)
 
 ### agents-md-improver
 
@@ -152,6 +154,19 @@ Create distinctive, production-grade frontend interfaces with high design qualit
 - Claude Code: `/opencode-power-pack:frontend-design`
 - HTML details: https://skills.waybarrios.com/docs/skills/#frontend-design
 - Source: https://github.com/waybarrios/opencode-power-pack/tree/main/skills/frontend-design
+
+### humanizer
+
+Rewrite English and Spanish copy in a direct, natural voice. Keep facts, names, numbers, URLs, and code intact.
+
+- Profiles: `authoring` on main
+- Automatic companions: None
+- Install from source: `npx --package=git+https://github.com/waybarrios/opencode-power-pack.git opencode-power-pack install humanizer`
+- Codex: `$humanizer`
+- OpenCode 1 and 2: `/humanizer`
+- Claude Code: `/opencode-power-pack:humanizer`
+- HTML details: https://skills.waybarrios.com/docs/skills/#humanizer
+- Source: https://github.com/waybarrios/opencode-power-pack/tree/main/skills/humanizer
 
 ### mcp-builder
 

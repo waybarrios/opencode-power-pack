@@ -1,10 +1,16 @@
 # OpenCode Power Pack Installation and Operations
 
-This guide covers selective npm installation, native host installation, and contained command execution for OpenCode Power Pack v0.5.0.
+This guide covers selective npm installation, native host installation, and contained command execution for the current main branch and the published npm release.
+
+## What is available now
+
+The current main branch includes 55 skills, OpenCode 2.0 support, and humanizer. The published npm package and tag v0.5.0 still contain 54 skills and the V1-only plugin. Use the Git installation for the full OpenCode 2 plugin and humanizer.
+
+The npm installer still works for its released skills on OpenCode 2. Copying skills does not register the plugin's three named specialists.
 
 ## Choose an installation path
 
-Use the selective npm installer when Codex, OpenCode, or Pi should load only chosen skills or a curated profile. It requires Node.js 20 or newer and installs into a portable `.agents/skills` directory.
+Use the selective npm installer when Codex, OpenCode, or Pi should load only chosen skills or a curated profile. It requires Node.js 20.11.0 or newer and installs into a portable `.agents/skills` directory.
 
 Use the host-native plugin or package installation when you want the full catalog and native activation behavior. Claude Code, Codex, OpenCode, and Pi each use their own host mechanism.
 
@@ -25,11 +31,24 @@ npx @waybarrios/opencode-power-pack install code-review --project
 npx @waybarrios/opencode-power-pack install --profile review --dry-run
 npx @waybarrios/opencode-power-pack install --profile review
 
-# Install all 54 skills
+# Install every skill in the published npm catalog
 npx @waybarrios/opencode-power-pack install --all
 ```
 
 The installer resolves required companion skills. Existing skills are not overwritten unless `--force` is supplied. Use `--dry-run` before any forced update.
+
+## GitHub Packages mirror
+
+npmjs is the public install source and does not require GitHub authentication. The same released package is also available through GitHub Packages.
+
+Use a GitHub personal access token (classic) with `read:packages` for the mirror:
+
+```sh
+npm login --scope=@waybarrios --auth-type=legacy --registry=https://npm.pkg.github.com
+npm install --global @waybarrios/opencode-power-pack --registry=https://npm.pkg.github.com
+```
+
+The mirror follows release tags. It does not include additions that are only on main.
 
 ## Agent-assisted installation
 
@@ -63,13 +82,23 @@ codex plugin list --marketplace opencode-power-pack
 
 Start a new Codex session and invoke a skill such as `$code-review`.
 
-### OpenCode
+### OpenCode 1 and 2
+
+Use Git main for OpenCode 2.0 support and the 55-skill catalog. The v0.5.0 tag contains the earlier V1-only plugin.
 
 ```sh
-opencode plugin --global "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git#v0.5.0"
+# OpenCode 2
+opencode plugin add "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"
+
+# OpenCode 1
+opencode plugin --global "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"
 ```
 
-Start a new OpenCode session and invoke a skill such as `/code-review`.
+Restart OpenCode and invoke a skill such as `/code-review` or `/humanizer`. On V2, run `opencode debug agents` to inspect the three specialists. On V1, use `opencode debug skill` and `opencode debug agent code-explorer`.
+
+V2 enforces the bundled specialists' read-only restrictions when it evaluates permissions, even with global allow rules. A custom system prompt or primary mode replaces the bundled role and keeps host permission defaults. The debug listing can still show the host's base permissions.
+
+Smoke tests cover OpenCode 1.18.7, 2.0.14, and 2.0.32. They verify all 55 skills and three specialists without model calls.
 
 ### Pi
 
@@ -185,8 +214,19 @@ macOS and Linux are supported. WSL2 is expected through the Linux backend but st
 - `frontend`: frontend implementation plus anti-generic design critique.
 - `security`: AppSec review, scanning, modeling, validation, and reporting.
 - `huggingface`: model discovery, inference, training, evaluation, Spaces, and AWS deployment.
-- `authoring`: skills, MCP servers, and technical-paper summaries.
+- `authoring`: humanizer, skill-creator, mcp-builder, and paper-summarizer on main. npm 0.5.0 has the three earlier authoring skills.
 - `project-memory`: durable AGENTS.md and CLAUDE.md maintenance.
+
+## Humanizer from current source
+
+Run the selective installer from Git main for a user-level copy:
+
+```sh
+npx --package=git+https://github.com/waybarrios/opencode-power-pack.git opencode-power-pack install humanizer --dry-run
+npx --package=git+https://github.com/waybarrios/opencode-power-pack.git opencode-power-pack install humanizer
+```
+
+Use `install --profile authoring` instead for all four authoring skills. For project scope, run the same command from the target repository with `--project`.
 
 ## Update and remove
 
@@ -198,6 +238,19 @@ npx @waybarrios/opencode-power-pack install code-review --force
 ```
 
 For host-native installations, use that host's plugin or package update and removal commands. Avoid activating the same workflow from both a native plugin and an npm copy at the same scope.
+
+On OpenCode 2, update or remove with the exact configured package specification:
+
+```sh
+opencode plugin update "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"
+opencode plugin remove "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"
+```
+
+On V1, reinstall with `plugin --global` to update, or remove its entry from the `plugin` config array. For a local `git+file://` install, pull the clone and then update or reinstall the same specification.
+
+## Contributor checks
+
+The behavioral runner uses the OpenCode 2 session API. It rejects partial text from failed or interrupted turns and accepts optional `provider/model#variant` references. Live runs need provider environment credentials; the isolated runtime does not copy the native V2 credential database.
 
 ## Troubleshooting
 
