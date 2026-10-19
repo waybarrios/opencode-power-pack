@@ -161,6 +161,10 @@ When `verdict=changes-requested`, also submit a real review so the PR's review d
 
 `POST /repos/<owner>/<repo>/pulls/<pr>/reviews` with `event: REQUEST_CHANGES` and a short body naming the blocking findings.
 
+The review is idempotent per pinned head SHA. Query `/repos/<owner>/<repo>/pulls/<pr>/reviews` before submitting, and submit only when the authenticated login has no `REQUEST_CHANGES` review whose `commit_id` is that head SHA. Repeated runs against one head must not stack reviews; a new head SHA may receive a new review.
+
+GitHub returns `422` when the authenticated login authored the PR, because a login cannot request changes on its own pull request. On that rejection, do not retry `REQUEST_CHANGES`: post the marker comment and submit the same review with `event: COMMENT`, and name in the body that the changes are requested but this login cannot block its own PR.
+
 Determine the authenticated login, then query both issue comments and inline review comments with `gh api --paginate`. Match both the exact marker and authenticated author. For each intended comment:
 
 - If its marker exists and content is identical, do nothing.

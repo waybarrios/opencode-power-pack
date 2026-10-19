@@ -74,6 +74,13 @@ test("code-review marker carries verdict= and posts a blocking review", () => {
   assert.match(review, /event: REQUEST_CHANGES/);
 });
 
+test("code-review review posting is idempotent per head and survives self-authored PRs", () => {
+  assert.match(review, /Query `\/repos\/<owner>\/<repo>\/pulls\/<pr>\/reviews`/);
+  assert.match(review, /authenticated login has no `REQUEST_CHANGES` review whose `commit_id` is that head SHA/i);
+  assert.match(review, /GitHub returns `422` when the authenticated login authored the PR/i);
+  assert.match(review, /submit the same review with `event: COMMENT`/i);
+});
+
 test("code-reviewer honors authoritative handoffs and complete local changes", () => {
   assert.match(reviewer, /Dispatched handoff/i);
   assert.match(reviewer, /scope manifest.*authoritative/is);
