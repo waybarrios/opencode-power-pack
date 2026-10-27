@@ -36,7 +36,15 @@ export default {
   async setup(ctx) {
     const policies = agents(skills);
     await ctx.skill.transform((editor) => {
-      for (const skill of skills) editor.add({ ...skill });
+      for (const skill of skills) {
+        // A throw here escapes the transform and the host disables the whole
+        // plugin, so one rejected skill must not take the other ones with it.
+        try {
+          editor.add({ ...skill });
+        } catch (error) {
+          console.error(`[opencode-power-pack] skipped skill ${skill.id}:`, error);
+        }
+      }
     });
     await ctx.agent.transform((editor) => {
       for (const [name, { permissions, ...agent }] of Object.entries(policies)) {
