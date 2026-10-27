@@ -124,6 +124,25 @@ test("plugin registers every bundled skill with the V2 Skill.Info shape", async 
   );
 });
 
+test("a skill rejected by the host does not block the other skills or agents", async (t) => {
+  const skills = fakeEditor();
+  const agents = fakeEditor();
+  const add = skills.add;
+  skills.add = (skill) => {
+    if (skill.id === "code-reviewer") throw new Error("rejected by host");
+    add(skill);
+  };
+  const logged = t.mock.method(console, "error", () => {});
+
+  await assert.doesNotReject(() => plugin.setup(contextFor(skills, agents)));
+
+  assert.equal(skills.list().length, SKILL_NAMES.length - 1);
+  assert.equal(skills.get("code-reviewer"), undefined);
+  assert.ok(agents.get("code-reviewer"), "agents still register after a rejected skill");
+  assert.equal(logged.mock.callCount(), 1);
+  assert.match(String(logged.mock.calls[0].arguments[0]), /code-reviewer/);
+});
+
 test("plugin registers the feature workflow roles as read-only subagents", async () => {
   const { agents } = await register();
 
