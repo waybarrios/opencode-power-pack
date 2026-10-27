@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "opencode-power-pack",
   "displayName": "OpenCode Power Pack",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Fifty-five workflows for Claude Code, Codex, OpenCode 1 and 2, and Pi.",
   "author": {
     "name": "Wayner Barrios",

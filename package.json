@@ -1,6 +1,6 @@
 {
   "name": "@waybarrios/opencode-power-pack",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Fifty-five workflows for Claude Code, Codex, OpenCode 1 and 2, and Pi: code review, security, feature development, writing, and project guidance.",
   "type": "module",
   "main": ".opencode/plugins/opencode-power-pack.js",

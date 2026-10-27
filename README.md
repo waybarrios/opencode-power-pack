@@ -51,7 +51,7 @@ The new `humanizer` skill rewrites English and Spanish copy in a direct, natural
 
 Invoke it with `$humanizer` in Codex, `/humanizer` in OpenCode, or `/opencode-power-pack:humanizer` in Claude Code.
 
-**Use the Git installation for these additions.** The published npm package and tag `v0.5.0` still contain 54 skills and the V1-only plugin. They do not include `humanizer` or the OpenCode 2 plugin port. The npm selective installer can still copy its released skills into `.agents/skills` for OpenCode 2.
+Release `v0.6.0` and npm `0.6.0` ship both additions: 55 skills and the plugin for OpenCode 1 and 2. Tag `v0.5.0` and npm `0.5.0` have 54 skills and only the OpenCode 1 plugin.
 
 For host commands, update steps, and the current catalog, see the [documentation](https://skills.waybarrios.com/docs/) and [skill reference](https://skills.waybarrios.com/docs/skills/). The [OpenCode compatibility guide](docs/opencode-compatibility.md) covers source selection and V2 permissions.
 
@@ -67,7 +67,7 @@ OpenCode Power Pack now includes an opt-in, fail-closed sandbox runner for safer
 Install the CLI, verify the boundary from the active agent session, and run a command with the skill's trusted profile:
 
 ```bash
-npm install --global @waybarrios/opencode-power-pack@0.5.0
+npm install --global @waybarrios/opencode-power-pack@0.6.0
 opencode-power-pack sandbox doctor --json
 opencode-power-pack sandbox exec --skill code-review -- git status --short
 ```
@@ -170,7 +170,7 @@ Run the installer directly from the mirror after authentication:
 npx --registry=https://npm.pkg.github.com @waybarrios/opencode-power-pack list
 ```
 
-Maintainers publish the mirror with the `Publish GitHub Package` workflow. Release events publish automatically, while a manual run requires an existing release tag such as `v0.5.0`. The workflow verifies that the tag matches `package.json`, uploads the artifact already verified by required release CI without rerunning lifecycle scripts, and authenticates with the repository-scoped `GITHUB_TOKEN`; no package token is stored in the repository.
+Maintainers publish the mirror with the `Publish GitHub Package` workflow. Release events publish automatically, while a manual run requires an existing release tag such as `v0.6.0`. The workflow verifies that the tag matches `package.json`, uploads the artifact already verified by required release CI without rerunning lifecycle scripts, and authenticates with the repository-scoped `GITHUB_TOKEN`; no package token is stored in the repository.
 
 | Profile | Intended use |
 |---|---|
@@ -201,7 +201,7 @@ The npm installer and the full Claude Code/Codex/OpenCode plugins are alternativ
 The package assigns every bundled skill a default least-capability profile and an explicit set of allowed escalations. Native plugin and package installations expose the skills but do not install the sandbox executable, so install the npm CLI in the same operating-system environment as the agent:
 
 ```bash
-npm install --global @waybarrios/opencode-power-pack@0.5.0
+npm install --global @waybarrios/opencode-power-pack@0.6.0
 opencode-power-pack sandbox doctor
 opencode-power-pack sandbox resolve --skill code-review
 opencode-power-pack sandbox resolve --sandbox-profile publish --json
@@ -405,7 +405,7 @@ Restart OpenCode after installation. One plugin adapts to the host version: Open
 
 The compatibility smoke tests cover OpenCode **1.18.7, 2.0.14, and 2.0.32**. The `SKILL.md` format stays the same across these hosts.
 
-To pin a release, append its tag to the same spec. Choose a release that includes the V2 port when using OpenCode 2; `v0.5.0` predates it:
+To pin a release, append its tag to the same spec. OpenCode 2 needs `v0.6.0` or later, because `v0.5.0` predates the V2 port:
 
 ```bash
 opencode plugin add "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git#<tag>"
