@@ -7,9 +7,10 @@ The `main` branch supports OpenCode 2.0 and keeps OpenCode 1.18.7 support. Both 
 | Source | Skills | OpenCode plugin | Humanizer |
 |---|---|---|---|
 | Git `main` | 55 | OpenCode 1 and 2 | Included |
+| npm `0.6.0` and tag `v0.6.0` | 55 | OpenCode 1 and 2 | Included |
 | npm `0.5.0` and tag `v0.5.0` | 54 | OpenCode 1 only | Not included |
 
-The npm selective installer can copy its released skills into `.agents/skills` for OpenCode 2. It does not register the three named specialist agents. Use the Git plugin for the full V2 integration.
+The npm selective installer copies skills into `.agents/skills`, but it does not register the three named specialist agents. Install the plugin for the full V2 integration.
 
 ## Install the current plugin
 
