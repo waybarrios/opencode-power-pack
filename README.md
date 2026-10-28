@@ -25,7 +25,7 @@
 <p align="center">
   <a href="#installation"><b>Install</b></a> ·
   <a href="https://skills.waybarrios.com/docs/"><b>Documentation</b></a> ·
-  <a href="#opencode-2-and-humanizer"><b>OpenCode 2</b></a> ·
+  <a href="#opencode-2-support"><b>OpenCode 2</b></a> ·
   <a href="#selective-install-with-npm"><b>Select Skills</b></a> ·
   <a href="#claude-code-quick-install"><b>Claude Code</b></a> ·
   <a href="#codex-quick-install"><b>Codex Quick Install</b></a> ·
@@ -37,21 +37,17 @@
   <a href="#acknowledgments"><b>Credits</b></a>
 </p>
 
-## OpenCode 2 and humanizer
+## OpenCode 2 support
 
-The current `main` branch supports OpenCode 2 and keeps OpenCode 1.18.7 support. Both hosts load all 55 skills and the three feature-development specialists. Smoke tests cover OpenCode 1.18.7, 2.0.14, and 2.0.32, including effective read-only permissions on V2.
+Version 0.6.0 supports OpenCode 2 and keeps OpenCode 1.18.7 support. Both hosts load all 55 skills and the three feature-development specialists. Smoke tests cover OpenCode 1.18.7, 2.0.14, and 2.0.32, including effective read-only permissions on V2.
 
-Install the current plugin in OpenCode 2:
+Install the plugin in OpenCode 2:
 
 ```bash
 opencode plugin add "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"
 ```
 
-The new `humanizer` skill rewrites English and Spanish copy in a direct, natural voice. It keeps facts, names, numbers, and code intact. The `authoring` profile now includes `humanizer`, `mcp-builder`, `paper-summarizer`, and `skill-creator`.
-
-Invoke it with `$humanizer` in Codex, `/humanizer` in OpenCode, or `/opencode-power-pack:humanizer` in Claude Code.
-
-Release `v0.6.0` and npm `0.6.0` ship both additions: 55 skills and the plugin for OpenCode 1 and 2. Tag `v0.5.0` and npm `0.5.0` have 54 skills and only the OpenCode 1 plugin.
+Release `v0.6.0` and npm `0.6.0` include the plugin for OpenCode 1 and 2. Tag `v0.5.0` and npm `0.5.0` have only the OpenCode 1 plugin.
 
 For host commands, update steps, and the current catalog, see the [documentation](https://skills.waybarrios.com/docs/) and [skill reference](https://skills.waybarrios.com/docs/skills/). The [OpenCode compatibility guide](docs/opencode-compatibility.md) covers source selection and V2 permissions.
 
@@ -180,19 +176,17 @@ Maintainers publish the mirror with the `Publish GitHub Package` workflow. Relea
 | `frontend` | Frontend implementation and anti-generic design critique |
 | `security` | Security review, threat modeling, static analysis, validation, and reporting |
 | `huggingface` | Model discovery, local inference, training, evaluation, Spaces, and AWS deployment |
-| `authoring` | Skills, MCP servers, technical-paper summaries, and natural copy editing on `main` |
+| `authoring` | Skills, MCP servers, technical-paper summaries, and natural copy editing with `humanizer` |
 | `project-memory` | Audit and maintain durable project guidance |
 
 Profiles automatically include required companion skills and can be combined with individual skill names. The default destination is `~/.agents/skills`; `--project` finds the current Git root and installs into its `.agents/skills` directory. Existing directories are skipped unless `--force` is provided, and replacements are staged with rollback plus per-skill locking. Every copied skill retains its provenance, third-party notices, and license texts. Use `--dry-run` to preview or `--all` to install the complete catalog.
 
-The commands above use the published npm catalog. To selectively install `humanizer` or the four-skill `authoring` profile from current source:
+To install `humanizer` on its own, or the four-skill `authoring` profile:
 
 ```bash
-npx --package=git+https://github.com/waybarrios/opencode-power-pack.git opencode-power-pack install humanizer --dry-run
-npx --package=git+https://github.com/waybarrios/opencode-power-pack.git opencode-power-pack install humanizer
+npx @waybarrios/opencode-power-pack install humanizer --dry-run
+npx @waybarrios/opencode-power-pack install --profile authoring
 ```
-
-Use `install --profile authoring` instead of `install humanizer` for all four authoring skills. These commands install into `~/.agents/skills`. For a project-local install, run the same command from the target repository with `--project`.
 
 The npm installer and the full Claude Code/Codex/OpenCode plugins are alternative activation paths. Claude Code users should prefer the namespaced plugin because the selective installer currently targets the portable `.agents/skills` location used by Codex, OpenCode, and Pi. If a full plugin is already active, selectively copying the same skills does not reduce that plugin's loaded catalog.
 
