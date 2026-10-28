@@ -1,12 +1,12 @@
 # OpenCode Power Pack Installation and Operations
 
-This guide covers selective npm installation, native host installation, and contained command execution for the current main branch and the published npm release.
+This guide covers selective npm installation, native host installation, and contained command execution for release v0.6.0.
 
 ## What is available now
 
-The current main branch includes 55 skills, OpenCode 2.0 support, and humanizer. The published npm package and tag v0.5.0 still contain 54 skills and the V1-only plugin. Use the Git installation for the full OpenCode 2 plugin and humanizer.
+Release v0.6.0 adds OpenCode 2.0 support on npm and Git. Tag v0.5.0 and npm 0.5.0 contain the earlier V1-only plugin.
 
-The npm installer still works for its released skills on OpenCode 2. Copying skills does not register the plugin's three named specialists.
+The npm installer also copies skills for OpenCode 2. Copying skills does not register the plugin's three named specialists.
 
 ## Choose an installation path
 
@@ -84,7 +84,7 @@ Start a new Codex session and invoke a skill such as `$code-review`.
 
 ### OpenCode 1 and 2
 
-Use Git main for OpenCode 2.0 support and the 55-skill catalog. The v0.5.0 tag contains the earlier V1-only plugin.
+OpenCode 2.0 needs v0.6.0 or Git main. The v0.5.0 tag contains the earlier V1-only plugin.
 
 ```sh
 # OpenCode 2
@@ -115,7 +115,7 @@ Version 0.5.0 adds an opt-in, fail-closed runner for one command and its descend
 Install the CLI and verify the operating-system boundary:
 
 ```sh
-npm install --global @waybarrios/opencode-power-pack@0.5.0
+npm install --global @waybarrios/opencode-power-pack@0.6.0
 opencode-power-pack sandbox doctor
 opencode-power-pack sandbox resolve --skill code-review
 ```
@@ -214,16 +214,16 @@ macOS and Linux are supported. WSL2 is expected through the Linux backend but st
 - `frontend`: frontend implementation plus anti-generic design critique.
 - `security`: AppSec review, scanning, modeling, validation, and reporting.
 - `huggingface`: model discovery, inference, training, evaluation, Spaces, and AWS deployment.
-- `authoring`: humanizer, skill-creator, mcp-builder, and paper-summarizer on main. npm 0.5.0 has the three earlier authoring skills.
+- `authoring`: humanizer, skill-creator, mcp-builder, and paper-summarizer.
 - `project-memory`: durable AGENTS.md and CLAUDE.md maintenance.
 
-## Humanizer from current source
+## Install humanizer
 
-Run the selective installer from Git main for a user-level copy:
+Run the selective installer for a user-level copy:
 
 ```sh
-npx --package=git+https://github.com/waybarrios/opencode-power-pack.git opencode-power-pack install humanizer --dry-run
-npx --package=git+https://github.com/waybarrios/opencode-power-pack.git opencode-power-pack install humanizer
+npx @waybarrios/opencode-power-pack install humanizer --dry-run
+npx @waybarrios/opencode-power-pack install humanizer
 ```
 
 Use `install --profile authoring` instead for all four authoring skills. For project scope, run the same command from the target repository with `--project`.

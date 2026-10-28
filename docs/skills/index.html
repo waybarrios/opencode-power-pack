@@ -515,7 +515,7 @@
           </p>
         </header>
 
-        <p class="note">The current main branch includes 55 skills, OpenCode 2.0 support, and humanizer. The published npm package and tag v0.5.0 still contain 54 skills and the V1-only plugin. Use the Git installation for the full OpenCode 2 plugin and humanizer. <a href="../#opencode-2">Read the compatibility guide.</a></p>
+        <p class="note">Release v0.6.0 adds OpenCode 2.0 support on npm and Git. Tag v0.5.0 and npm 0.5.0 contain the earlier V1-only plugin. <a href="../#opencode-2">Read the compatibility guide.</a></p>
 
         <section class="docs-section skill-install-guide" id="install-one">
           <h2>Install one skill</h2>
@@ -946,10 +946,10 @@ npx @waybarrios/opencode-power-pack install code-review</code></div>
           <article class="skill-reference-card" id="humanizer" data-skill="humanizer writing copy editing english spanish authoring core">
             <header><span>CORE / 12</span><h3><a href="#humanizer">humanizer</a></h3></header>
             <div class="skill-reference-purpose"><span>What it does / when to use</span><p class="skill-reference-description">Rewrite English and Spanish copy in a direct, natural voice. Keep facts, names, numbers, URLs, and code intact.</p></div>
-            <div class="skill-reference-install"><span>Install from Git main</span><code>npx --package=git+https://github.com/waybarrios/opencode-power-pack.git opencode-power-pack install humanizer</code><button class="small-copy" type="button" data-copy="npx --package=git+https://github.com/waybarrios/opencode-power-pack.git opencode-power-pack install humanizer">Copy command</button></div>
-            <p>This runs the installer from Git main and installs into <code>~/.agents/skills</code>. Add <code>--dry-run</code> to preview, or <code>--project</code> for the current repository. npm 0.5.0 does not include humanizer.</p>
+            <div class="skill-reference-install"><span>Install</span><code>npx @waybarrios/opencode-power-pack install humanizer</code><button class="small-copy" type="button" data-copy="npx @waybarrios/opencode-power-pack install humanizer">Copy command</button></div>
+            <p>This installs into <code>~/.agents/skills</code>. Add <code>--dry-run</code> to preview, or <code>--project</code> for the current repository.</p>
             <dl class="skill-reference-meta">
-              <div><dt>Included by profiles</dt><dd><code>authoring</code> on main, alongside mcp-builder, paper-summarizer, and skill-creator.</dd></div>
+              <div><dt>Included by profiles</dt><dd><code>authoring</code>, alongside mcp-builder, paper-summarizer, and skill-creator.</dd></div>
               <div><dt>Automatic companions</dt><dd>None</dd></div>
               <div><dt>Invoke after installation</dt><dd><code>$humanizer</code> in Codex, <code>/humanizer</code> in OpenCode, or <code>/opencode-power-pack:humanizer</code> in Claude Code.</dd></div>
             </dl>

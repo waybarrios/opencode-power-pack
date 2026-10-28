@@ -10,14 +10,14 @@ Use Claude Code's native plugin commands for the complete namespaced catalog. Do
 
 ## Current source and OpenCode 2.0
 
-The current main branch includes 55 skills, OpenCode 2.0 support, and humanizer. The published npm package and tag v0.5.0 still contain 54 skills and the V1-only plugin. Use the Git installation for the full OpenCode 2 plugin and humanizer.
+Release v0.6.0 adds OpenCode 2.0 support on npm and Git. Tag v0.5.0 and npm 0.5.0 contain the earlier V1-only plugin.
 
-The project-local procedure below uses the published npm catalog. Read its output before choosing skills. Do not try to install humanizer from npm 0.5.0 or change sources without the user's selection.
+The project-local procedure below uses the published npm catalog. Read its output before choosing skills. Do not change sources without the user's selection.
 
 ## Safe project-local procedure
 
 1. Confirm the current directory belongs to the intended Git repository.
-2. Run `node --version`. Stop if Node.js is older than 20.11.0.11.0.
+2. Run `node --version`. Stop if Node.js is older than 20.11.0.
 3. Preview the resolved selection and destination.
 4. Report the destination, selected skills, automatic companions, existing conflicts, and planned writes.
 5. If the preview matches the user's requested scope, repeat the command without `--dry-run`.
@@ -75,7 +75,7 @@ Help me choose and install the right OpenCode Power Pack skills safely and proje
 
 Your goal is to understand what I need, recommend the smallest useful profile or set of individual skills, obtain my explicit selection, install it for the active coding-agent host, preserve all existing project work, and leave a reproducible verification report.
 
-The npm procedure below uses the published catalog. OpenCode 2 can use those copied skills, but the native V2 plugin and humanizer require Git main. If I need either, show the current Git install guide and wait for my source choice before continuing.
+The npm procedure below copies skills from the published catalog. It does not register the native OpenCode plugin or its three specialists. If I need the plugin, show the OpenCode install guide and wait for my choice before continuing.
 
 Safety rules:
 1. Do not modify package.json, package-lock.json, npm-shrinkwrap.json, pnpm-lock.yaml, yarn.lock, bun.lock, or application dependencies.

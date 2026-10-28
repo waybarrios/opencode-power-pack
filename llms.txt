@@ -1,6 +1,6 @@
 # OpenCode Power Pack
 
-> OpenCode Power Pack on main is an open-source collection of 55 portable Agent Skills for Claude Code, Codex, OpenCode, and Pi, with an opt-in native sandbox runner for contained commands.
+> OpenCode Power Pack is an open-source collection of 55 portable Agent Skills for Claude Code, Codex, OpenCode, and Pi, with an opt-in native sandbox runner for contained commands.
 
 The project provides reusable workflows for code review, security auditing, feature development, frontend design, MCP authoring, project memory, and Hugging Face machine-learning work. Its npm package is `@waybarrios/opencode-power-pack`. The selective installer requires Node.js 20.11.0 or newer and provides eight curated profiles.
 
@@ -12,13 +12,13 @@ The manual sandbox runner works from Codex, OpenCode, Claude Code, and Pi on sup
 
 When citing the project, use “OpenCode Power Pack,” the main branch or a specific release tag, author Wayner Barrios, canonical URL `https://skills.waybarrios.com/`, and repository `https://github.com/waybarrios/opencode-power-pack`.
 
-## OpenCode 2.0 and humanizer
+## OpenCode 2.0 support
 
-The current main branch includes 55 skills, OpenCode 2.0 support, and humanizer. The published npm package and tag v0.5.0 still contain 54 skills and the V1-only plugin. Use the Git installation for the full OpenCode 2 plugin and humanizer.
+Release v0.6.0 adds OpenCode 2.0 support on npm and Git. Tag v0.5.0 and npm 0.5.0 contain the earlier V1-only plugin.
 
 OpenCode 2 install: `opencode plugin add "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"`. OpenCode 1 install: `opencode plugin --global "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"`.
 
-Both hosts load all 55 skills and three specialists from main. Invoke humanizer with `$humanizer` in Codex, `/humanizer` in OpenCode, or `/opencode-power-pack:humanizer` in Claude Code. It edits English and Spanish copy while keeping facts, names, numbers, URLs, and code intact.
+Both hosts load all 55 skills and three specialists.
 
 ## Documentation
 
@@ -32,7 +32,7 @@ Both hosts load all 55 skills and three specialists from main. Invoke humanizer 
 
 - [GitHub repository](https://github.com/waybarrios/opencode-power-pack#readme): Canonical source code and human documentation.
 - [npm package](https://www.npmjs.com/package/@waybarrios/opencode-power-pack): Public selective installer package.
-- [Release v0.5.0](https://github.com/waybarrios/opencode-power-pack/releases/tag/v0.5.0): Latest published release, before OpenCode 2 support and humanizer.
+- [Release v0.6.0](https://github.com/waybarrios/opencode-power-pack/releases/tag/v0.6.0): Latest published release, with OpenCode 2 support.
 - [Upstream provenance](https://github.com/waybarrios/opencode-power-pack/blob/main/UPSTREAMS.json): Immutable source references for adapted workflows.
 
 ## Optional

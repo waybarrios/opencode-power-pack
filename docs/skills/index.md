@@ -1,6 +1,6 @@
 # OpenCode Power Pack: Complete Skill Reference
 
-> Purpose, audience, profile membership, dependencies, install command, invocation, and source link for all 55 skills on main.
+> Purpose, audience, profile membership, dependencies, install command, invocation, and source link for all 55 skills.
 
 Canonical HTML browser: https://skills.waybarrios.com/docs/skills/
 
@@ -8,7 +8,7 @@ Install released skills at user scope with `npx @waybarrios/opencode-power-pack 
 
 Required companion skills are installed automatically. Invoke an installed workflow as `$<skill-id>` in Codex, `/<skill-id>` in OpenCode, or `/opencode-power-pack:<skill-id>` in Claude Code.
 
-The current main branch includes 55 skills, OpenCode 2.0 support, and humanizer. The published npm package and tag v0.5.0 still contain 54 skills and the V1-only plugin. Use the Git installation for the full OpenCode 2 plugin and humanizer.
+Release v0.6.0 adds OpenCode 2.0 support on npm and Git. Tag v0.5.0 and npm 0.5.0 contain the earlier V1-only plugin.
 
 ## Core and authoring skills (15)
 
@@ -159,9 +159,9 @@ Create distinctive, production-grade frontend interfaces with high design qualit
 
 Rewrite English and Spanish copy in a direct, natural voice. Keep facts, names, numbers, URLs, and code intact.
 
-- Profiles: `authoring` on main
+- Profiles: `authoring`
 - Automatic companions: None
-- Install from source: `npx --package=git+https://github.com/waybarrios/opencode-power-pack.git opencode-power-pack install humanizer`
+- Install: `npx @waybarrios/opencode-power-pack install humanizer`
 - Codex: `$humanizer`
 - OpenCode 1 and 2: `/humanizer`
 - Claude Code: `/opencode-power-pack:humanizer`

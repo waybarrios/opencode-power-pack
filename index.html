@@ -6,7 +6,7 @@
     <title>OpenCode Power Pack | 55 Skills for AI Coding Agents</title>
     <meta
       name="description"
-      content="Use 55 Agent Skills from main for Claude Code, Codex, OpenCode, and Pi, with an opt-in native sandbox runner for contained commands."
+      content="Use 55 Agent Skills for Claude Code, Codex, OpenCode, and Pi, with an opt-in native sandbox runner for contained commands."
    >
     <meta name="author" content="Wayner Barrios">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
@@ -88,7 +88,7 @@
       "description": "A curated collection of 55 Agent Skills for code review, security auditing, feature development, frontend design, MCP authoring, and machine-learning workflows.",
       "codeRepository": "https://github.com/waybarrios/opencode-power-pack",
       "downloadUrl": "https://www.npmjs.com/package/@waybarrios/opencode-power-pack",
-      "softwareVersion": "main",
+      "softwareVersion": "0.6.0",
       "runtimePlatform": [
         "Claude Code",
         "Codex",
@@ -176,7 +176,7 @@
           "name": "Does the plugin support OpenCode 2.0?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes. Git main supports OpenCode 2.0 and OpenCode 1.18.7. The published npm package and tag v0.5.0 predate the V2 plugin port."
+            "text": "Yes. Version 0.6.0 supports OpenCode 2.0 and OpenCode 1.18.7. Tag v0.5.0 predates the V2 plugin port."
           }
         }
       ]
@@ -234,7 +234,7 @@
           "position": 7,
           "name": "authoring",
           "url": "https://skills.waybarrios.com/#profiles",
-          "description": "Create skills and MCP servers, summarize technical papers, and edit English and Spanish copy on main."
+          "description": "Create skills and MCP servers, summarize technical papers, and edit English and Spanish copy."
         },
         {
           "@type": "ListItem",
@@ -372,7 +372,7 @@
 
 Your goal is to understand what I need, recommend the smallest useful profile or set of individual skills, obtain my explicit selection, install it for the active coding-agent host, preserve all existing project work, and leave a reproducible verification report.
 
-The npm procedure below uses the published catalog. OpenCode 2 can use those copied skills, but the native V2 plugin and humanizer require Git main. If I need either, show the current Git install guide and wait for my source choice before continuing.
+The npm procedure below copies skills from the published catalog. It does not register the native OpenCode plugin or its three specialists. If I need the plugin, show the OpenCode install guide and wait for my choice before continuing.
 
 Safety rules:
 1. Do not modify package.json, package-lock.json, npm-shrinkwrap.json, pnpm-lock.yaml, yarn.lock, bun.lock, or application dependencies.
@@ -484,17 +484,16 @@ Phase 6: verify and report.
       <section class="proof-strip" aria-label="Project facts">
         <div><strong>55</strong><span>curated skills</span></div>
         <div><strong>4</strong><span>agent hosts</span></div>
-        <div><strong>418</strong><span>automated tests</span></div>
+        <div><strong>419</strong><span>automated tests</span></div>
         <div><strong>4</strong><span>sandbox profiles</span></div>
       </section>
 
       <section class="section update-section" id="whats-new" aria-labelledby="updates-title">
         <div class="section-heading">
-          <p class="kicker">New on main</p>
-          <h2 id="updates-title">OpenCode 2.0 and humanizer.</h2>
+          <p class="kicker">New in v0.6.0</p>
+          <h2 id="updates-title">OpenCode 2.0 support.</h2>
           <p>OpenCode 1.18.7, 2.0.14, and 2.0.32 load all 55 skills and three specialists. V2 permission checks keep the bundled specialists read-only.</p>
-          <p><a href="docs/skills/#humanizer">Humanizer</a> edits English and Spanish copy without changing the facts. The authoring profile now has four skills.</p>
-          <p class="release-note">The published npm package and tag v0.5.0 still contain 54 skills and the V1-only plugin. Use Git main for OpenCode 2 and humanizer. <a href="docs/#opencode-2">See the install commands.</a></p>
+          <p class="release-note">It ships in npm 0.6.0 and on Git main. Tag v0.5.0 has only the V1 plugin. <a href="docs/#opencode-2">See the install commands.</a></p>
         </div>
       </section>
 
@@ -565,12 +564,12 @@ Phase 6: verify and report.
           </article>
 
           <article class="profile-card">
-            <div><span>AUTHORING</span><b>4 skills on main</b></div>
+            <div><span>AUTHORING</span><b>4 skills</b></div>
             <h3>Reusable agent tools</h3>
             <p><strong>For:</strong> builders creating new Agent Skills, MCP servers, technical-paper summaries, and clear English or Spanish copy.</p>
-            <small>Includes humanizer, skill-creator, mcp-builder, and paper-summarizer on main.</small>
-            <code>npx --package=git+https://github.com/waybarrios/opencode-power-pack.git opencode-power-pack install --profile authoring</code>
-            <button type="button" class="small-copy" data-copy="npx --package=git+https://github.com/waybarrios/opencode-power-pack.git opencode-power-pack install --profile authoring">Copy command</button>
+            <small>Includes humanizer, skill-creator, mcp-builder, and paper-summarizer.</small>
+            <code>npx @waybarrios/opencode-power-pack install --profile authoring</code>
+            <button type="button" class="small-copy" data-copy="npx @waybarrios/opencode-power-pack install --profile authoring">Copy command</button>
           </article>
 
           <article class="profile-card">
@@ -611,7 +610,7 @@ Phase 6: verify and report.
           <article class="platform-card platform-opencode">
             <span class="platform-number">C</span>
             <h3>OpenCode 1 + 2</h3>
-            <p>OpenCode 2.0 support on main, with three read-only specialists. OpenCode 1.18.7 still works.</p>
+            <p>OpenCode 2.0 support, with three read-only specialists. OpenCode 1.18.7 still works.</p>
             <code>opencode plugin add "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"</code>
           </article>
           <article class="platform-card platform-pi">
@@ -739,7 +738,7 @@ Phase 6: verify and report.
           </div>
           <ol class="quality-list">
             <li><b>01</b><span><strong>55 / 55</strong> official Agent Skills validations</span></li>
-            <li><b>02</b><span><strong>418</strong> automated behavioral, packaging, and sandbox tests</span></li>
+            <li><b>02</b><span><strong>419</strong> automated behavioral, packaging, and sandbox tests</span></li>
             <li><b>03</b><span><strong>Strict</strong> Claude plugin and marketplace validation</span></li>
             <li><b>04</b><span><strong>OpenCode 1 + 2</strong> OpenCode smoke coverage</span></li>
             <li><b>05</b><span><strong>Immutable</strong> upstream provenance and license records</span></li>
@@ -779,7 +778,7 @@ Phase 6: verify and report.
           </details>
           <details>
             <summary>Does the plugin support OpenCode 2.0?</summary>
-            <p>Yes. Install from Git main with <code>opencode plugin add</code>. The same plugin supports OpenCode 1.18.7 through <code>plugin --global</code>. npm 0.5.0 predates the V2 port. <a href="docs/#opencode-2">Read the compatibility guide.</a></p>
+            <p>Yes. Install it with <code>opencode plugin add</code>. The same plugin supports OpenCode 1.18.7 through <code>plugin --global</code>. Tag v0.5.0 predates the V2 port. <a href="docs/#opencode-2">Read the compatibility guide.</a></p>
           </details>
           <details>
             <summary>Can I install only one skill?</summary>

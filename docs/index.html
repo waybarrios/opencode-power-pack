@@ -53,7 +53,7 @@
   "headline": "OpenCode Power Pack Documentation",
   "description": "Installation, usage, and native sandbox documentation for OpenCode Power Pack Agent Skills.",
   "url": "https://skills.waybarrios.com/docs/",
-  "dateModified": "2026-10-19",
+  "dateModified": "2026-10-27",
   "author": {
     "@type": "Person",
     "name": "Wayner Barrios",
@@ -63,7 +63,7 @@
     "@type": "SoftwareSourceCode",
     "name": "OpenCode Power Pack",
     "codeRepository": "https://github.com/waybarrios/opencode-power-pack",
-    "softwareVersion": "main",
+    "softwareVersion": "0.6.0",
     "runtimePlatform": [
       "Claude Code",
       "Codex",
@@ -96,7 +96,7 @@
     <div class="status-rail" aria-hidden="true">
       <span>DOCUMENTATION // MAIN</span>
       <span>55 MODULES</span>
-      <span>LAST UPDATED 2026-10-19</span>
+      <span>LAST UPDATED 2026-10-27</span>
     </div>
 
     <div class="docs-shell">
@@ -143,15 +143,15 @@
 
         <section class="docs-section" id="opencode-2">
           <h2>OpenCode 2.0 and current source</h2>
-          <p>The current main branch includes 55 skills, OpenCode 2.0 support, and humanizer. The published npm package and tag v0.5.0 still contain 54 skills and the V1-only plugin. Use the Git installation for the full OpenCode 2 plugin and humanizer.</p>
-          <p>The npm installer can copy its released skills for OpenCode 2. Copying skills does not register the three named specialists.</p>
-          <p>Smoke tests cover OpenCode 1.18.7, 2.0.14, and 2.0.32. The current suite has 418 tests; the latest local run passed 417 and skipped the optional native sandbox integration.</p>
+          <p>Release v0.6.0 adds OpenCode 2.0 support on npm and Git. Tag v0.5.0 and npm 0.5.0 contain the earlier V1-only plugin.</p>
+          <p>The npm installer can also copy skills for OpenCode 2. Copying skills does not register the three named specialists.</p>
+          <p>Smoke tests cover OpenCode 1.18.7, 2.0.14, and 2.0.32. The current suite has 419 tests; the latest local run passed 418 and skipped the optional native sandbox integration.</p>
           <p>For the host commands and permission checks, see <a href="#host-opencode">OpenCode setup</a>. For the new writing workflow, see <a href="skills/#humanizer">humanizer</a>.</p>
         </section>
 
         <section class="docs-section" id="quick-start">
           <h2>Choose an installation path</h2>
-          <p>Choose selected skills from npm or the full plugin from Git main. The sources contain different versions.</p>
+          <p>Choose selected skills from npm or the full plugin. Both sources ship v0.6.0.</p>
           <div class="install-choice-grid">
             <article>
               <span>SELECTIVE</span>
@@ -271,7 +271,7 @@ npm install --global @waybarrios/opencode-power-pack --registry=https://npm.pkg.
 
 Your goal is to understand what I need, recommend the smallest useful profile or set of individual skills, obtain my explicit selection, install it for the active coding-agent host, preserve all existing project work, and leave a reproducible verification report.
 
-The npm procedure below uses the published catalog. OpenCode 2 can use those copied skills, but the native V2 plugin and humanizer require Git main. If I need either, show the current Git install guide and wait for my source choice before continuing.
+The npm procedure below copies skills from the published catalog. It does not register the native OpenCode plugin or its three specialists. If I need the plugin, show the OpenCode install guide and wait for my choice before continuing.
 
 Safety rules:
 1. Do not modify package.json, package-lock.json, npm-shrinkwrap.json, pnpm-lock.yaml, yarn.lock, bun.lock, or application dependencies.
@@ -411,8 +411,8 @@ opencode-power-pack install code-review</code></div>
             also needs trusted system installations of <code>bubblewrap</code>, <code>socat</code>, and
             <code>rg</code>. macOS uses the built-in Seatbelt backend.
           </p>
-          <div class="docs-code"><code># Keep the v0.5.0 CLI available
-npm install --global @waybarrios/opencode-power-pack@0.5.0
+          <div class="docs-code"><code># Install the v0.6.0 CLI
+npm install --global @waybarrios/opencode-power-pack@0.6.0
 
 # Verify the actual operating-system boundary
 opencode-power-pack sandbox doctor
@@ -493,7 +493,7 @@ opencode-power-pack sandbox exec --skill code-review -- rg TODO .</code></div>
             that same agent session. A doctor that succeeds in another terminal does not prove that a more
             restricted agent session can start the backend.
           </p>
-          <div class="docs-code"><code>npm install --global @waybarrios/opencode-power-pack@0.5.0</code></div>
+          <div class="docs-code"><code>npm install --global @waybarrios/opencode-power-pack@0.6.0</code></div>
 
           <article class="host-doc">
             <header><span>01</span><h3>Codex</h3><b>MANUAL RUNNER</b></header>
@@ -607,7 +607,7 @@ codex plugin list --marketplace opencode-power-pack</code></div>
 
           <article class="host-doc" id="host-opencode">
             <header><span>03</span><h3>OpenCode 1 and 2</h3><b>FULL CATALOG</b></header>
-            <p>Use Git main for OpenCode 2.0 and all 55 skills. The v0.5.0 tag predates the V2 plugin port.</p>
+            <p>OpenCode 2.0 needs v0.6.0 or Git main. The v0.5.0 tag predates the V2 plugin port.</p>
             <div class="docs-code"><code># OpenCode 2
 opencode plugin add "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git"
 
@@ -695,11 +695,11 @@ pi install git:github.com/waybarrios/opencode-power-pack -l</code></div>
               </div>
             </details>
             <details>
-              <summary><span><code>authoring</code> Reusable workflow creation</span><b>4 on main</b></summary>
+              <summary><span><code>authoring</code> Reusable workflow creation</span><b>4 skills</b></summary>
               <div>
                 <p>Create Agent Skills and MCP servers, or turn technical papers into engineering-ready summaries.</p>
-                <div class="docs-code"><code>npx --package=git+https://github.com/waybarrios/opencode-power-pack.git opencode-power-pack install --profile authoring</code></div>
-                <p>On main: <code>humanizer</code>, <code>mcp-builder</code>, <code>paper-summarizer</code>, and <code>skill-creator</code>. npm 0.5.0 has the three earlier skills. <a href="skills/#humanizer">Install humanizer from source.</a></p>
+                <div class="docs-code"><code>npx @waybarrios/opencode-power-pack install --profile authoring</code></div>
+                <p>Includes <code>humanizer</code>, <code>mcp-builder</code>, <code>paper-summarizer</code>, and <code>skill-creator</code>. <a href="skills/#humanizer">Read the humanizer reference.</a></p>
               </div>
             </details>
             <details>
@@ -750,7 +750,7 @@ npx @waybarrios/opencode-power-pack@latest install --profile review --force
 # Update one project-local skill
 npx @waybarrios/opencode-power-pack@latest install code-review --project --force</code></div>
           <p>
-            The selective CLI has no remove command in v0.5.0. To remove a copied workflow, verify the
+            The selective CLI has no remove command in v0.6.0. To remove a copied workflow, verify the
             destination printed by the installer and delete only its exact skill directory, such as
             <code>~/.agents/skills/code-review</code> or <code>&lt;repo&gt;/.agents/skills/code-review</code>.
           </p>
